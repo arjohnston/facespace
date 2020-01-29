@@ -1,0 +1,54 @@
+{
+  "name": "mern-auth",
+  "version": "0.1.0",
+  "private": true,
+  "browserslist": "",
+  "dependencies": {
+    "address": "^1.1.0",
+    "axios": "^0.19.0",
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.7.0",
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.2.1",
+    "mongoose": "^5.7.3",
+    "morgan": "^1.9.1",
+    "normalize.css": "^8.0.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.2.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node server",
+    "dev": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "mocha",
+    "pm2-start": "pm2 start mongod --name \"database\" && npm run build && pm2 start npm --name \"app\" -- start && npm run dev",
+    "pm2-stop": "pm2 stop app database && pm2 delete app database",
+    "deploy": "git pull && npm install && pm2 stop database api app && pm2 delete database api app && pm2 start mongod --name \"database\" && npm run build && pm2 start npm --name \"app\" -- start && pm2 start npm \"app\" -- run dev",
+    "lint": "prettier 'routes/*.js' 'config/*.js' 'src/*.js' 'src/**/*.js' '*.js' --write --single-quote --no-semi && standard --fix"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --single-quote --no-semi",
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "react-test-renderer": "^16.10.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "proxy": "http://localhost:8080/"
+}

@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`With Snapshot Testing should match its empty snapshot 1`] = `
+<div
+  className="container"
+>
+  <h1>
+    Whoops, looks like the page doesn't exist. 
+    <Link
+      to="/"
+    >
+      Return home
+    </Link>
+  </h1>
+</div>
+`;

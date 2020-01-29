@@ -1,0 +1,4 @@
+User-agent: *
+
+# Don't crawl entire app by default
+Disallow: /

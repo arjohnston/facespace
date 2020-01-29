@@ -1,0 +1,146 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input {
+  -webkit-appearance: none;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #222831;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 800 800'%3E%3Cg fill='none' stroke='%231a363d' stroke-width='1'%3E%3Cpath d='M769 229L1037 260.9M927 880L731 737 520 660 309 538 40 599 295 764 126.5 879.5 40 599-197 493 102 382-31 229 126.5 79.5-69-63'/%3E%3Cpath d='M-31 229L237 261 390 382 603 493 308.5 537.5 101.5 381.5M370 905L295 764'/%3E%3Cpath d='M520 660L578 842 731 737 840 599 603 493 520 660 295 764 309 538 390 382 539 269 769 229 577.5 41.5 370 105 295 -36 126.5 79.5 237 261 102 382 40 599 -69 737 127 880'/%3E%3Cpath d='M520-140L578.5 42.5 731-63M603 493L539 269 237 261 370 105M902 382L539 269M390 382L102 382'/%3E%3Cpath d='M-222 42L126.5 79.5 370 105 539 269 577.5 41.5 927 80 769 229 902 382 603 493 731 737M295-36L577.5 41.5M578 842L295 764M40-201L127 80M102 382L-261 269'/%3E%3C/g%3E%3Cg fill='%23223b45'%3E%3Ccircle cx='769' cy='229' r='5'/%3E%3Ccircle cx='539' cy='269' r='5'/%3E%3Ccircle cx='603' cy='493' r='5'/%3E%3Ccircle cx='731' cy='737' r='5'/%3E%3Ccircle cx='520' cy='660' r='5'/%3E%3Ccircle cx='309' cy='538' r='5'/%3E%3Ccircle cx='295' cy='764' r='5'/%3E%3Ccircle cx='40' cy='599' r='5'/%3E%3Ccircle cx='102' cy='382' r='5'/%3E%3Ccircle cx='127' cy='80' r='5'/%3E%3Ccircle cx='370' cy='105' r='5'/%3E%3Ccircle cx='578' cy='42' r='5'/%3E%3Ccircle cx='237' cy='261' r='5'/%3E%3Ccircle cx='390' cy='382' r='5'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+form {
+  max-width: 375px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 12px;
+}
+
+.container h1 {
+  font-weight: 200;
+  color: #DDD;
+  letter-spacing: 2px;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.container a,
+.container a:visited {
+  text-decoration: none;
+  color: #00adb5;
+  transition: color 0.2s;
+}
+
+.container a:hover {
+  color: white;
+}
+
+form p {
+  color: #DDD;
+  font-size: 0.8em;
+  letter-spacing: 1px;
+  margin-top: 18px;
+  font-weight: 300;
+}
+
+form input {
+  background-color: rgba(100,100,100,0.3);
+  border-radius: 3px;
+  border: 1px solid #666;
+  padding: 18px 12px;
+  margin-bottom: 12px;
+  outline: none;
+  color: white;
+}
+
+form input:focus {
+  border: 1px solid #FFF;
+}
+
+form input::placeholder {
+  color: #CCCCCC;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+input:-webkit-autofill {
+  border: none;
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+form button {
+  padding: 18px 12px;
+  border-radius: 3px;
+  border: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form button.active {
+  background: #007A82;
+  cursor: pointer;
+  color: white;
+}
+
+form button svg {
+  margin-right: 8px;
+}
+
+form button.active svg {
+  fill: #FFF;
+}
+
+form button.inactive {
+  background: #7F7F7F;
+  color: #BBB;
+}
+
+form button.inactive svg {
+  fill: #BBB;
+}
+
+form button.active:hover {
+  background: #00adb5;
+}
+
+form span {
+  color: orange;
+  font-size: 0.95em;
+  margin-bottom: 12px;
+}
+
+.password-strength {
+  color: white;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.password-meter-wrapper {
+  width: 100%;
+  height: 5px;
+  background: rgba(255,255,255,0.3);
+  margin-bottom: 12px
+}
+
+.password-meter {
+  height: 100%;
+}
