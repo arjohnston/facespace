@@ -1,4 +1,4 @@
-/* global describe it before */
+/* global describe it before after */
 // During the test the env variable is set to test
 process.env.NODE_ENV = 'test'
 
@@ -8,24 +8,47 @@ const User = require('../api/models/User')
 // Require the dev-dependencies
 const chai = require('chai')
 const chaiHttp = require('chai-http')
-const app = require('../server')
+const server = require('../server')
 const expect = chai.expect
-const { OK, UNAUTHORIZED, BAD_REQUEST, CONFLICT } = require('../util/statusCodes')
+const {
+  OK,
+  UNAUTHORIZED,
+  BAD_REQUEST,
+  CONFLICT
+} = require('../util/statusCodes')
 
 // Setup Chai
 chai.should()
 chai.use(chaiHttp)
 
+let serverInstance = null
+let app = null
+
+function initializeServer () {
+  serverInstance = new server.Server()
+  serverInstance.openConnection()
+  app = serverInstance.getServerInstance()
+}
+
+function terminateServer (done) {
+  serverInstance.closeConnection(done)
+}
+
 // Parent block for the User tests
 describe('Users', () => {
   // Clear the database before the test beings
   before(done => {
+    initializeServer()
+
     User.deleteMany({}, err => {
       if (err) {
         // Ignore the error
       }
       done()
     })
+  })
+  after(done => {
+    terminateServer(done)
   })
 
   // Set a variable for the token that will be created during the login process
@@ -274,6 +297,161 @@ describe('Users', () => {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
           res.body.should.have.property('username')
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST /api/auth/forgot-password', () => {
+    it('Should return statusCode 400 if a username was not passed in', done => {
+      chai
+        .request(app)
+        .post('/api/auth/forgot-password')
+        .send({})
+        .then(function (res) {
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 if a username was passed in always', done => {
+      chai
+        .request(app)
+        .post('/api/auth/forgot-password')
+        .send({ username: 'a@b.c' })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST /api/auth/updatePassword', () => {
+    it('Should return statusCode 400 if token is not provided', done => {
+      const user = {
+        password: 'StrongPassword$1'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/updatePassword')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 400 if password is not provided', done => {
+      const user = {
+        token: token
+      }
+      chai
+        .request(app)
+        .post('/api/auth/updatePassword')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 if successfully updated', done => {
+      const user = {
+        token: token,
+        password: 'StrongPassword$1'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/updatePassword')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST /api/auth/getUser', () => {
+    it('Should return statusCode 400 if a token was not passed in', done => {
+      chai
+        .request(app)
+        .post('/api/auth/getUser')
+        .send({})
+        .then(function (res) {
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 if a user was found', done => {
+      chai
+        .request(app)
+        .post('/api/auth/getUser')
+        .send({ token: token })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+          res.body.should.be.a('object')
+          res.body.should.have.property('username')
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST /api/auth/deleteUser', () => {
+    it('Should return statusCode 400 if a token was not passed in', done => {
+      chai
+        .request(app)
+        .post('/api/auth/deleteUser')
+        .send({})
+        .then(function (res) {
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 if a user was deleted', done => {
+      chai
+        .request(app)
+        .post('/api/auth/deleteUser')
+        .send({ token: token })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
 
           done()
         })

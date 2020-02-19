@@ -3,18 +3,22 @@ const Schema = mongoose.Schema
 const bcrypt = require('bcrypt-nodejs')
 
 // Create a new schema for the User
-const UserSchema = new Schema({
-  username: {
-    type: String,
-    unique: true, // Don't allow multiple users with the same username
-    required: true
+const UserSchema = new Schema(
+  {
+    username: {
+      type: String,
+      unique: true, // Don't allow multiple users with the same username
+      required: true
+    },
+    password: {
+      type: String,
+      required: true
+    },
+    lastLogin: {
+      type: Date
+    }
   },
-  password: {
-    type: String,
-    required: true
-  }
-},
-{ collection: 'User' }
+  { collection: 'User' }
 )
 
 // When saving the user, ensure the password
