@@ -30,7 +30,7 @@
     "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "mocha",
-    "pm2-start": "pm2 start mongod --name \"database\" && npm run build && pm2 start npm --name \"app\" -- start && npm run dev",
+    "pm2-start": "pm2 start mongod --name \"database\" -- --dbpath=/Volumes/data/db/ && npm run build && pm2 start npm --name \"app\" -- start && npm run dev",
     "pm2-stop": "pm2 stop app database && pm2 delete app database",
     "deploy": "git pull && npm install && pm2 stop database api app && pm2 delete database api app && pm2 start mongod --name \"database\" && npm run build && pm2 start npm --name \"app\" -- start && pm2 start npm \"app\" -- run dev",
     "lint": "prettier 'routes/*.js' 'config/*.js' 'src/*.js' 'src/**/*.js' '*.js' --write --single-quote --no-semi && standard --fix"

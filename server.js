@@ -19,7 +19,7 @@ const TEST = process.env.NODE_ENV === 'test'
 const PORT = DEV ? '3000' : '8080'
 
 // Name the database based if its in test mode or development/production
-const DATABASE_NAME = TEST ? 'mern-auth-test' : 'mern-auth'
+const DATABASE_NAME = TEST ? 'cmpe-133-test' : 'cmpe-133'
 
 // Configure and connect to Mongoose
 mongoose.Promise = require('bluebird')
