@@ -1,8 +1,19 @@
 {
-  "name": "mern-auth",
+  "name": "facespace",
   "version": "0.1.0",
   "private": true,
-  "browserslist": "",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "address": "^1.1.0",
     "axios": "^0.19.0",
@@ -50,5 +61,12 @@
       "pre-commit": "lint-staged"
     }
   },
-  "proxy": "http://localhost:8080/"
+  "proxy": "http://localhost:8080/",
+  "standard": {
+    "globals": [
+      "fetch",
+      "$"
+    ],
+    "parser": "babel-eslint"
+  }
 }
