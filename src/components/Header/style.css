@@ -1,0 +1,32 @@
+.header {
+  width: 100%;
+  height: 70px;
+  background: pink;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.logo {
+  height: 60px;
+}
+
+nav {
+  display: flex;
+  height: 100%;
+}
+
+nav a {
+  color: white;
+  transition: all 0.2s;
+  text-decoration: none;
+  padding: 0 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+nav a:hover {
+  color: rgba(255,255,255,0.7);
+}

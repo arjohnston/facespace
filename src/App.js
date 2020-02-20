@@ -4,6 +4,9 @@ import store from './store'
 import { Provider } from 'react-redux'
 
 import Login from './pages/Login'
+import Messaging from './pages/Messaging'
+import Friends from './pages/Friends'
+import Profile from './pages/Profile'
 import Register from './pages/Register'
 import Dashboard from './components/Dashboard/Dashboard'
 import Overview from './pages/Overview'
@@ -51,10 +54,17 @@ export default class App extends React.Component {
             <Switch>
               <Route
                 exact
-                path='/'
+                path='/(|messaging|friends|profile)'
                 render={() => (
                   <Dashboard>
                     <Route exact path='/' render={() => <Overview />} />
+                    <Route
+                      exact
+                      path='/messaging'
+                      render={() => <Messaging />}
+                    />
+                    <Route exact path='/friends' render={() => <Friends />} />
+                    <Route exact path='/profile' render={() => <Profile />} />
                   </Dashboard>
                 )}
               />

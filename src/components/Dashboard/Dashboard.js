@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import axios from 'axios'
 
-// import Header from '../Header/Header'
+import Header from '../Header/Header'
 
 export class Dashboard extends Component {
   constructor (props) {
@@ -52,7 +52,7 @@ export class Dashboard extends Component {
       this.state.isAuthenticated && (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
           <div style={{ width: '100%' }}>
-            {/* <Header /> */}
+            <Header />
 
             {this.props.children}
           </div>
