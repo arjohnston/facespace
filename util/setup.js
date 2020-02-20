@@ -30,7 +30,9 @@ function checkArgs () {
   // are not valid.
   // Manual installation is required for Windows users
   if (process.platform === 'win32') {
-    console.log('Unfortunately Windows requires manual installation of the dependencies\n')
+    console.log(
+      'Unfortunately Windows requires manual installation of the dependencies\n'
+    )
 
     // For windows users, print out the list of required dependencies
     printListOfDependencies()
@@ -45,14 +47,24 @@ function checkArgs () {
   // If the verbose argument is passed in, then set the options
   // so the commands ran will print as verbose, otherwise
   // minimal output will be printed during the setup process
-  if (args.toString().toLowerCase().includes('verbose')) {
+  if (
+    args
+      .toString()
+      .toLowerCase()
+      .includes('verbose')
+  ) {
     // If verbose logging is requested, enable verbose logging
     options.verbose = true
   }
 
   // If manual is passed in, then print the list of depdendencies
   // and set up the configuration file
-  if (args.toString().toLowerCase().includes('manual')) {
+  if (
+    args
+      .toString()
+      .toLowerCase()
+      .includes('manual')
+  ) {
     printListOfDependencies()
 
     createConfigFile()
@@ -62,20 +74,35 @@ function checkArgs () {
 
   // If medium is passed in as an argument, set the passwordStrength
   // to medium
-  if (args.toString().toLowerCase().includes('medium')) {
+  if (
+    args
+      .toString()
+      .toLowerCase()
+      .includes('medium')
+  ) {
     options.passwordStrength = 'medium'
   }
 
   // If weak is passed in as an argument, set the passwordStrength
   // to weak
-  if (args.toString().toLowerCase().includes('weak')) {
+  if (
+    args
+      .toString()
+      .toLowerCase()
+      .includes('weak')
+  ) {
     options.passwordStrength = 'weak'
   }
 
   // If help is passed in as an argument, print the help function
   // Listing all available commands and an explanation of the password
   // policy
-  if (args.toString().toLowerCase().includes('help')) {
+  if (
+    args
+      .toString()
+      .toLowerCase()
+      .includes('help')
+  ) {
     help()
 
     // Exit out of the setup program
@@ -89,26 +116,52 @@ function checkArgs () {
 // Print all dependencies used by the application
 function printListOfDependencies () {
   console.log('Required dependencies:')
-  console.log(formatOutput('NodeJS ', 'warn'), 'The Javascript engine used to power the app')
-  console.log(formatOutput('NPM ', 'warn'), 'Package manager for installing Node modules')
-  console.log(formatOutput('PM2 ', 'warn'), 'The process manager to spawn the daemons')
-  console.log(formatOutput('Brew ', 'warn'), 'System package manager to install mongo')
+  console.log(
+    formatOutput('NodeJS ', 'warn'),
+    'The Javascript engine used to power the app'
+  )
+  console.log(
+    formatOutput('NPM ', 'warn'),
+    'Package manager for installing Node modules'
+  )
+  console.log(
+    formatOutput('PM2 ', 'warn'),
+    'The process manager to spawn the daemons'
+  )
+  console.log(
+    formatOutput('Brew ', 'warn'),
+    'System package manager to install mongo'
+  )
   console.log(formatOutput('MongoDB ', 'warn'), 'The database used')
   console.log()
-  console.log('Once each of the depedencies are installed, the database will need\nto be configured according to your operating system')
+  console.log(
+    'Once each of the depedencies are installed, the database will need\nto be configured according to your operating system'
+  )
   console.log()
 }
 
 // Print a list of all available arguments and password policy
 function help () {
   console.log('Available arguments:')
-  console.log('--verbose: (e.g. `node setup.js --verbose`): Prints outputs of each command ran')
-  console.log('--manual: (e.g. `node setup.js --manual`): Prints list of dependencies to be manually installed')
-  console.log('--weak, --medium: (e.g. `node setup.js --weak`): Sets the password strength policy to Weak')
-  console.log('--help: (e.g. `node setup.js --help`): Prints a list of available commands')
-  console.log('Multiple commands can be used together (e.g. `node setup.js --verbose weak`)\n')
+  console.log(
+    '--verbose: (e.g. `node setup.js --verbose`): Prints outputs of each command ran'
+  )
+  console.log(
+    '--manual: (e.g. `node setup.js --manual`): Prints list of dependencies to be manually installed'
+  )
+  console.log(
+    '--weak, --medium: (e.g. `node setup.js --weak`): Sets the password strength policy to Weak'
+  )
+  console.log(
+    '--help: (e.g. `node setup.js --help`): Prints a list of available commands'
+  )
+  console.log(
+    'Multiple commands can be used together (e.g. `node setup.js --verbose weak`)\n'
+  )
 
-  console.log('Using the below policy definitions, select which password policy should be enforced (default Strong)')
+  console.log(
+    'Using the below policy definitions, select which password policy should be enforced (default Strong)'
+  )
   console.log('Strong (default):')
   console.log('\tContains at least 1 lowercase alphabetical character')
   console.log('\tContains at least 1 uppercase alphabetical character')
@@ -117,14 +170,24 @@ function help () {
   console.log('\tThe string must be at least eight characters or longer')
   console.log()
 
-  console.log('Medium (pass --medium to the arguments (e.g. `node setup.js --medium`)):')
-  console.log('\tContains at least 1 lowercase alphabetical character and at least 1 uppercase alphabetical character; or')
-  console.log('\tContains at least one lowercase alphabetical character and at least 1 numeric character; or')
-  console.log('\tContains at least one uppercase alphabetical character and at least 1 numeric character')
+  console.log(
+    'Medium (pass --medium to the arguments (e.g. `node setup.js --medium`)):'
+  )
+  console.log(
+    '\tContains at least 1 lowercase alphabetical character and at least 1 uppercase alphabetical character; or'
+  )
+  console.log(
+    '\tContains at least one lowercase alphabetical character and at least 1 numeric character; or'
+  )
+  console.log(
+    '\tContains at least one uppercase alphabetical character and at least 1 numeric character'
+  )
   console.log('\tThe string must be at least six characters or longer')
   console.log()
 
-  console.log('Weak (pass --weak to the arguments (e.g. `node setup.js --weak`)):')
+  console.log(
+    'Weak (pass --weak to the arguments (e.g. `node setup.js --weak`)):'
+  )
   console.log('\tNo restrictions')
   console.log()
 }
@@ -169,7 +232,8 @@ function createConfigFile () {
   // @return: String
   function createSecretKey () {
     // All available characters to be included in the hash
-    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    const chars =
+      '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     // Result of the hash
     let result = ''
@@ -178,7 +242,7 @@ function createConfigFile () {
     const HASH_LENGTH = 64
 
     // For loop for the hash length, utilizing random numbers
-    for (let i = HASH_LENGTH; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)]
+    for (let i = HASH_LENGTH; i > 0; --i) { result += chars[Math.floor(Math.random() * chars.length)] }
 
     // Return the hash
     return result
@@ -200,14 +264,23 @@ function createConfigFile () {
 
   return new Promise((resolve, reject) => {
     // Try to write a file to the config.file
-    fs.writeFile('../api/config/config.json', JSON.stringify(config, null, 2), (error, result) => {
-      if (error) reject(new Error(error))
+    fs.writeFile(
+      '../api/config/config.json',
+      JSON.stringify(config, null, 2),
+      (error, result) => {
+        if (error) return reject(new Error(error))
 
-      console.log(formatOutput('Successfully created the configuration file\n', 'success'))
+        console.log(
+          formatOutput(
+            'Successfully created the configuration file\n',
+            'success'
+          )
+        )
 
-      // Resolve the promise
-      resolve()
-    })
+        // Resolve the promise
+        resolve()
+      }
+    )
   })
 }
 
@@ -230,18 +303,26 @@ function setup () {
       return runChildProcessExec('npm install', 'Setting up dependencies...')
     })
     .then(() => {
-      console.log(formatOutput('Successfully installed node_modules\n', 'success'))
+      console.log(
+        formatOutput('Successfully installed node_modules\n', 'success')
+      )
 
       // Upgrade and update brew in preparation for installing MongoDB
       // Dependency: Homebrew
-      return runChildProcessExec('brew update && brew upgrade', 'Upgrading brew...')
+      return runChildProcessExec(
+        'brew update && brew upgrade',
+        'Upgrading brew...'
+      )
     })
     .then(() => {
       console.log(formatOutput('Successfully upgraded brew\n', 'success'))
 
       // Install MongoDB
       // Dependency: brew
-      return runChildProcessExec('brew tap mongodb/brew && brew install mongodb-community', 'Installing MongoDB...')
+      return runChildProcessExec(
+        'brew tap mongodb/brew && brew install mongodb-community',
+        'Installing MongoDB...'
+      )
     })
     .then(() => {
       console.log(formatOutput('Successfully installed MongoDB\n', 'success'))
@@ -255,20 +336,40 @@ function setup () {
 
       // Set up the database & adjust the user
       // Feature request: remove necessity of using sudo
-      return runChildProcessExec('sudo mkdir -p /data/db && sudo chown -R `id -un` /data/db', 'Setting up database at /data/db/, pwd needed for sudo:')
+      return runChildProcessExec(
+        'sudo mkdir -p /data/db && sudo chown -R `id -un` /data/db',
+        'Setting up database at /data/db/, pwd needed for sudo:'
+      )
     })
     .then(() => {
-      console.log(formatOutput('Successfully set up the database & permissions\n', 'success'))
+      console.log(
+        formatOutput(
+          'Successfully set up the database & permissions\n',
+          'success'
+        )
+      )
 
       return createConfigFile()
     })
     .then(() => {
-      console.log(formatOutput('Utilized `sudo` to set up permissions. It\'s recommended to set up a group for security reasons.\n', 'warn'))
+      console.log(
+        formatOutput(
+          "Utilized `sudo` to set up permissions. It's recommended to set up a group for security reasons.\n",
+          'warn'
+        )
+      )
       console.log()
       console.log('To start the processes use \x1b[32mnpm run pm2-start\x1b[0m')
       console.log('To stop the processes use  \x1b[32mnpm run pm2-stop\x1b[0m')
     })
-    .catch((err) => console.log(formatOutput(`An error was encountered. Try manually installing the last dependency.\n${err}`, 'error')))
+    .catch(err =>
+      console.log(
+        formatOutput(
+          `An error was encountered. Try manually installing the last dependency.\n${err}`,
+          'error'
+        )
+      )
+    )
 }
 
 // Format the text of a message to be outputed into a terminal (tested on MacOS iTerm2)
