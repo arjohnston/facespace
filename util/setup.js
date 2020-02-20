@@ -268,7 +268,7 @@ function createConfigFile () {
   return new Promise((resolve, reject) => {
     // Try to write a file to the config.file
     fs.writeFile(
-      path.join('../', __dirname, '/api/config/config.json'),
+      path.join(__dirname, '../api/config/config.json'),
       JSON.stringify(config, null, 2),
       (error, result) => {
         if (error) return reject(new Error(error))
