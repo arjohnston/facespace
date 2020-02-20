@@ -9,6 +9,7 @@
 
 const cp = require('child_process')
 const fs = require('fs')
+const path = require('path')
 
 // Get the arguments passed into this file
 const args = process.argv
@@ -242,7 +243,9 @@ function createConfigFile () {
     const HASH_LENGTH = 64
 
     // For loop for the hash length, utilizing random numbers
-    for (let i = HASH_LENGTH; i > 0; --i) { result += chars[Math.floor(Math.random() * chars.length)] }
+    for (let i = HASH_LENGTH; i > 0; --i) {
+      result += chars[Math.floor(Math.random() * chars.length)]
+    }
 
     // Return the hash
     return result
@@ -265,7 +268,7 @@ function createConfigFile () {
   return new Promise((resolve, reject) => {
     // Try to write a file to the config.file
     fs.writeFile(
-      '../api/config/config.json',
+      path.join('../', __dirname, '/api/config/config.json'),
       JSON.stringify(config, null, 2),
       (error, result) => {
         if (error) return reject(new Error(error))
