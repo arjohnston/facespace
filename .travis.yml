@@ -9,7 +9,7 @@ before_install:
 install:
  #- echo $ENCODED_CONFIG > .temp
  #- base64 --decode .temp > api/config/config.json
- - node /util/setup.js --manual
+ - node util/setup.js --manual
  - npm install
 script:
  - npm run test
