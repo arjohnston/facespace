@@ -10,6 +10,9 @@ const options = {
 
 const platform = process.platform
 
+// Get the arguments passed into this file
+const args = process.argv
+
 // Generic function to run commands through NodeJS
 // @parameter cmd: String
 // @parameter msg: String
@@ -207,7 +210,7 @@ function start () {
       return stopPm2()
     })
     .then(() => {
-      return runChildProcessExec(commands.mongo, true, 'Starting MongoDB')
+      if (platform !== 'win32') { return runChildProcessExec(commands.mongo, true, 'Starting MongoDB') }
     })
     .then(() => {
       return runChildProcessExec(
@@ -291,8 +294,15 @@ function formatOutput (msg, type) {
   }
 }
 
-// By default run the checkArgs function
-// checkArgs()
-configure().then(() => {
-  start()
-})
+if (
+  args
+    .toString()
+    .toLowerCase()
+    .includes('config-only')
+) {
+  configure()
+} else {
+  configure().then(() => {
+    start()
+  })
+}
