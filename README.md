@@ -38,14 +38,17 @@ This project was built in the Ubuntu Xenial 16.04 LTS Linux environment, and was
       - Windows:
         - `cd C:\`
         - `md "\data\db"`
-  5. If you haven't already cloned the project on your local machine, clone the `dev` branch into a location of your choice (e.g. the `Documents` directory):
+  5. [Windows] Install git by downloading it [here](https://git-scm.com/download/win)
+  6. [Windows] Install PM2
+      - `npm i -g pm2`
+  7. If you haven't already cloned the project on your local machine, clone the `dev` branch into a location of your choice (e.g. the `Documents` directory):
       - `git clone https://github.com/arjohnston/myface`
-  6. Go to the root directory of the project (i.e. `cd /path/to/your/.../myface/`
-  7. Create your own branch to work off of:
+  8. Go to the root directory of the project (i.e. `cd /path/to/your/.../myface/`
+  9. Create your own branch to work off of:
       - `git checkout -b [name]`
-  8. [Windows] In a new terminal window, run the mongo daemon by entering:
+  10. [Windows] In a new terminal window, run the mongo daemon by entering:
       - `"C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="c:\data\db"`
-  9. Run the app in the root project directory using: `npm start`
+  11. Run the app in the root project directory using: `npm start`
       - The app should automatically run on port 3000 and 8080 and open in your default browser
 
 ## Available Scripts

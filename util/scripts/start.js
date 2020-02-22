@@ -1,7 +1,6 @@
 const cp = require('child_process')
 const fs = require('fs')
 const path = require('path')
-const address = require('address')
 
 const options = {
   // Default strong password
@@ -136,11 +135,13 @@ function checkDependencies () {
   return new Promise((resolve, reject) => {
     runChildProcessExec('npm -v', false, 'Checking if NPM is installed')
       .then(() => {
-        return runChildProcessExec(
-          'mongo --version',
-          false,
-          'Checking if Mongo is installed'
-        )
+        if (platform !== 'win32') {
+          return runChildProcessExec(
+            'mongo --version',
+            false,
+            'Checking if Mongo is installed'
+          )
+        }
       })
       .then(() => {
         return runChildProcessExec(
@@ -153,12 +154,7 @@ function checkDependencies () {
         resolve()
       })
       .catch(err =>
-        console.log(
-          formatOutput(
-            `An error was encountered. Try installing the dependencies with python setup.py\n${err}`,
-            'error'
-          )
-        )
+        console.log(formatOutput(`An error was encountered.\n${err}`, 'error'))
       )
   })
 }
@@ -174,10 +170,13 @@ function start () {
     mongo: 'pm2 start mongod --name "database" -- --dbpath=/Volumes/data/db/',
     npmInstall: 'npm install',
     npmBuild: './node_modules/.bin/react-scripts build',
-    startWindowsApi:
-      'set NODE_ENV=production && pm2 start npm --name "api" -- start',
     startApi: 'pm2 start ecosystem.config.js',
     frontEnd: './node_modules/.bin/react-scripts start'
+  }
+
+  if (platform === 'win32') {
+    commands.npmBuild = 'node_modules\\.bin\\react-scripts build'
+    commands.frontEnd = 'node_modules\\.bin\\react-scripts start'
   }
 
   function stopPm2 () {
@@ -196,6 +195,7 @@ function start () {
     })
   }
 
+  // This needs to be expanded to fit Windows
   process.on('SIGINT', () => {
     stopPm2().then(() => {
       console.log('Stopped PM2 services')
@@ -210,7 +210,9 @@ function start () {
       return stopPm2()
     })
     .then(() => {
-      if (platform !== 'win32') { return runChildProcessExec(commands.mongo, true, 'Starting MongoDB') }
+      if (platform !== 'win32') {
+        return runChildProcessExec(commands.mongo, true, 'Starting MongoDB')
+      }
     })
     .then(() => {
       return runChildProcessExec(
@@ -218,6 +220,15 @@ function start () {
         true,
         'Installing dependencies'
       )
+    })
+    .then(() => {
+      if (platform === 'win32') {
+        return runChildProcessExec(
+          'npm config set script-shell bash',
+          true,
+          'Setting npm config'
+        )
+      }
     })
     .then(() => {
       return runChildProcessExec(commands.npmBuild, true, 'Creating a build')
@@ -235,7 +246,6 @@ function start () {
       console.log('You can view the app in the browser:')
       console.log()
       console.log('Local:               http://localhost:3000')
-      console.log(`On Your Network:     http://${address.ip()}:3000`)
       console.log()
 
       return runChildProcessExec(commands.frontEnd, true)
