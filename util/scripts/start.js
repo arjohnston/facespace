@@ -215,6 +215,15 @@ function start () {
       }
     })
     .then(() => {
+      if (platform === 'win32') {
+        return runChildProcessExec(
+          'npm config delete script-shell',
+          true,
+          'Reverting npm config'
+        )
+      }
+    })
+    .then(() => {
       return runChildProcessExec(
         commands.npmInstall,
         true,
