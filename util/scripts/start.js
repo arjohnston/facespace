@@ -8,7 +8,6 @@ const options = {
   passwordStrength: 'strong'
 }
 
-// const isWindows = process.platform === 'win32'
 const platform = process.platform
 
 // Generic function to run commands through NodeJS
@@ -162,12 +161,18 @@ function checkDependencies () {
 }
 
 function start () {
+  // Windows mongod start:
+  // "C:\Program Files\MongoDB\Server\4.2\bin\mongod.exe" --dbpath="c:\data\db"
+
+  // setProd:
+  // set NODE_ENV=production
   const commands = {
     pm2Stop: 'pm2 stop api database && pm2 delete api database',
     mongo: 'pm2 start mongod --name "database" -- --dbpath=/Volumes/data/db/',
     npmInstall: 'npm install',
     npmBuild: './node_modules/.bin/react-scripts build',
-    setProd: 'NODE_ENV=production',
+    startWindowsApi:
+      'set NODE_ENV=production && pm2 start npm --name "api" -- start',
     startApi: 'pm2 start ecosystem.config.js',
     frontEnd: './node_modules/.bin/react-scripts start'
   }
