@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.2.5",
-    "address": "^1.1.0",
+    "address": "^1.1.2",
     "axios": "^0.19.0",
     "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.7.0",
