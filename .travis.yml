@@ -3,10 +3,8 @@ node_js:
  - "lts/*"
 services:
   - mongodb
-before_install:
-  - python setup.py
 install:
- - node util/setup.js --manual
+ - node util/scripts/start.js --config-only
  - npm install
 script:
  - npm run test
