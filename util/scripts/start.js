@@ -224,6 +224,17 @@ function start () {
       }
     })
     .then(() => {
+      if (platform === 'win32') {
+        if (fs.existsSync('./package-lock.json')) {
+          return runChildProcessExec(
+            'del package-lock.json',
+            true,
+            'Removing package-lock.json'
+          )
+        }
+      }
+    })
+    .then(() => {
       return runChildProcessExec(
         commands.npmInstall,
         true,
