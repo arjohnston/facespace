@@ -14,6 +14,7 @@ export default class extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleCheckForCapsLock = this.handleCheckForCapsLock.bind(this)
   }
 
   componentDidMount () {
@@ -36,8 +37,6 @@ export default class extends Component {
     }
 
     this.setState(state)
-
-    console.log(e.target.value)
   }
 
   handleSubmit (e) {
@@ -84,6 +83,14 @@ export default class extends Component {
       })
   }
 
+  handleCheckForCapsLock (e) {
+    // console.log(e.getModifierState('CapsLock'))
+    const message = e.getModifierState('CapsLock') ? 'Caps lock is enabled' : ''
+    this.setState({
+      message: message
+    })
+  }
+
   render () {
     const { email, password, remember, message } = this.state
 
@@ -105,6 +112,7 @@ export default class extends Component {
               id='email'
               value={email}
               onChange={this.handleChange}
+              onKeyDown={this.handleCheckForCapsLock}
               required
             />
             <svg viewBox='0 0 24 24'>
@@ -120,6 +128,7 @@ export default class extends Component {
               id='password'
               value={password}
               onChange={this.handleChange}
+              onKeyDown={this.handleCheckForCapsLock}
               required
             />
             <svg viewBox='0 0 24 24'>
@@ -129,13 +138,23 @@ export default class extends Component {
 
           <div className='alternate-cta'>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <input type='checkbox' name='remember' id='remember' value={remember} onChange={this.handleChange} checked={remember} />
-              <label htmlFor='remember' style={{ letterSpacing: '0', fontWeight: '400' }}>Remember me</label>
+              <input
+                type='checkbox'
+                name='remember'
+                id='remember'
+                value={remember}
+                onChange={this.handleChange}
+                checked={remember}
+              />
+              <label
+                htmlFor='remember'
+                style={{ letterSpacing: '0', fontWeight: '400' }}
+              >
+                Remember me
+              </label>
             </div>
 
-            <Link to='/forgot-password'>
-              Forgot Password?
-            </Link>
+            <Link to='/forgot-password'>Forgot Password?</Link>
           </div>
 
           <button

@@ -14,9 +14,15 @@ const {
 } = require('../../util/statusCodes')
 
 router.post('/checkIfPasswordMeetsRequirements', (req, res) => {
-  if (!req.body.password) return res.status(BAD_REQUEST).send({ message: 'Bad request, missing password.' })
+  if (!req.body.password) {
+    return res
+      .status(BAD_REQUEST)
+      .send({ message: 'Bad request, missing password.' })
+  }
 
-  return testPasswordStrength(req.body.password).success ? res.sendStatus(OK) : res.sendStatus(BAD_REQUEST)
+  return testPasswordStrength(req.body.password).success
+    ? res.sendStatus(OK)
+    : res.sendStatus(BAD_REQUEST)
 })
 
 // Check if the user exists
@@ -262,6 +268,7 @@ router.post('/login', function (req, res) {
             // Data to be passed to the token stored in Local Storage
             const userToBeSigned = {
               username: user.username,
+              email: user.email,
               lastLogin: user.lastLogin
             }
 
