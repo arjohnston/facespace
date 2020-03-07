@@ -16,7 +16,7 @@ const {
 // Check if the user exists
 // @parameter username: String
 // @return: statusCode
-router.post('/checkIfUserExists', (req, res) => {
+router.post('/checkIfUsernameExists', (req, res) => {
   // If a username is passed in, return a BAD_REQUEST
   if (!req.body.username) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
@@ -44,9 +44,40 @@ router.post('/checkIfUserExists', (req, res) => {
   )
 })
 
+// Check if the email exists
+// @parameter email: String
+// @return: statusCode
+router.post('/checkIfEmailExists', (req, res) => {
+  // If a email is not passed in, return a BAD_REQUEST
+  if (!req.body.email) {
+    return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+  }
+
+  // Try and find the user in the database
+  User.findOne(
+    {
+      email: req.body.email.toLowerCase()
+    },
+    function (error, user) {
+      if (error) {
+        // Bad Request
+        return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+      }
+
+      if (!user) {
+        // Member email does not exist
+        res.sendStatus(OK)
+      } else {
+        // User email does exist
+        res.sendStatus(CONFLICT)
+      }
+    }
+  )
+})
+
 router.post('/forgot-password', (req, res) => {
-  // If a username is passed in, return a BAD_REQUEST
-  if (!req.body.username) {
+  // If a email is passed in, return a BAD_REQUEST
+  if (!req.body.email) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
@@ -59,13 +90,13 @@ router.post('/edit', (req, res) => {
   if (!req.body.token) return res.sendStatus(BAD_REQUEST)
 
   const token = req.body.token.replace(/^JWT\s/, '')
-  const query = { username: req.body.queryUsername }
+  const query = { email: req.body.queryEmail }
   const user = {
     ...req.body
   }
 
   // Remove the auth token from the form getting edited
-  delete user.queryUsername
+  delete user.queryEmail
   delete user.token
   delete user.password // don't allow password updates
 
@@ -76,19 +107,19 @@ router.post('/edit', (req, res) => {
     } else {
       // Ok
       // Build this out to search for a user
-      if (!query.username) query.username = decoded.username
+      if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
         if (error) res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
 
         if (result.nModified < 1) {
           return res
             .status(NOT_FOUND)
-            .send({ message: `${req.body.queryUsername} not found.` })
+            .send({ message: `${req.body.queryEmail} not found.` })
         }
 
         return res
           .status(OK)
-          .send({ message: `${req.body.queryUsername} was updated.` })
+          .send({ message: `${req.body.queryEmail} was updated.` })
       })
     }
   })
@@ -99,7 +130,7 @@ router.post('/updatePassword', (req, res) => {
   if (!req.body.token || !req.body.password) return res.sendStatus(BAD_REQUEST)
 
   const token = req.body.token.replace(/^JWT\s/, '')
-  const query = { username: req.body.queryUsername }
+  const query = { email: req.body.queryEmail }
   const password = req.body.password
 
   jwt.verify(token, config.secretKey, function (error, decoded) {
@@ -109,7 +140,7 @@ router.post('/updatePassword', (req, res) => {
     } else {
       // Ok
       // Build this out to search for a user
-      if (!query.username) query.username = decoded.username
+      if (!query.email) query.email = decoded.email
 
       User.findOne(
         {
@@ -122,7 +153,7 @@ router.post('/updatePassword', (req, res) => {
           }
 
           if (!user) {
-            // Unauthorized if the username does not match any records in the database
+            // Unauthorized if the email does not match any records in the database
             res.status(404).send({ message: 'User not found.' })
           } else {
             user.password = password
@@ -142,19 +173,21 @@ router.post('/updatePassword', (req, res) => {
   })
 })
 
-// Registers a new user if the username is unique
+// Registers a new user if the email is unique
+// @parameter email: String
 // @parameter username: String
 // @parameter password: String
 // @return statusCode
 router.post('/register', function (req, res) {
-  // If the username or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.username || !req.body.password) {
+  // If the username, email or password isn't supplied, return a BAD_REQUEST
+  if (!req.body.email || !req.body.username || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Create a new user with the supplied username and password
-  if (req.body.username && req.body.password) {
+  if (req.body.email && req.body.username && req.body.password) {
     const newUser = new User({
+      email: req.body.email,
       username: req.body.username,
       password: req.body.password
     })
@@ -183,19 +216,19 @@ router.post('/register', function (req, res) {
 })
 
 // Logs the user in if the password and username match the database
-// @parameter username: String
+// @parameter email: String
 // @paratmeter password: String
 // @return: statusCode & JWT token
 router.post('/login', function (req, res) {
-  // If the username or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.username || !req.body.password) {
+  // If the email or password isn't supplied, return a BAD_REQUEST
+  if (!req.body.email || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Try and find a user in the database
   User.findOne(
     {
-      username: req.body.username
+      email: req.body.email
     },
     function (error, user) {
       if (error) {
@@ -204,15 +237,15 @@ router.post('/login', function (req, res) {
       }
 
       if (!user) {
-        // Unauthorized if the username does not match any records in the database
+        // Unauthorized if the email does not match any records in the database
         res
           .status(UNAUTHORIZED)
-          .send({ message: 'Username or password does not match our records.' })
+          .send({ message: 'Email or password does not match our records.' })
       } else {
         // Check if password matches database
         user.comparePassword(req.body.password, function (error, isMatch) {
           if (isMatch && !error) {
-            // If the username and password matches the database, assign and
+            // If the email and password matches the database, assign and
             // return a jwt token
 
             // Set the expiration time
@@ -234,7 +267,7 @@ router.post('/login', function (req, res) {
           } else {
             // Unauthorized
             res.status(UNAUTHORIZED).send({
-              message: 'Username or password does not match our records.'
+              message: 'Email or password does not match our records.'
             })
           }
         })
@@ -256,7 +289,7 @@ router.post('/getUser', function (req, res) {
       // Build this out to search for a user
       User.findOne(
         {
-          username: decoded.username
+          email: decoded.email
         },
         function (error, user) {
           if (error) {
@@ -265,9 +298,9 @@ router.post('/getUser', function (req, res) {
           }
 
           if (!user) {
-            // Unauthorized if the username does not match any records in the database
+            // Unauthorized if the email does not match any records in the database
             res.status(UNAUTHORIZED).send({
-              message: 'Username or password does not match our records.'
+              message: 'Email or password does not match our records.'
             })
           } else {
             // Check if password matches database
@@ -292,7 +325,7 @@ router.post('/deleteUser', (req, res) => {
       // Unauthorized
       res.sendStatus(UNAUTHORIZED)
     } else {
-      User.deleteOne({ username: decoded.username }, (error, entries) => {
+      User.deleteOne({ email: decoded.email }, (error, entries) => {
         if (error) {
           return res.sendStatus(BAD_REQUEST)
         }

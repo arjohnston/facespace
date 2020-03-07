@@ -6,7 +6,7 @@ export default class extends Component {
   constructor () {
     super()
     this.state = {
-      username: '',
+      email: '',
       password: '',
       message: ''
     }
@@ -35,21 +35,21 @@ export default class extends Component {
   handleSubmit (e) {
     e.preventDefault()
 
-    const { username, password } = this.state
+    const { email, password } = this.state
 
     axios
-      .post('/api/auth/login', { username, password })
+      .post('/api/auth/login', { email, password })
       .then(result => {
         window.localStorage.setItem('jwtToken', result.data.token)
 
         this.setState({
           message: '',
-          username: username,
+          email: email,
           token: result.data.token
         })
       })
       .then(() => {
-        this.updateLastLoginDate(this.state.username, this.state.token)
+        this.updateLastLoginDate(this.state.email, this.state.token)
       })
       .catch(error => {
         this.setState({
@@ -58,10 +58,10 @@ export default class extends Component {
       })
   }
 
-  updateLastLoginDate (username, token) {
+  updateLastLoginDate (email, token) {
     axios
       .post('/api/auth/edit', {
-        queryUsername: username,
+        queryEmail: email,
         lastLogin: new Date(),
         // This token must be passed in for authentication
         token: token
@@ -77,7 +77,7 @@ export default class extends Component {
   }
 
   render () {
-    const { username, password, message } = this.state
+    const { email, password, message } = this.state
 
     return (
       <div className='login-container'>
@@ -89,13 +89,13 @@ export default class extends Component {
         <form onSubmit={this.handleSubmit}>
           {message !== '' && <span>{message}</span>}
 
-          <label htmlFor='username'>Email</label>
+          <label htmlFor='email'>Email</label>
           <div className='form-input-wrapper'>
             <input
               type='email'
-              name='username'
-              id='username'
-              value={username}
+              name='email'
+              id='email'
+              value={email}
               onChange={this.handleChange}
               required
             />
@@ -125,10 +125,10 @@ export default class extends Component {
 
           <button
             disabled={
-              !this.state.password.length > 0 && !this.state.username.length > 0
+              !this.state.password.length > 0 && !this.state.email.length > 0
             }
             className={
-              this.state.password.length > 0 && this.state.username.length > 0
+              this.state.password.length > 0 && this.state.email.length > 0
                 ? 'active'
                 : 'inactive'
             }

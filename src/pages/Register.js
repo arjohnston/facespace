@@ -6,6 +6,7 @@ export default class extends Component {
   constructor () {
     super()
     this.state = {
+      email: '',
       username: '',
       password: '',
       confirmPassword: '',
@@ -14,27 +15,21 @@ export default class extends Component {
       passwordStrengthScore: 0,
       passwordMeterColor: 'red',
       passwordMeterProgress: '25%',
-      usernameAvailable: null
+      usernameAvailable: null,
+      emailAvailable: null
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleCheckIfUserExists = this.handleCheckIfUserExists.bind(this)
+    this.handleCheckIfUsernameExists = this.handleCheckIfUsernameExists.bind(this)
+    this.handleCheckIfEmailExists = this.handleCheckIfEmailExists.bind(this)
   }
 
-  handleCheckIfUserExists () {
+  handleCheckIfUsernameExists () {
     if (!this.state.username) return
 
-    if (!/^.+@.+\..+$/.test(this.state.username)) {
-      this.setState({
-        message: 'Invalid email address'
-      })
-
-      return
-    }
-
     axios
-      .post('/api/auth/checkIfUserExists', { username: this.state.username })
+      .post('/api/auth/checkIfUsernameExists', { username: this.state.username })
       .then(result => {
         if (result.status >= 200 && result.status < 300) {
           this.setState({
@@ -46,6 +41,35 @@ export default class extends Component {
       .catch(() => {
         this.setState({
           usernameAvailable: false,
+          message: ''
+        })
+      })
+  }
+
+  handleCheckIfEmailExists () {
+    if (!this.state.email) return
+
+    if (!/^.+@.+\..+$/.test(this.state.email)) {
+      this.setState({
+        message: 'Invalid email address'
+      })
+
+      return
+    }
+
+    axios
+      .post('/api/auth/checkIfEmailExists', { email: this.state.email })
+      .then(result => {
+        if (result.status >= 200 && result.status < 300) {
+          this.setState({
+            emailAvailable: true,
+            message: ''
+          })
+        }
+      })
+      .catch(() => {
+        this.setState({
+          emailAvailable: false,
           message: ''
         })
       })
@@ -115,7 +139,7 @@ export default class extends Component {
   handleSubmit (e) {
     e.preventDefault()
 
-    const { username, password, confirmPassword } = this.state
+    const { email, username, password, confirmPassword } = this.state
 
     // If the password doesn't exist or the password and confirmPassword don't match,
     // then return
@@ -136,7 +160,7 @@ export default class extends Component {
     }
 
     axios
-      .post('/api/auth/register', { username, password })
+      .post('/api/auth/register', { email, username, password })
       .then(() => {
         this.setState({ message: '' })
         this.props.history.push('/login')
@@ -149,7 +173,7 @@ export default class extends Component {
   }
 
   render () {
-    const { username, password, confirmPassword, message } = this.state
+    const { email, username, password, confirmPassword, message } = this.state
 
     return (
       <div className='login-container'>
@@ -160,28 +184,57 @@ export default class extends Component {
         <form onSubmit={this.handleSubmit}>
           {message !== '' && <span>{message}</span>}
 
-          <label htmlFor='username'>Email</label>
+          <label htmlFor='username'>Username</label>
           <div className='form-input-wrapper'>
             <input
-              type='email'
+              type='text'
               name='username'
               id='username'
               value={username}
               onChange={this.handleChange}
-              onBlur={this.handleCheckIfUserExists}
+              onBlur={this.handleCheckIfUsernameExists}
               required
             />
             <svg viewBox='0 0 24 24'>
               <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
             </svg>
+
+            {this.state.usernameAvailable && (
+              <svg viewBox='0 0 24 24' className='checkmark'>
+                <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
+              </svg>
+            )}
           </div>
-          {this.state.usernameAvailable !== null && (
-            <div style={{ margin: '0 0 12px 12px' }}>
-              {this.state.usernameAvailable ? (
-                <span style={{ color: 'green' }}>✔ Username available</span>
-              ) : (
-                <span>✘ Username not available</span>
-              )}
+          {!this.state.usernameAvailable && this.state.usernameAvailable !== null && (
+            <div style={{ margin: '-12px 0 12px 12px' }}>
+              <span>✘ Username {username} is not available</span>
+            </div>
+          )}
+
+          <label htmlFor='email'>Email</label>
+          <div className='form-input-wrapper'>
+            <input
+              type='email'
+              name='email'
+              id='email'
+              value={email}
+              onChange={this.handleChange}
+              onBlur={this.handleCheckIfEmailExists}
+              required
+            />
+            <svg viewBox='0 0 24 24'>
+              <path d='M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z' />
+            </svg>
+
+            {this.state.emailAvailable && (
+              <svg viewBox='0 0 24 24' className='checkmark'>
+                <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
+              </svg>
+            )}
+          </div>
+          {!this.state.emailAvailable && this.state.emailAvailable !== null && (
+            <div style={{ margin: '-12px 0 12px 12px' }}>
+              <span>✘ {email} is already in use</span>
             </div>
           )}
 
@@ -198,7 +251,23 @@ export default class extends Component {
             <svg viewBox='0 0 24 24'>
               <path d='M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z' />
             </svg>
+
+            {/* <svg viewBox='0 0 24 24' className='checkmark'>
+              <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
+            </svg> */}
           </div>
+
+          {this.state.password.length > 0 && (
+            <div className='password-meter-wrapper'>
+              <div
+                className='password-meter'
+                style={{
+                  background: this.state.passwordMeterColor,
+                  width: this.state.passwordMeterProgress
+                }}
+              />
+            </div>
+          )}
 
           <label htmlFor='confirmPassword'>Confirm Password</label>
           <div className='form-input-wrapper'>
@@ -213,18 +282,24 @@ export default class extends Component {
             <svg viewBox='0 0 24 24'>
               <path d='M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z' />
             </svg>
+
+            {password === confirmPassword && password !== '' && (
+              <svg viewBox='0 0 24 24' className='checkmark'>
+                <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
+              </svg>
+            )}
           </div>
 
-          {this.state.password.length > 0 && (
+          {/* this.state.password.length > 0 && (
             <div className='password-strength'>
               Password Strength:{' '}
               <span style={{ color: this.state.passwordMeterColor }}>
                 {this.state.passwordStrength}
               </span>
             </div>
-          )}
+          ) */}
 
-          {this.state.password.length > 0 && (
+          {/* this.state.password.length > 0 && (
             <div className='password-meter-wrapper'>
               <div
                 className='password-meter'
@@ -234,7 +309,7 @@ export default class extends Component {
                 }}
               />
             </div>
-          )}
+          ) */}
 
           <button
             disabled={
