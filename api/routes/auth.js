@@ -13,6 +13,12 @@ const {
   CONFLICT
 } = require('../../util/statusCodes')
 
+router.post('/checkIfPasswordMeetsRequirements', (req, res) => {
+  if (!req.body.password) return res.status(BAD_REQUEST).send({ message: 'Bad request, missing password.' })
+
+  return testPasswordStrength(req.body.password).success ? res.sendStatus(OK) : res.sendStatus(BAD_REQUEST)
+})
+
 // Check if the user exists
 // @parameter username: String
 // @return: statusCode
@@ -250,7 +256,7 @@ router.post('/login', function (req, res) {
 
             // Set the expiration time
             const jwtOptions = {
-              expiresIn: '4h' // 4 hours
+              expiresIn: req.body.remember ? '7d' : '4h' // 7 days or 4 hours
             }
 
             // Data to be passed to the token stored in Local Storage

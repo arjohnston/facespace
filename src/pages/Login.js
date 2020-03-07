@@ -8,6 +8,7 @@ export default class extends Component {
     this.state = {
       email: '',
       password: '',
+      remember: false,
       message: ''
     }
 
@@ -28,17 +29,24 @@ export default class extends Component {
 
   handleChange (e) {
     const state = Object.assign({}, { ...this.state }, null)
-    state[e.target.name] = e.target.value
+    if (e.target.name === 'remember') {
+      state[e.target.name] = !state[e.target.name]
+    } else {
+      state[e.target.name] = e.target.value
+    }
+
     this.setState(state)
+
+    console.log(e.target.value)
   }
 
   handleSubmit (e) {
     e.preventDefault()
 
-    const { email, password } = this.state
+    const { email, password, remember } = this.state
 
     axios
-      .post('/api/auth/login', { email, password })
+      .post('/api/auth/login', { email, password, remember })
       .then(result => {
         window.localStorage.setItem('jwtToken', result.data.token)
 
@@ -77,12 +85,12 @@ export default class extends Component {
   }
 
   render () {
-    const { email, password, message } = this.state
+    const { email, password, remember, message } = this.state
 
     return (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '100px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '60px' }} />
         </div>
         <h1>Welcome</h1>
 
@@ -119,9 +127,16 @@ export default class extends Component {
             </svg>
           </div>
 
-          <Link to='/forgot-password' style={{ margin: '-18px 0 24px' }}>
-            Forgot Password?
-          </Link>
+          <div className='alternate-cta'>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <input type='checkbox' name='remember' id='remember' value={remember} onChange={this.handleChange} checked={remember} />
+              <label htmlFor='remember' style={{ letterSpacing: '0', fontWeight: '400' }}>Remember me</label>
+            </div>
+
+            <Link to='/forgot-password'>
+              Forgot Password?
+            </Link>
+          </div>
 
           <button
             disabled={

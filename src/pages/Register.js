@@ -11,12 +11,12 @@ export default class extends Component {
       password: '',
       confirmPassword: '',
       message: '',
-      passwordStrength: 'Too short',
       passwordStrengthScore: 0,
       passwordMeterColor: 'red',
       passwordMeterProgress: '25%',
       usernameAvailable: null,
-      emailAvailable: null
+      emailAvailable: null,
+      passwordMeetsRequirements: false
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -110,30 +110,42 @@ export default class extends Component {
     }
     score += (variationCount - 1) * 10
 
-    let passwordStrength = 'Too short'
+    // let passwordStrength = 'Too short'
     let passwordMeterColor = 'red'
     let passwordMeterProgress = '25%'
 
     if (score > 80) {
-      passwordStrength = 'Strong'
       passwordMeterColor = 'green'
       passwordMeterProgress = '100%'
     } else if (score > 60) {
-      passwordStrength = 'Good'
       passwordMeterColor = 'orange'
       passwordMeterProgress = '75%'
     } else if (score >= 30) {
-      passwordStrength = 'Weak'
       passwordMeterColor = 'red'
       passwordMeterProgress = '50%'
     }
 
-    this.setState({
-      passwordStrengthScore: score,
-      passwordStrength: passwordStrength,
-      passwordMeterColor: passwordMeterColor,
-      passwordMeterProgress: passwordMeterProgress
-    })
+    // let passwordMeetsRequirements = this.state.passwordMeetsRequirements
+
+    axios
+      .post('/api/auth/checkIfPasswordMeetsRequirements', { password })
+      .then((result) => {
+        console.log(result)
+        this.setState({
+          passwordStrengthScore: score,
+          passwordMeterColor: passwordMeterColor,
+          passwordMeterProgress: passwordMeterProgress,
+          passwordMeetsRequirements: result.status >= 200 && result.status < 300
+        })
+      })
+      .catch(() => {
+        this.setState({
+          passwordStrengthScore: score,
+          passwordMeterColor: passwordMeterColor,
+          passwordMeterProgress: passwordMeterProgress,
+          passwordMeetsRequirements: false
+        })
+      })
   }
 
   handleSubmit (e) {
@@ -178,7 +190,7 @@ export default class extends Component {
     return (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '100px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '60px' }} />
         </div>
         <h1>Create your account</h1>
         <form onSubmit={this.handleSubmit}>
@@ -252,9 +264,11 @@ export default class extends Component {
               <path d='M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z' />
             </svg>
 
-            {/* <svg viewBox='0 0 24 24' className='checkmark'>
-              <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
-            </svg> */}
+            {this.state.passwordMeetsRequirements && (
+              <svg viewBox='0 0 24 24' className='checkmark'>
+                <path d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' />
+              </svg>
+            )}
           </div>
 
           {this.state.password.length > 0 && (
@@ -289,27 +303,6 @@ export default class extends Component {
               </svg>
             )}
           </div>
-
-          {/* this.state.password.length > 0 && (
-            <div className='password-strength'>
-              Password Strength:{' '}
-              <span style={{ color: this.state.passwordMeterColor }}>
-                {this.state.passwordStrength}
-              </span>
-            </div>
-          ) */}
-
-          {/* this.state.password.length > 0 && (
-            <div className='password-meter-wrapper'>
-              <div
-                className='password-meter'
-                style={{
-                  background: this.state.passwordMeterColor,
-                  width: this.state.passwordMeterProgress
-                }}
-              />
-            </div>
-          ) */}
 
           <button
             disabled={

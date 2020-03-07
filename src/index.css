@@ -20,7 +20,7 @@ input {
   align-items: center;
   min-height: 100vh;
   background-color: #222831;
-  background-image: url("/background.svg");
+  background-image: url("/login-bg.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -53,12 +53,26 @@ input {
 }
 
 .login-container h1 {
-  font-weight: 200;
-  color: #DDD;
-  letter-spacing: 2px;
-  margin-bottom: 1.5em;
+  font-weight: 100;
+  color: #FFF;
+  letter-spacing: 3px;
+  margin-bottom: 1em;
   text-align: center;
-  font-size: 2em;
+  font-size: 3em;
+}
+
+.login-container .alternate-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: -12px 0 24px;
+}
+
+.login-container .alternate-cta label {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  color: #3aab90;
 }
 
 .login-container a,
@@ -88,12 +102,21 @@ input {
 .login-container form input {
   border-radius: 10px;
   border: 1px solid #DDD;
-  padding: 18px 12px 18px 36px;
+  padding: 18px 36px 18px 36px;
   outline: none;
   color: #555;
   width: 100%;
   transition: all 0.2s;
   background: transparent;
+}
+
+.login-container form input[type='checkbox'] {
+  border-radius: 0;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  -webkit-appearance: checkbox;
 }
 
 .login-container form label {
