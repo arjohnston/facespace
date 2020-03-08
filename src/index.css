@@ -147,10 +147,17 @@ input {
   left: initial;
 }
 
+.login-container form .form-input-wrapper svg.show-password,
+.login-container form .form-input-wrapper svg.hide-password {
+  right: 10px;
+  left: initial;
+}
+
 .login-container form input:focus {
   border: 1px solid #3aab90;
 }
-.login-container form input:focus ~ svg {
+.login-container form input:focus ~ svg,
+.login-container form input:focus ~ label svg {
   fill: #3aab90;
 }
 
