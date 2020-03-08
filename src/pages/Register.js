@@ -26,6 +26,10 @@ export default class extends Component {
     this.handleCheckIfEmailExists = this.handleCheckIfEmailExists.bind(this)
   }
 
+  componentDidMount () {
+    document.title = 'myface: Sign Up'
+  }
+
   handleCheckIfUsernameExists () {
     if (!this.state.username) return
 
@@ -213,11 +217,10 @@ export default class extends Component {
               </svg>
             )}
           </div>
-          {!this.state.usernameAvailable && this.state.usernameAvailable !== null && (
+          {(!this.state.usernameAvailable && this.state.usernameAvailable !== null) &&
             <div style={{ margin: '-12px 0 12px 12px' }}>
               <span>✘ Username {username} is not available</span>
-            </div>
-          )}
+            </div>}
 
           <label htmlFor='email'>Email</label>
           <div className='form-input-wrapper'>

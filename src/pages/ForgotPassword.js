@@ -18,6 +18,10 @@ export default class extends Component {
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
+  componentDidMount () {
+    document.title = 'myface: Recover Password'
+  }
+
   handleChange (e) {
     const state = Object.assign({}, { ...this.state }, null)
     state[e.target.name] = e.target.value

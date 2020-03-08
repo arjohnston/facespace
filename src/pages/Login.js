@@ -24,6 +24,8 @@ export default class extends Component {
       ? window.localStorage.getItem('jwtToken')
       : ''
 
+    document.title = 'myface: Login'
+
     // If token is present, log them in
     if (token) {
       if (this.props.history) this.props.history.push('/')
