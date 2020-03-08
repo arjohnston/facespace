@@ -19,9 +19,6 @@ export class Dashboard extends Component {
       ? window.localStorage.getItem('jwtToken')
       : ''
 
-    console.log('Try to get token:')
-    console.log(token)
-
     // Immediately direct to /login if no jwtToken token present
     if (!token) {
       if (this.props.history) this.props.history.push('/login')
@@ -53,7 +50,15 @@ export class Dashboard extends Component {
 
     return (
       this.state.isAuthenticated && (
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
+        <div
+          style={{
+            display: 'flex',
+            minHeight: '100vh',
+            background: '#EFEFEF',
+            maxHeight: '100vh',
+            overflow: 'hidden'
+          }}
+        >
           <div style={{ width: '100%' }}>
             <Header />
 
