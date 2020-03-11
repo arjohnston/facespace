@@ -5,6 +5,11 @@ const bcrypt = require('bcrypt-nodejs')
 // Create a new schema for the User
 const UserSchema = new Schema(
   {
+    email: {
+      type: String,
+      unique: true,
+      required: true
+    },
     username: {
       type: String,
       unique: true, // Don't allow multiple users with the same username

@@ -49,13 +49,11 @@ export class Dashboard extends Component {
   }
 
   render () {
-    // this.props.renderNotificationBadge(this.state.token)
-
     return (
       this.state.isAuthenticated && (
         <div style={{ display: 'flex', minHeight: '100vh' }}>
           <div style={{ width: '100%' }}>
-            <Header />
+            <Header username={this.state.username} />
 
             {this.props.children}
           </div>

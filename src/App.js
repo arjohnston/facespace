@@ -54,7 +54,7 @@ export default class App extends React.Component {
             <Switch>
               <Route
                 exact
-                path='/(|messaging|friends|profile)'
+                path='/(|messaging|friends)'
                 render={() => (
                   <Dashboard>
                     <Route exact path='/' render={() => <Overview />} />
@@ -64,10 +64,10 @@ export default class App extends React.Component {
                       render={() => <Messaging />}
                     />
                     <Route exact path='/friends' render={() => <Friends />} />
-                    <Route exact path='/profile' render={() => <Profile />} />
                   </Dashboard>
                 )}
               />
+              <Route path='/user/:userId' render={() => <Dashboard><Profile /></Dashboard>} />
               <Route path='/login' component={Login} />
               <Route path='/register' component={Register} />
               <Route path='/forgot-password' component={ForgotPassword} />

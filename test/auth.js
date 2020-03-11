@@ -56,7 +56,7 @@ describe('Users', () => {
   let token = ''
 
   // Check to see if the user exists
-  describe('/POST checkIfUserExists with no users added yet', () => {
+  describe('/POST checkIfEmailExists with no users added yet', () => {
     it('Should not return statusCode 200 when an email is not provided', done => {
       // Create an empty user
       const user = {}
@@ -64,7 +64,7 @@ describe('Users', () => {
       // Try to send the empty used to the API
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
         .send(user)
         .then(function (res) {
           // Expect to get a BAD_REQUEST back from the server
@@ -79,11 +79,11 @@ describe('Users', () => {
 
     it('Should return statusCode 200 when a user does not exist', done => {
       const user = {
-        username: 'a@b.c'
+        email: 'a@b.c'
       }
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
         .send(user)
         .then(function (res) {
           expect(res).to.have.status(OK)
@@ -98,7 +98,7 @@ describe('Users', () => {
 
   // Register a user
   describe('/POST /api/auth/register', () => {
-    it('Should not register a user without email or password', done => {
+    it('Should not register a user without email, username or password', done => {
       const user = {}
 
       chai
@@ -115,9 +115,10 @@ describe('Users', () => {
         })
     })
 
-    it('Should successfully register a user with email and password', done => {
+    it('Should successfully register a user with email, username and password', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'StrongPassword$1'
       }
 
@@ -137,7 +138,8 @@ describe('Users', () => {
 
     it('Should not allow a second registration with the same email as a user in the database', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'StrongPassword$1'
       }
 
@@ -157,14 +159,14 @@ describe('Users', () => {
   })
 
   // Check if the user exists after registering the user above
-  describe('/POST checkIfUserExists with a user added', () => {
+  describe('/POST checkIfEmailExists with a user added', () => {
     it('Should return statusCode 409 when a user already exists', done => {
       const user = {
-        username: 'a@b.c'
+        email: 'a@b.c'
       }
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
         .send(user)
         .then(function (res) {
           expect(res).to.have.status(CONFLICT)
@@ -179,7 +181,7 @@ describe('Users', () => {
 
   // Login with the username and password created above
   describe('/POST /api/auth/login', () => {
-    it('Should return statusCode 400 if an email and/or password is not provided', done => {
+    it('Should return statusCode 400 if an email, username and/or password is not provided', done => {
       const user = {}
       chai
         .request(app)
@@ -197,7 +199,8 @@ describe('Users', () => {
 
     it('Should return statusCode 401 if an email/pass combo does not match a record in the DB', done => {
       const user = {
-        username: 'nota@b.c',
+        email: 'nota@b.c',
+        username: 'abc',
         password: 'notpass'
       }
       chai
@@ -216,7 +219,8 @@ describe('Users', () => {
 
     it('Should return statusCode 401 if the email exists but password is incorrect', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'notpass'
       }
       chai
@@ -235,7 +239,8 @@ describe('Users', () => {
 
     it('Should return statusCode 200 and a JWT token if the email/pass is correct', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'StrongPassword$1'
       }
       chai
@@ -307,7 +312,7 @@ describe('Users', () => {
   })
 
   describe('/POST /api/auth/forgot-password', () => {
-    it('Should return statusCode 400 if a username was not passed in', done => {
+    it('Should return statusCode 400 if a email was not passed in', done => {
       chai
         .request(app)
         .post('/api/auth/forgot-password')
@@ -322,11 +327,11 @@ describe('Users', () => {
         })
     })
 
-    it('Should return statusCode 200 if a username was passed in always', done => {
+    it('Should return statusCode 200 if a email was passed in always', done => {
       chai
         .request(app)
         .post('/api/auth/forgot-password')
-        .send({ username: 'a@b.c' })
+        .send({ email: 'a@b.c' })
         .then(function (res) {
           expect(res).to.have.status(OK)
 

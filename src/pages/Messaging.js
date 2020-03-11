@@ -6,6 +6,10 @@ export default class Friends extends Component {
     this.state = {}
   }
 
+  componentDidMount () {
+    document.title = 'Messaging'
+  }
+
   render () {
     return <div>yo, friend.</div>
   }
