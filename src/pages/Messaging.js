@@ -39,7 +39,7 @@ export default class Messaging extends Component {
   // This should be upgraded once the Friends section is implemented
   getListOfUsers () {
     axios
-      .post('/api/messages/getConversationList', { token: this.state.token })
+      .post('/api/auth/getAllUsers', { token: this.state.token })
       .then(res => {
         this.setState({
           users: res.data

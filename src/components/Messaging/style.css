@@ -1,9 +1,9 @@
 .messaging-container {
   max-height: 80vh;
-  max-width: 70vw;
   height: 100%;
   margin: 24px auto 0;
   display: flex;
+  justify-content: center;
 }
 
 .message-box,
@@ -26,6 +26,7 @@
   display: flex;
   flex-direction: column;
   padding: 6px;
+  max-width: 700px;
 }
 
 .friend-list {
@@ -78,6 +79,7 @@
 }
 .friend-img-container svg {
   fill: white;
+  height: 30px;
 }
 
 .friend-row.online .friend-img-container::before {
@@ -133,6 +135,7 @@
 }
 .friend-header-img svg {
   fill: white;
+  height: 50px;
 }
 
 .message-box .messages {
@@ -159,17 +162,19 @@
   min-width: 50px;
   background: #EFEFEF;
   margin-right: 12px;
+  border: 1px solid #ddd;
 }
 
 .message-cta-container .message-input textarea {
   width: 100%;
   resize: none;
   border: none;
+  outline: none;
 }
 
 .message-cta-container .profile-img svg {
   fill: #FFF;
-  height: 50px;
+  height: 45px;
 }
 .message-cta-container .message-cta {
   display: flex;
@@ -197,6 +202,9 @@
   margin-right: 18px;
   position: relative;
   fill: #FFF;
+}
+.message-profile-img svg {
+  height: 50px;
 }
 .message {
   display: flex;

@@ -4,8 +4,6 @@ import axios from 'axios'
 
 import './style.css'
 
-const socket = io()
-
 export default class MessageBox extends Component {
   constructor (props) {
     super(props)
@@ -24,17 +22,20 @@ export default class MessageBox extends Component {
 
     this.chatBottom = React.createRef()
 
-    socket.on('message', message => {
-      if (message.conversation !== this.state.conversationId) return
+    this.socket = io()
 
-      const messages = [...this.state.messages]
-      messages.push(message)
-      this.setState(
-        {
-          messages: messages
-        },
-        () => this.scrollIntoView()
-      )
+    this.socket.on('message', message => {
+      // if (message.conversation !== this.state.conversationId) return
+      //
+      // const messages = [...this.state.messages]
+      // messages.push(message)
+      // this.setState(
+      //   {
+      //     messages: messages
+      //   },
+      //   () => this.scrollIntoView()
+      // )
+      this.appendMessage(message)
     })
   }
 
@@ -69,6 +70,19 @@ export default class MessageBox extends Component {
     if (nextProps.userSelected !== prevState.userSelected) {
       return { userSelected: nextProps.userSelected }
     } else return null
+  }
+
+  appendMessage (message) {
+    if (message.conversation !== this.state.conversationId) return
+
+    const messages = [...this.state.messages]
+    messages.push(message)
+    this.setState(
+      {
+        messages: messages
+      },
+      () => this.scrollIntoView()
+    )
   }
 
   getConversationMessages () {
@@ -143,9 +157,10 @@ export default class MessageBox extends Component {
 
           const date = new Date(message.date)
           let hours = date.getHours()
-          const minutes = date.getMinutes()
+          let minutes = date.getMinutes()
           const label = hours > 12 ? ' PM' : ' AM'
           if (hours > 12) hours = hours - 12
+          if (minutes < 10) minutes = '0' + minutes
           const formattedDate = hours + ':' + minutes + label
 
           return (
