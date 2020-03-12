@@ -14,7 +14,7 @@
   margin: 10px;
 }
 
-.friend-list-container {
+.messaging-container .friend-list-wrapper {
   max-width: 250px;
   height: 100%;
   display: flex;
@@ -138,6 +138,7 @@
 .message-box .messages {
   height: 100%;
   padding: 12px;
+  overflow-y: scroll;
 }
 
 .message-cta-container {

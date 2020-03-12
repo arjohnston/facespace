@@ -4,41 +4,6 @@ import axios from 'axios'
 import List from '../components/Messaging/List'
 import MessageBox from '../components/Messaging/MessageBox'
 
-// const friends = [
-//   {
-//     name: 'Cookie Monster',
-//     profileImg: null,
-//     online: true,
-//     messages: [
-//       {
-//         type: 'from',
-//         message: 'I WANT COOKIE',
-//         timestamp: '2:39AM'
-//       },
-//       {
-//         type: 'to',
-//         message: 'I mean... I can bake cookies',
-//         timestamp: '2:41AM'
-//       },
-//       {
-//         type: 'from',
-//         message: 'COOKIE!!',
-//         timestamp: '2:42AM'
-//       }
-//     ]
-//   },
-//   {
-//     name: 'Garbage Collector',
-//     profileImg: null,
-//     online: false
-//   },
-//   {
-//     name: 'Ernie',
-//     profileImg: null,
-//     online: false
-//   }
-// ]
-
 export default class Messaging extends Component {
   constructor (props) {
     super(props)
@@ -74,7 +39,7 @@ export default class Messaging extends Component {
   // This should be upgraded once the Friends section is implemented
   getListOfUsers () {
     axios
-      .post('/api/auth/getAllUsers', { token: this.state.token })
+      .post('/api/messages/getConversationList', { token: this.state.token })
       .then(res => {
         this.setState({
           users: res.data

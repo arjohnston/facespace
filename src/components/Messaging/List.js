@@ -31,7 +31,9 @@ export default class List extends Component {
           users: this.state.users
         },
         () => {
-          if (this.state.activeUser === null && this.state.users.length > 0) { this.activateUser(this.state.users[0]) }
+          if (this.state.activeUser === null && this.state.users.length > 0) {
+            this.activateUser(this.state.users[0])
+          }
         }
       )
     }
@@ -91,7 +93,7 @@ export default class List extends Component {
 
   render () {
     return (
-      <div className='friend-list-container'>
+      <div className='friend-list-wrapper'>
         <div className='search-bar'>
           <label htmlFor='friend-search'>
             <svg viewBox='0 0 24 24'>

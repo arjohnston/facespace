@@ -22,14 +22,19 @@ export default class MessageBox extends Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
 
+    this.chatBottom = React.createRef()
+
     socket.on('message', message => {
       if (message.conversation !== this.state.conversationId) return
 
       const messages = [...this.state.messages]
       messages.push(message)
-      this.setState({
-        messages: messages
-      })
+      this.setState(
+        {
+          messages: messages
+        },
+        () => this.scrollIntoView()
+      )
     })
   }
 
@@ -51,7 +56,9 @@ export default class MessageBox extends Component {
     if (prevState.userSelected !== this.state.userSelected) {
       this.setState(
         {
-          userSelected: this.state.userSelected
+          userSelected: this.state.userSelected,
+          messages: [],
+          conversationId: null
         },
         () => this.getConversationMessages()
       )
@@ -59,7 +66,9 @@ export default class MessageBox extends Component {
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
-    if (nextProps.userSelected !== prevState.userSelected) { return { userSelected: nextProps.userSelected } } else return null
+    if (nextProps.userSelected !== prevState.userSelected) {
+      return { userSelected: nextProps.userSelected }
+    } else return null
   }
 
   getConversationMessages () {
@@ -71,15 +80,23 @@ export default class MessageBox extends Component {
         userId: this.state.userSelected._id
       })
       .then(res => {
-        console.log(res.data)
         if (res.data.length < 1 || !res.data[0].conversation) return
 
-        this.setState({
-          conversationId: res.data[0].conversation,
-          messages: res.data
-        })
+        this.setState(
+          {
+            conversationId: res.data[0].conversation,
+            messages: res.data
+          },
+          () => {
+            this.scrollIntoView()
+          }
+        )
       })
       .catch(err => console.log(err))
+  }
+
+  scrollIntoView () {
+    this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
   }
 
   handleKeyPress (e) {
@@ -99,6 +116,7 @@ export default class MessageBox extends Component {
     if (e) e.preventDefault()
 
     if (!this.state.userSelected) return
+    if (this.state.messageInput === '') return
 
     axios
       .post('/api/messages/sendMessage', {
@@ -117,31 +135,43 @@ export default class MessageBox extends Component {
   renderMessages () {
     if (!this.state.messages) return
 
-    return this.state.messages.map((message, index) => {
-      let classes = 'message'
-      if (message.to === this.state.userSelected._id) classes += ' to'
+    return (
+      <div>
+        {this.state.messages.map((message, index) => {
+          let classes = 'message'
+          if (message.to === this.state.userSelected._id) classes += ' to'
 
-      return (
-        <div className={classes} key={index}>
-          <div className='message-profile-img'>
-            {this.state.userSelected.profileImg ? (
-              <img
-                src={this.state.userSelected.profileImg}
-                alt={this.state.userSelected.name}
-              />
-            ) : (
-              <svg viewBox='0 0 24 24'>
-                <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-              </svg>
-            )}
-          </div>
-          <div className='message-container'>
-            <span className='timestamp'>{message.timestamp}</span>
-            <span>{message.message}</span>
-          </div>
-        </div>
-      )
-    })
+          const date = new Date(message.date)
+          let hours = date.getHours()
+          const minutes = date.getMinutes()
+          const label = hours > 12 ? ' PM' : ' AM'
+          if (hours > 12) hours = hours - 12
+          const formattedDate = hours + ':' + minutes + label
+
+          return (
+            <div className={classes} key={index}>
+              <div className='message-profile-img'>
+                {this.state.userSelected.profileImg ? (
+                  <img
+                    src={this.state.userSelected.profileImg}
+                    alt={this.state.userSelected.name}
+                  />
+                ) : (
+                  <svg viewBox='0 0 24 24'>
+                    <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                  </svg>
+                )}
+              </div>
+              <div className='message-container'>
+                <span className='timestamp'>{formattedDate}</span>
+                <span>{message.message}</span>
+              </div>
+            </div>
+          )
+        })}
+        <div ref={this.chatBottom} />
+      </div>
+    )
   }
 
   render () {
