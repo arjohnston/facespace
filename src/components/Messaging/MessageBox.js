@@ -21,20 +21,11 @@ export default class MessageBox extends Component {
     this.handleKeyPress = this.handleKeyPress.bind(this)
 
     this.chatBottom = React.createRef()
+    this.chatInput = React.createRef()
 
-    this.socket = io()
+    this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
 
     this.socket.on('message', message => {
-      // if (message.conversation !== this.state.conversationId) return
-      //
-      // const messages = [...this.state.messages]
-      // messages.push(message)
-      // this.setState(
-      //   {
-      //     messages: messages
-      //   },
-      //   () => this.scrollIntoView()
-      // )
       this.appendMessage(message)
     })
   }
@@ -47,10 +38,15 @@ export default class MessageBox extends Component {
     this.setState(
       {
         token: token,
-        userSelected: this.props.userSelected
+        userSelected: this.props.userSelected,
+        componentMounted: true
       },
       () => this.getConversationMessages()
     )
+  }
+
+  componentWillUnmount () {
+    this.socket.removeAllListeners('message')
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -103,6 +99,7 @@ export default class MessageBox extends Component {
           },
           () => {
             this.scrollIntoView()
+            this.setInputIntoFocus()
           }
         )
       })
@@ -111,6 +108,10 @@ export default class MessageBox extends Component {
 
   scrollIntoView () {
     this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  setInputIntoFocus () {
+    this.chatInput.current.focus()
   }
 
   handleKeyPress (e) {
@@ -232,6 +233,7 @@ export default class MessageBox extends Component {
               onChange={this.handleInputChange}
               value={this.state.messageInput}
               onKeyDown={this.handleKeyPress}
+              ref={this.chatInput}
             />
           </div>
 
