@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 const passport = require('passport')
 require('../config/passport')(passport)
+const mongoose = require('mongoose')
 const User = require('../models/User')
 const config = require('../../util/settings')
 const {
@@ -256,8 +257,10 @@ router.post('/login', function (req, res) {
             // Data to be passed to the token stored in Local Storage
             const userToBeSigned = {
               username: user.username,
+              name: user.name,
               email: user.email,
-              lastLogin: user.lastLogin
+              lastLogin: user.lastLogin,
+              id: user.id
             }
 
             // Sign the token using the data provided above, the secretKey and JWT options
@@ -312,6 +315,61 @@ router.post('/getUser', function (req, res) {
           }
         }
       )
+    }
+  })
+})
+
+// TEMP while the Friends function is being created
+router.post('/getAllUsers', function (req, res) {
+  if (!req.body.token) return res.sendStatus(BAD_REQUEST)
+  const token = req.body.token.replace(/^JWT\s/, '')
+
+  jwt.verify(token, config.secretKey, function (error, decoded) {
+    if (error) {
+      // Unauthorized
+      res.sendStatus(UNAUTHORIZED)
+    } else {
+      // Ok
+      // Build this out to search for a user
+      const id = mongoose.Types.ObjectId(decoded.id)
+
+      User.aggregate()
+        .match({ _id: { $not: { $eq: id } } })
+        .project({
+          password: 0,
+          __v: 0,
+          lastLogin: 0,
+          username: 0
+        })
+        .exec((err, users) => {
+          if (err) {
+            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+          } else {
+            res.status(OK).send(users)
+          }
+        })
+
+      // User.find(
+      //   {
+      //     _id: { $not: { $eq: id } }
+      //   },
+      //   function (error, users) {
+      //     if (error) {
+      //       // Bad Request
+      //       return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+      //     }
+      //
+      //     if (!users) {
+      //       // Unauthorized if the email does not match any records in the database
+      //       res.status(NOT_FOUND).send({
+      //         message: 'Could not find any users'
+      //       })
+      //     } else {
+      //       // Check if password matches database
+      //       res.status(OK).send(users)
+      //     }
+      //   }
+      // )
     }
   })
 })

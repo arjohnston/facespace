@@ -15,6 +15,9 @@ const UserSchema = new Schema(
       unique: true, // Don't allow multiple users with the same username
       required: true
     },
+    name: {
+      type: String
+    },
     password: {
       type: String,
       required: true
