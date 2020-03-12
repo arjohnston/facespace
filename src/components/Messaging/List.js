@@ -6,28 +6,48 @@ export default class List extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      activeFriend: 0,
+      activeUser: null,
       searchText: '',
-      friends: null
+      users: null
     }
 
-    this.renderFriendList = this.renderFriendList.bind(this)
+    this.renderUserList = this.renderUserList.bind(this)
     this.handleSearchBarChange = this.handleSearchBarChange.bind(this)
   }
 
   componentDidMount () {
     // This should be moved to query the DB for a list of friends
     this.setState({
-      friends: this.props.friends
+      users: this.props.users,
+      userSelected:
+        this.props.users.length > 0 ? this.props.users.data[0] : null
     })
   }
 
-  activateFriend (index) {
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.users !== this.state.users) {
+      this.setState(
+        {
+          users: this.state.users
+        },
+        () => {
+          if (this.state.activeUser === null && this.state.users.length > 0) { this.activateUser(this.state.users[0]) }
+        }
+      )
+    }
+  }
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (nextProps.users !== prevState.users) return { users: nextProps.users }
+    else return null
+  }
+
+  activateUser (user) {
     this.setState({
-      activeFriend: index
+      activeUser: user
     })
 
-    this.props.selectFriend(index)
+    this.props.selectUser(user)
   }
 
   handleSearchBarChange (e) {
@@ -40,30 +60,30 @@ export default class List extends Component {
     // Search one friend at a time with their message history
   }
 
-  renderFriendList () {
-    if (!this.state.friends) return
+  renderUserList () {
+    if (!this.state.users) return
 
-    return this.state.friends.map((item, index) => {
+    return this.state.users.map((user, index) => {
       let classes = 'friend-row'
-      if (item.online) classes += ' online'
-      if (this.state.activeFriend === index) classes += ' active'
+      if (user.online) classes += ' online'
+      if (this.state.activeUser === user) classes += ' active'
 
       return (
         <div
           className={classes}
           key={index}
-          onClick={this.activateFriend.bind(this, index)}
+          onClick={this.activateUser.bind(this, user)}
         >
           <div className='friend-img-container'>
-            {item.profileImg ? (
-              <img src={item.profileImg} alt={item.name} />
+            {user.profileImg ? (
+              <img src={user.profileImg} alt={user.name || 'User'} />
             ) : (
               <svg viewBox='0 0 24 24'>
                 <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
               </svg>
             )}
           </div>
-          <span>{item.name}</span>
+          <span>{user.name || 'User'}</span>
         </div>
       )
     })
@@ -87,7 +107,7 @@ export default class List extends Component {
             value={this.state.searchText}
           />
         </div>
-        <div className='friend-list'>{this.renderFriendList()}</div>
+        <div className='friend-list'>{this.renderUserList()}</div>
       </div>
     )
   }
