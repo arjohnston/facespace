@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import io from 'socket.io-client'
 import axios from 'axios'
 
+import { connect } from 'react-redux'
+
 import './style.css'
 
-export default class MessageBox extends Component {
+export class MessageBox extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -77,7 +79,7 @@ export default class MessageBox extends Component {
       {
         messages: messages
       },
-      () => this.scrollIntoView()
+      () => this.scrollIntoView(true)
     )
   }
 
@@ -106,8 +108,9 @@ export default class MessageBox extends Component {
       .catch(err => console.log(err))
   }
 
-  scrollIntoView () {
-    this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
+  scrollIntoView (effect) {
+    if (effect) { return this.chatBottom.current.scrollIntoView({ behavior: 'smooth' }) }
+    this.chatBottom.current.scrollIntoView()
   }
 
   setInputIntoFocus () {
@@ -159,10 +162,15 @@ export default class MessageBox extends Component {
           const date = new Date(message.date)
           let hours = date.getHours()
           let minutes = date.getMinutes()
-          const label = hours > 12 ? ' PM' : ' AM'
+          const label = hours >= 12 ? ' PM' : ' AM'
           if (hours > 12) hours = hours - 12
           if (minutes < 10) minutes = '0' + minutes
           const formattedDate = hours + ':' + minutes + label
+
+          const name =
+            message.from === this.state.userSelected._id
+              ? this.state.userSelected.name
+              : this.props.user.name
 
           return (
             <div className={classes} key={index}>
@@ -179,7 +187,17 @@ export default class MessageBox extends Component {
                 )}
               </div>
               <div className='message-container'>
-                <span className='timestamp'>{formattedDate}</span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: '8px'
+                  }}
+                >
+                  {name && <span className='message-name'>{name}</span>}
+                  {name && <div className='message-name-break' />}
+                  <span className='timestamp'>{formattedDate}</span>
+                </div>
                 <span>{message.message}</span>
               </div>
             </div>
@@ -249,3 +267,9 @@ export default class MessageBox extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+export default connect(mapStateToProps)(MessageBox)

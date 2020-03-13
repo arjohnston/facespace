@@ -22,7 +22,7 @@ export default class Messaging extends Component {
   }
 
   componentDidMount () {
-    document.title = 'Messaging'
+    document.title = 'Messaging | myface'
 
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')

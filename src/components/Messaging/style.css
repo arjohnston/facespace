@@ -25,8 +25,8 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 6px;
-  max-width: 700px;
+  /* padding: 6px; */
+  max-width: 600px;
 }
 
 .friend-list {
@@ -49,11 +49,12 @@
 }
 
 .friend-row:hover {
-  background: #F8F8F8;
+  background: rgba(58, 171, 144, 0.08);
 }
 
 .friend-row.active {
   border-left: 3px solid #3AAB90;
+  background: rgba(58, 171, 144, 0.08);
 }
 
 .friend-row span {
@@ -140,7 +141,7 @@
 
 .message-box .messages {
   height: 100%;
-  padding: 12px;
+  /* padding: 12px; */
   overflow-y: scroll;
 }
 
@@ -190,10 +191,10 @@
 }
 
 .message-profile-img {
-  width: 60px;
-  min-width: 60px;
-  height: 60px;
-  min-height: 60px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
   border: 1px solid #ddd;
   display: flex;
   justify-content: center;
@@ -204,28 +205,49 @@
   fill: #FFF;
 }
 .message-profile-img svg {
-  height: 50px;
+  height: 30px;
 }
 .message {
   display: flex;
-  margin: 6px 0;
+  /* margin: 6px 0 24px; */
+  padding: 6px 18px 30px;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  /* margin-right: 75px; */
 }
-.message.to {
+.message:hover {
+  background: #F4F4F4;
+}
+/* .message.to {
   flex-direction: row-reverse;
+  margin-right: 0;
+  margin-left: 75px;
 }
 .message.to .message-profile-img {
   margin-right: 0;
   margin-left: 18px;
-}
+} */
 .message .message-container {
   display: flex;
   flex-direction: column;
 }
-.message.to .message-container {
+/* .message.to .message-container {
   align-items: flex-end;
-}
+} */
 .message .timestamp {
-  color: #888;
+  color: #999;
   font-size: 0.8em;
-  margin-bottom: 4px;
+  font-weight: 300;
+}
+
+.message .message-name {
+  font-size: 1em;
+  font-weight: 500;
+}
+.message-name-break {
+  width: 4px;
+  height: 4px;
+  background: black;
+  border-radius: 50%;
+  margin: 0 6px;
 }

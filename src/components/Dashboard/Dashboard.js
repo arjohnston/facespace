@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import axios from 'axios'
 
+import { connect } from 'react-redux'
+import { setLoggedInUser } from '../../actions/index'
+
 import Header from '../Header/Header'
 
 export class Dashboard extends Component {
@@ -31,11 +34,19 @@ export class Dashboard extends Component {
     axios
       .post('/api/auth/verify', { token })
       .then(res => {
-        this.setState({
-          isAuthenticated: true,
-          username: res.data.username,
-          token: token
-        })
+        this.setState(
+          {
+            isAuthenticated: true,
+            username: res.data.username,
+            token: token
+          },
+          () =>
+            this.setLoggedInUser(
+              res.data.name,
+              res.data.username,
+              res.data.email
+            )
+        )
       })
       .catch(() => {
         // if err statusCode == 401, then remove token & push /login
@@ -43,6 +54,16 @@ export class Dashboard extends Component {
         window.localStorage.removeItem('jwtToken')
         if (this.props.history) this.props.history.push('/login')
       })
+  }
+
+  setLoggedInUser (name, username, email) {
+    const payload = {
+      name: name,
+      username: username,
+      email: email
+    }
+
+    this.props.setLoggedInUser(payload)
   }
 
   render () {
@@ -58,7 +79,7 @@ export class Dashboard extends Component {
           }}
         >
           <div style={{ width: '100%' }}>
-            <Header username={this.state.username} />
+            <Header />
 
             {this.props.children}
           </div>
@@ -68,4 +89,17 @@ export class Dashboard extends Component {
   }
 }
 
-export default withRouter(Dashboard)
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = dispatch => ({
+  setLoggedInUser: payload => dispatch(setLoggedInUser(payload))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Dashboard))
+
+// export default withRouter(Dashboard)
