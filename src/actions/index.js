@@ -4,3 +4,10 @@ export function setLoggedInUser (payload) {
     payload
   }
 }
+
+export function setListOfFriends (payload) {
+  return {
+    type: 'SET_LIST_OF_FRIENDS',
+    payload
+  }
+}

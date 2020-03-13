@@ -14,13 +14,20 @@ export class MessageBox extends Component {
       userSelected: null,
       messages: [],
       messageInput: '',
-      conversationId: null
+      conversationId: null,
+      friendSearchInputText: '',
+      friends: [],
+      filteredFriends: []
     }
 
     this.renderMessages = this.renderMessages.bind(this)
     this.handleSendMessage = this.handleSendMessage.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.handleSearchFriendListChange = this.handleSearchFriendListChange.bind(
+      this
+    )
+    this.renderFilteredFriends = this.renderFilteredFriends.bind(this)
 
     this.chatBottom = React.createRef()
     this.chatInput = React.createRef()
@@ -62,11 +69,19 @@ export class MessageBox extends Component {
         () => this.getConversationMessages()
       )
     }
+
+    if (prevState.friends !== this.state.friends) {
+      this.setState({
+        friends: this.state.friends
+      })
+    }
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
     if (nextProps.userSelected !== prevState.userSelected) {
       return { userSelected: nextProps.userSelected }
+    } else if (nextProps.friends !== prevState.friends) {
+      return { friends: nextProps.friends }
     } else return null
   }
 
@@ -152,8 +167,64 @@ export class MessageBox extends Component {
       .catch(err => console.log(err))
   }
 
+  handleSearchFriendListChange (e) {
+    const value = e.target.value
+
+    this.setState({
+      friendSearchInputText: value
+    })
+
+    if (this.searchFriendListCallback) { clearTimeout(this.searchFriendListCallback) }
+
+    if (this.state.friends.length <= 0) return
+
+    if (value === '') return
+
+    const callback = () => {
+      const filteredFriends = this.state.friends.filter(friend => {
+        return friend.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
+      })
+
+      this.setState({
+        filteredFriends: filteredFriends
+      })
+
+      delete this.searchFriendListCallback
+    }
+
+    this.searchFriendListCallback = setTimeout(callback, 500)
+  }
+
+  renderFilteredFriends () {
+    if (this.state.filteredFriends.length <= 0) return
+
+    return this.state.filteredFriends.map((friend, index) => {
+      return (
+        <div
+          key={index}
+          className='filtered-friend-row'
+          onClick={this.handleCreateNewConversation.bind(this, friend)}
+        >
+          <span>{friend.name}</span>
+        </div>
+      )
+    })
+  }
+
+  handleCreateNewConversation (friendSelected) {
+    this.setState({
+      filteredFriends: []
+    })
+
+    // Check if there is an existing conversation, if so use that
+
+    // If there is no existing conversation, start a new one
+
+    console.log(friendSelected)
+  }
+
   renderMessages () {
-    if (!this.state.messages) return
+    if (!this.state.messages || !this.state.userSelected) return
 
     const MONTHS = [
       'JAN',
@@ -179,8 +250,6 @@ export class MessageBox extends Component {
           let classes = 'message'
           if (message.to === this.state.userSelected._id) classes += ' to'
 
-          // console.log(new Date(message.date))
-
           const date = new Date(message.date)
           const month = date.getMonth()
           const day = date.getDate()
@@ -195,7 +264,9 @@ export class MessageBox extends Component {
           if (prevMessageMonth && prevMessageDate) {
             if (prevMessageMonth < month) shouldInsertDateBreak = true
 
-            if (prevMessageMonth <= month && prevMessageDate < day) { shouldInsertDateBreak = true }
+            if (prevMessageMonth <= month && prevMessageDate < day) {
+              shouldInsertDateBreak = true
+            }
           }
 
           prevMessageMonth = month
@@ -254,7 +325,62 @@ export class MessageBox extends Component {
 
   render () {
     // Make this into a placeholder. Including search for new conversation
-    if (!this.state.userSelected) return <div className='message-box' />
+    if (!this.state.userSelected) {
+      return (
+        <div className='message-box'>
+          <div className='friend-header-new'>
+            <span>New message</span>
+
+            <input
+              type='text'
+              placeholder='Start typing a name...'
+              value={this.state.friendSearchInputText}
+              onChange={this.handleSearchFriendListChange}
+            />
+
+            {this.state.filteredFriends.length > 0 && (
+              <div className='search-results'>
+                {this.renderFilteredFriends()}
+              </div>
+            )}
+          </div>
+
+          <div className='messages'>{this.renderMessages()}</div>
+
+          <div className='message-cta-container'>
+            <div className='message-input'>
+              <div className='profile-img'>
+                {this.props.user.profileImg ? (
+                  <img
+                    src={this.props.user.profileImg}
+                    alt={this.props.user.name}
+                  />
+                ) : (
+                  <svg viewBox='0 0 24 24'>
+                    <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                  </svg>
+                )}
+              </div>
+              <textarea
+                placeholder='Whats on your mind?'
+                onChange={this.handleInputChange}
+                value={this.state.messageInput}
+                onKeyDown={this.handleKeyPress}
+                ref={this.chatInput}
+              />
+            </div>
+
+            <div className='message-cta'>
+              <input
+                type='submit'
+                value='Send'
+                onClick={this.handleSendMessage}
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
 
     return (
       <div className='message-box'>
@@ -279,10 +405,10 @@ export class MessageBox extends Component {
         <div className='message-cta-container'>
           <div className='message-input'>
             <div className='profile-img'>
-              {this.state.userSelected.profileImg ? (
+              {this.props.user.profileImg ? (
                 <img
-                  src={this.state.userSelected.profileImg}
-                  alt={this.state.userSelected.name}
+                  src={this.props.user.profileImg}
+                  alt={this.props.user.name}
                 />
               ) : (
                 <svg viewBox='0 0 24 24'>

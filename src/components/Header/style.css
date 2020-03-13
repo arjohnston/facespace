@@ -42,6 +42,10 @@ nav a svg {
   fill: white;
 }
 
+nav a.nav-active {
+  border-bottom: 3px solid white;
+}
+
 
 .profile-menu-icon {
   height: 25px;

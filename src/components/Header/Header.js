@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-
+import { Link, NavLink } from 'react-router-dom'
+import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 
 import './style.css'
@@ -27,24 +27,24 @@ export class Header extends Component {
           </Link>
         </div>
         <nav>
-          <Link to='/'>
+          <NavLink to='/' exact activeClassName='nav-active'>
             <svg viewBox='0 0 24 24'>
               <path d='M12 5.69L17 10.19V18H15V12H9V18H7V10.19L12 5.69M12 3L2 12H5V20H11V14H13V20H19V12H22L12 3Z' />
             </svg>
             Home
-          </Link>
-          <Link to='/messaging'>
+          </NavLink>
+          <NavLink to='/messaging' exact activeClassName='nav-active'>
             <svg viewBox='0 0 24 24'>
               <path d='M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H6L4,18V4H20' />
             </svg>
             Messaging
-          </Link>
-          <Link to='/friends'>
+          </NavLink>
+          <NavLink to='/friends' exact activeClassName='nav-active'>
             <svg viewBox='0 0 24 24'>
               <path d='M13.07 10.41A5 5 0 0 0 13.07 4.59A3.39 3.39 0 0 1 15 4A3.5 3.5 0 0 1 15 11A3.39 3.39 0 0 1 13.07 10.41M5.5 7.5A3.5 3.5 0 1 1 9 11A3.5 3.5 0 0 1 5.5 7.5M7.5 7.5A1.5 1.5 0 1 0 9 6A1.5 1.5 0 0 0 7.5 7.5M16 17V19H2V17S2 13 9 13 16 17 16 17M14 17C13.86 16.22 12.67 15 9 15S4.07 16.31 4 17M15.95 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13Z' />
             </svg>
             Friends
-          </Link>
+          </NavLink>
 
           <div className='profile-menu-wrapper'>
             <div
@@ -101,4 +101,4 @@ const mapStateToProps = state => ({
   ...state
 })
 
-export default connect(mapStateToProps)(Header)
+export default connect(mapStateToProps)(withRouter(Header))

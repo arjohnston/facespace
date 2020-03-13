@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import axios from 'axios'
+// import axios from 'axios'
+// import { connect } from 'react-redux'
 
 import List from '../components/Messaging/List'
 import MessageBox from '../components/Messaging/MessageBox'
@@ -8,8 +9,7 @@ export default class Messaging extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      userSelected: null,
-      users: []
+      userSelected: null
     }
 
     this.selectUser = this.selectUser.bind(this)
@@ -28,32 +28,35 @@ export default class Messaging extends Component {
       ? window.localStorage.getItem('jwtToken')
       : ''
 
-    this.setState(
-      {
-        token: token
-      },
-      () => this.getListOfUsers()
-    )
+    this.setState({
+      token: token
+    })
   }
 
   // This should be upgraded once the Friends section is implemented
-  getListOfUsers () {
-    axios
-      .post('/api/auth/getAllUsers', { token: this.state.token })
-      .then(res => {
-        this.setState({
-          users: res.data
-        })
-      })
-      .catch(err => console.log(err))
-  }
+  // getListOfUsers () {
+  //   axios
+  //     .post('/api/auth/getAllUsers', { token: this.state.token })
+  //     .then(res => {
+  //       this.setState({
+  //         users: res.data
+  //       })
+  //     })
+  //     .catch(err => console.log(err))
+  // }
 
   render () {
     return (
       <div className='messaging-container'>
-        <List users={this.state.users} selectUser={this.selectUser} />
+        <List selectUser={this.selectUser} />
         <MessageBox userSelected={this.state.userSelected} />
       </div>
     )
   }
 }
+
+// const mapStateToProps = state => ({
+//   ...state
+// })
+
+// export default connect(mapStateToProps)(Messaging)

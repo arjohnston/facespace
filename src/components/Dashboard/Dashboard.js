@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 import axios from 'axios'
 
 import { connect } from 'react-redux'
-import { setLoggedInUser } from '../../actions/index'
+import { setLoggedInUser, setListOfFriends } from '../../actions/index'
 
 import Header from '../Header/Header'
 
@@ -40,12 +40,15 @@ export class Dashboard extends Component {
             username: res.data.username,
             token: token
           },
-          () =>
+          () => {
             this.setLoggedInUser(
               res.data.name,
               res.data.username,
               res.data.email
             )
+
+            // this.setListOfFriends(token)
+          }
         )
       })
       .catch(() => {
@@ -54,6 +57,18 @@ export class Dashboard extends Component {
         window.localStorage.removeItem('jwtToken')
         if (this.props.history) this.props.history.push('/login')
       })
+
+    this.setListOfFriends(token)
+  }
+
+  // TODO: Once friends list is implemented, change this to friend list
+  setListOfFriends (token) {
+    axios
+      .post('/api/auth/getAllUsers', { token: token })
+      .then(res => {
+        this.props.setListOfFriends(res.data)
+      })
+      .catch(err => console.log(err))
   }
 
   setLoggedInUser (name, username, email) {
@@ -94,7 +109,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setLoggedInUser: payload => dispatch(setLoggedInUser(payload))
+  setLoggedInUser: payload => dispatch(setLoggedInUser(payload)),
+  setListOfFriends: payload => dispatch(setListOfFriends(payload))
 })
 
 export default connect(

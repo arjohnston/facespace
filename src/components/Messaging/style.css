@@ -7,7 +7,7 @@
 }
 
 .message-box,
-.search-bar,
+.friend-list-cta-wrapper,
 .friend-list {
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
@@ -15,7 +15,8 @@
 }
 
 .messaging-container .friend-list-wrapper {
-  max-width: 250px;
+  max-width: 275px;
+  min-width: 275px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -25,7 +26,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* padding: 6px; */
   max-width: 600px;
 }
 
@@ -33,6 +33,39 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.friend-list-cta-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.friend-list-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3px 6px 0px;
+  padding: 3px 6px;
+  border-bottom: 1px solid #DDD;
+}
+.friend-list-title {
+  font-size: 1.1em;
+}
+.friend-list-cta-wrapper .create-new-conversation {
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.friend-list-cta-wrapper .create-new-conversation:hover {
+  background: rgba(58, 171, 144, 0.1);
+}
+.friend-list-cta-wrapper .create-new-conversation svg {
+  fill: #3AAB90;
+  height: 22px;
 }
 
 .friend-row {
@@ -102,14 +135,14 @@
 .search-bar svg {
   position: absolute;
   left: 12px;
-  top: 18px;
-  width: 30px;
+  top: 14px;
+  width: 20px;
   fill: #515151;
 }
 
 .search-bar input {
   border: none;
-  padding: 24px 0 24px 48px;
+  padding: 16px 0 16px 36px;
   font-size: 0.9em;
 }
 
@@ -119,6 +152,47 @@
   border-bottom: 1px solid #ddd;
   color: #3d6ba6;
   font-weight: 500;
+}
+
+.friend-header-new {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.friend-header-new span {
+  padding: 12px 0;
+}
+
+.friend-header-new input {
+  border: none;
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+  width: 100%;
+  padding: 12px;
+}
+
+.friend-header-new .search-results {
+  position: absolute;
+  top: 86px;
+  width: 100%;
+  background: white;
+  z-index: 1;
+  border: 1px solid #DDD;
+}
+
+.filtered-friend-row {
+  color: #515151;
+  padding: 12px 24px;
+  border-bottom: 1px solid #DDD;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.filtered-friend-row:last-child {
+  border-bottom: none;
+}
+.filtered-friend-row:hover {
+  background: #EFEFEF;
 }
 
 .friend-header-img {
