@@ -207,33 +207,32 @@
 .message-profile-img svg {
   height: 30px;
 }
+.message-date-break {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #DDD;
+  margin: 0px 6px 18px;
+}
+.message-date-break span {
+  background: white;
+  margin-bottom: -7px;
+  padding: 0 12px;
+  font-size: 0.8em;
+  color: #777;
+}
 .message {
   display: flex;
-  /* margin: 6px 0 24px; */
   padding: 6px 18px 30px;
   transition: all 0.2s;
   font-size: 0.9em;
-  /* margin-right: 75px; */
 }
 .message:hover {
   background: #F4F4F4;
 }
-/* .message.to {
-  flex-direction: row-reverse;
-  margin-right: 0;
-  margin-left: 75px;
-}
-.message.to .message-profile-img {
-  margin-right: 0;
-  margin-left: 18px;
-} */
 .message .message-container {
   display: flex;
   flex-direction: column;
 }
-/* .message.to .message-container {
-  align-items: flex-end;
-} */
 .message .timestamp {
   color: #999;
   font-size: 0.8em;
@@ -247,7 +246,7 @@
 .message-name-break {
   width: 4px;
   height: 4px;
-  background: black;
+  background: #999;
   border-radius: 50%;
   margin: 0 6px;
 }

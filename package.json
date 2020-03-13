@@ -42,6 +42,9 @@
   },
   "scripts": {
     "start": "node util/scripts/start.js",
+    "build": "react-scripts build",
+    "start-api": "NODE_ENV=production node server.js",
+    "start-ui": "react-scripts start",
     "test": "mocha && NODE_ENV=test mocha --require @babel/register --require ignore-styles test/ui/*.js",
     "deploy": "git pull && npm start",
     "lint": "prettier 'routes/*.js' 'config/*.js' 'src/*.js' 'src/**/*.js' '*.js' --write --single-quote --no-semi && standard --fix"

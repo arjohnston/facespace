@@ -109,7 +109,9 @@ export class MessageBox extends Component {
   }
 
   scrollIntoView (effect) {
-    if (effect) { return this.chatBottom.current.scrollIntoView({ behavior: 'smooth' }) }
+    if (effect) {
+      return this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
+    }
     this.chatBottom.current.scrollIntoView()
   }
 
@@ -153,13 +155,35 @@ export class MessageBox extends Component {
   renderMessages () {
     if (!this.state.messages) return
 
+    const MONTHS = [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC'
+    ]
+
+    let prevMessageMonth = null
+    let prevMessageDate = null
+
     return (
       <div>
         {this.state.messages.map((message, index) => {
           let classes = 'message'
           if (message.to === this.state.userSelected._id) classes += ' to'
 
+          // console.log(new Date(message.date))
+
           const date = new Date(message.date)
+          const month = date.getMonth()
+          const day = date.getDate()
           let hours = date.getHours()
           let minutes = date.getMinutes()
           const label = hours >= 12 ? ' PM' : ' AM'
@@ -167,38 +191,58 @@ export class MessageBox extends Component {
           if (minutes < 10) minutes = '0' + minutes
           const formattedDate = hours + ':' + minutes + label
 
+          let shouldInsertDateBreak = false
+          if (prevMessageMonth && prevMessageDate) {
+            if (prevMessageMonth < month) shouldInsertDateBreak = true
+
+            if (prevMessageMonth <= month && prevMessageDate < day) { shouldInsertDateBreak = true }
+          }
+
+          prevMessageMonth = month
+          prevMessageDate = day
+
           const name =
             message.from === this.state.userSelected._id
               ? this.state.userSelected.name
               : this.props.user.name
 
           return (
-            <div className={classes} key={index}>
-              <div className='message-profile-img'>
-                {this.state.userSelected.profileImg ? (
-                  <img
-                    src={this.state.userSelected.profileImg}
-                    alt={this.state.userSelected.name}
-                  />
-                ) : (
-                  <svg viewBox='0 0 24 24'>
-                    <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-                  </svg>
-                )}
-              </div>
-              <div className='message-container'>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '8px'
-                  }}
-                >
-                  {name && <span className='message-name'>{name}</span>}
-                  {name && <div className='message-name-break' />}
-                  <span className='timestamp'>{formattedDate}</span>
+            <div key={index}>
+              {shouldInsertDateBreak && (
+                <div className='message-date-break'>
+                  <span>
+                    {MONTHS[month]} {day}
+                  </span>
                 </div>
-                <span>{message.message}</span>
+              )}
+
+              <div className={classes}>
+                <div className='message-profile-img'>
+                  {this.state.userSelected.profileImg ? (
+                    <img
+                      src={this.state.userSelected.profileImg}
+                      alt={this.state.userSelected.name}
+                    />
+                  ) : (
+                    <svg viewBox='0 0 24 24'>
+                      <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                    </svg>
+                  )}
+                </div>
+                <div className='message-container'>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      marginBottom: '8px'
+                    }}
+                  >
+                    {name && <span className='message-name'>{name}</span>}
+                    {name && <div className='message-name-break' />}
+                    <span className='timestamp'>{formattedDate}</span>
+                  </div>
+                  <span>{message.message}</span>
+                </div>
               </div>
             </div>
           )

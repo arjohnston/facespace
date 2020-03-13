@@ -64,6 +64,21 @@ Build and run:
 npm run start
 ```
 
+Manually build:
+```sh
+npm run build
+```
+
+Manually start the API server:
+```sh
+npm run start-api
+```
+
+Manually start the API:
+```sh
+npm run start-ui
+```
+
 Launch the test runner utilizing mocha and chai:
 ```sh
 npm test
