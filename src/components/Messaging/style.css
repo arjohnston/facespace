@@ -442,3 +442,167 @@
 .message-image-wrapper {
   position: relative;
 }
+
+.image-viewer-wrapper .close-button svg {
+  fill: #555;
+}
+
+@media (prefers-color-scheme: dark) {
+  .message-box,
+  .friend-list-cta-wrapper,
+  .friend-list {
+    background: #1b252b;
+  }
+
+  .friend-list-title-wrapper {
+    border-bottom: 1px solid #555;
+  }
+
+  .friend-row {
+    color: #3AAB90;
+  }
+  .friend-row span {
+    border-bottom: none;
+  }
+
+  .friend-img-container {
+    border: 1px solid #555;
+    background: #1f2b33;
+  }
+
+  .search-bar input {
+    background: #1b252b;
+    color: white;
+  }
+
+  .friend-header-new input {
+    background: #1b252b;
+    color: white;
+  }
+  .friend-header-new span {
+    color: #DDD;
+  }
+
+  .search-bar input::placeholder,
+  .friend-header-new input::placeholder,
+  .message-input textarea::placeholder {
+    color: #888;
+    opacity: 1;
+  }
+
+  .friend-list-title {
+    color: #DDD;
+  }
+
+  .search-bar svg {
+    fill: #AAA;
+  }
+
+  .friend-header {
+    border-bottom: 1px solid #555;
+    color: #3AAB90;
+  }
+
+  .message-cta-container .message-input textarea {
+    background: #1b252b;
+    color: white;
+  }
+
+  .friend-header-new input {
+    border-top: 1px solid #555;
+    border-bottom: 1px solid #555;
+  }
+
+  .friend-header-new .search-results {
+    background: #1f2b33;
+    border: 1px solid #555;
+  }
+
+  .filtered-friend-row {
+    color: white;
+    border-bottom: 1px solid #555;
+  }
+  .filtered-friend-row:hover {
+    background: rgba(58, 171, 144, 0.08);
+  }
+
+  .friend-header-img {
+    border: 1px solid #555;
+    background: #1f2b33;
+  }
+  .friend-header-img svg {
+    fill: white;
+  }
+
+  .message-cta-container {
+    border-top: 1px solid #555;
+  }
+
+  .message-cta-container .profile-img {
+    background: #1f2b33;
+    border: 1px solid #555;
+  }
+
+  .message-cta-container .message-cta input[type='submit'] {
+    color: white;
+    background: #3AAB90;
+  }
+
+  .message-profile-img {
+    border: 1px solid #555;
+    background: #1f2b33;
+    fill: #FFF;
+  }
+  .message-date-break {
+    border-bottom: 1px solid #555;
+  }
+  .message-date-break span {
+    background: #1b252b;
+    color: #DDD;
+  }
+  .message:hover {
+    background: rgba(58, 171, 144, 0.08);
+  }
+
+  .friend-row-meta span:last-child {
+    color: #555;
+  }
+
+  .message-input-image-title svg {
+    border: 1px solid #515151;
+    fill: orange;
+  }
+
+  .message-input-image-title span {
+    color: white;
+  }
+
+  .image-viewer {
+    background: rgba(0,0,0,0.5);
+  }
+
+  .image-viewer-wrapper {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+    background: #1b252b;
+  }
+
+  .image-viewer-wrapper span {
+    background: #3AAB90;
+  }
+
+  .image-viewer-wrapper .close-button {
+    background: none;
+  }
+
+  .image-viewer-wrapper .close-button svg {
+    fill: white;
+  }
+
+  .message-container span {
+    color: white;
+  }
+
+  span.message-name {
+    color: #3AAB90;
+  }
+}

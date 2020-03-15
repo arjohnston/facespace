@@ -12,9 +12,9 @@ import MessageBox from '../components/Messaging/MessageBox'
 // typing bubbles
 // Limit msg count to 50 when first loading. Query for more msgs
 // Search msgs + names
-// DONE Attach img
-// DONE Click outside AttachmentInput, should close popup
-// DONE check size of upload to ensure its less than 1MB
+// DONE - Attach img
+// DONE - Click outside AttachmentInput, should close popup
+// DONE - check size of upload to ensure its less than 1MB
 // DONE - Check image type when dragging
 
 // Messenger UI
@@ -28,7 +28,7 @@ import MessageBox from '../components/Messaging/MessageBox'
 // Mobile friendly
 // Recaptcha on registering. Try out V3
 
-// Dark mode (boolean). true by default if the browser reports prefers-color-scheme: dark.
+// DONE - Dark mode (boolean). true by default if the browser reports prefers-color-scheme: dark.
 
 export class Messaging extends Component {
   constructor (props) {

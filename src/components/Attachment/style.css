@@ -40,6 +40,10 @@
   transition: background-color 0.2s;
 }
 
+.attachment-input-close-button svg {
+  fill: #555;
+}
+
 .attachment-input {
   position: relative;
   background: white;
@@ -229,4 +233,56 @@
   text-align: center;
   padding: 6px 0;
   color: red;
+}
+
+@media (prefers-color-scheme: dark) {
+  .attachment-wrapper svg {
+    fill: #3AAB90;
+  }
+
+  .attachment-input-wrapper {
+    background: rgba(0,0,0,0.5);
+  }
+
+  .attachment-input {
+    background: #1b252b;
+  }
+
+  .attachment-input-title {
+    border-bottom: 1px solid #555;
+    color: #DDD;
+  }
+
+  .attachment-input label {
+    background: #3AAB90;
+    color: white;
+  }
+
+  .attachment-input-close-button svg {
+    fill: #DDD;
+  }
+
+  .attachment-drag-drop span {
+    color: #DDD;
+  }
+
+  .upload-wrapper {
+    border: 1px solid #555;
+    background: #1b252b;
+  }
+
+  .upload-img {
+    border: 3px solid #3AAB90;
+    background: #1b252b;
+  }
+
+  .upload-wrapper .pulse {
+    border: 1px solid #3AAB90;
+  }
+
+  .upload-wrapper .upload-img .upload-arrow,
+  .upload-wrapper .upload-img .upload-image,
+  .upload-wrapper .upload-img .upload-checkmark {
+    fill: #3AAB90;
+  }
 }

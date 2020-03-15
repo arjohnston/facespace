@@ -7,6 +7,8 @@ import { setLoggedInUser, setListOfFriends } from '../../actions/index'
 
 import Header from '../Header/Header'
 
+import './style.css'
+
 export class Dashboard extends Component {
   constructor (props) {
     super(props)
@@ -84,15 +86,7 @@ export class Dashboard extends Component {
   render () {
     return (
       this.state.isAuthenticated && (
-        <div
-          style={{
-            display: 'flex',
-            minHeight: '100vh',
-            background: '#EFEFEF',
-            maxHeight: '100vh',
-            overflow: 'hidden'
-          }}
-        >
+        <div className='dashboard-container'>
           <div style={{ width: '100%' }}>
             <Header />
 

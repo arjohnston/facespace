@@ -1,0 +1,25 @@
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background: #EFEFEF;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dashboard-container {
+    background: #1f2b33;
+  }
+
+  html {
+    --scrollbarBG: #1f2b33;
+    --thumbBG: #90A4AE;
+  }
+  body::-webkit-scrollbar {
+    width: 11px;
+  }
+  body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
+}

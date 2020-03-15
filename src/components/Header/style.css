@@ -46,7 +46,6 @@ nav a.nav-active {
   border-bottom: 3px solid white;
 }
 
-
 .profile-menu-icon {
   height: 25px;
   width: 25px;
@@ -160,4 +159,82 @@ nav a.nav-active {
   font-size: 0.9em;
   max-width: 200px;
   overflow: hidden;
+}
+
+@media (prefers-color-scheme: dark) {
+  .header {
+    background: #1b252b;
+  }
+
+  nav a {
+    color: #DDD;
+  }
+
+  nav a:hover {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  nav a svg {
+    fill: #DDD;
+  }
+
+  nav a.nav-active {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  .profile-menu-icon {
+    background: transparent;
+    fill: #FFF;
+    border: 1px solid #3aab90;
+  }
+
+  .profile-menu-down-icon {
+    fill: #CCC;
+  }
+
+  .profile-menu {
+    background: #1b252b;
+    border: 1px solid #555;
+  }
+
+  .profile-menu-label {
+    color: white;
+  }
+
+  .profile-menu > * {
+    color: #FFF;
+    border-bottom: none;
+  }
+
+  .profile-menu > *:hover {
+    background-color: #3aab90;
+    color: #FFF;
+    border-bottom: none;
+  }
+
+  .profile-menu > *:hover svg {
+    fill: #FFF;
+  }
+
+  .profile-menu > * svg {
+    fill: #FFF;
+  }
+
+  .profile-menu-wrapper:hover {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  .profile-user-account:hover {
+    background: #3aab90;
+    color: #FFF;
+  }
+  .profile-user-account:hover svg {
+    fill: white;
+  }
+
+  .profile-user-account svg {
+    fill: #3aab90;
+    background: none;
+    border: 1px solid white;
+  }
 }

@@ -223,3 +223,53 @@ input {
 .password-meter {
   height: 100%;
 }
+
+
+@media (prefers-color-scheme: dark) {
+  .login-container form {
+    background-color: #1f2b33;
+  }
+
+  .login-container .alternate-cta label {
+    color: #3aab90;
+  }
+
+  .login-container a,
+  .login-container a:visited {
+    color: #FFF;
+  }
+
+  .login-container form a,
+  .login-container form a:visited {
+    color: #3aab90;
+  }
+
+  .login-container form input {
+    border: 1px solid #555;
+    color: white;
+  }
+
+  .login-container form label {
+    color: #BBB;
+  }
+
+  .login-container form .form-input-wrapper svg {
+    fill: #BBB;
+  }
+
+  .login-container form .form-input-wrapper svg.checkmark {
+    fill: #3aab90;
+  }
+
+  .login-container form input::placeholder {
+    color: #DDD;
+  }
+
+  .login-container form button:hover {
+    background: #00adb5;
+  }
+
+  .password-meter-wrapper {
+    background: rgba(255,255,255,0.3);
+  }
+}
