@@ -255,6 +255,7 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
+  align-items: center;
 }
 .message-cta-container .message-cta input[type='submit'] {
   padding: 6px 36px;
@@ -323,4 +324,111 @@
   background: #999;
   border-radius: 50%;
   margin: 0 6px;
+}
+
+.friend-row-meta {
+  display: flex;
+  flex-direction: column;
+}
+.friend-row-meta span {
+  border: none;
+  white-space: nowrap;
+}
+.friend-row-meta span:last-child {
+  color: #AAA;
+  font-size: 0.8em;
+  max-width: 175px;
+  margin-top: 6px;
+  overflow-x: hidden;
+}
+
+.emoji-wrapper {
+  position: relative;
+  margin: 0 12px 0 6px;
+}
+
+.emoji-wrapper svg {
+  height: 25px;
+  fill: #3AAB90;
+}
+
+.emoji-picker {
+  display: none;
+}
+.emoji-wrapper:hover .emoji-picker {
+  display: block;
+}
+
+.message-input-image img {
+  height: 75px;
+  width: auto;
+  margin-right: auto;
+}
+.message-input-image-title span {
+  font-size: 0.8em;
+}
+.message-input-image {
+  display: flex;
+  flex-direction: column;
+}
+.message-input-image-title {
+  display: flex;
+  align-items: center;
+}
+.message-input-image-title svg {
+  border: 1px solid #515151;
+  height: 18px;
+  width: 18px;
+  margin-left: 6px;
+  fill: red;
+  cursor: pointer;
+}
+.message-container img {
+  height: 75px;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.image-viewer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  background: rgba(0,0,0,0.2);
+  z-index: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.image-viewer-wrapper {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-viewer-wrapper span {
+  padding: 24px;
+  background: #3AAB90;
+  color: white;
+}
+
+.image-viewer-wrapper .close-button {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.image-viewer-wrapper .close-button svg {
+  width: 35px;
 }

@@ -38,8 +38,12 @@ class Server {
     this.app.set('port', PORT)
 
     // Use body-parser
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({ extended: 'false' }))
+    this.app.use(bodyParser.json({ limit: '1mb' }))
+    this.app.use(
+      bodyParser.urlencoded({
+        extended: 'false'
+      })
+    )
 
     // Serve the index.html build
     this.app.use(express.static(path.join(__dirname, 'build')))
@@ -53,29 +57,6 @@ class Server {
     if (DEV) {
       this.app.use(morgan('dev'))
     }
-
-    // // Routes for all APIs here
-    // this.app.use('/api/auth', auth)
-    // this.app.use('/api/messages', messages)
-    //
-    // // Catch 404 and forward to error handler
-    // // if not in test mode
-    // if (!TEST) {
-    //   this.app.use(function (req, res, next) {
-    //     const error = new Error('Not Found')
-    //     error.status = 404
-    //     next(error)
-    //   })
-    // }
-    //
-    // // Error handler
-    // this.app.use(function (error, req, res, next) {
-    //   console.log(error)
-    //
-    //   if (!DEV) delete error.stack
-    //
-    //   res.status(error.statusCode || 500).json(error)
-    // })
   }
 
   openConnection () {

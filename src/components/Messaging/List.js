@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 
-import { connect } from 'react-redux'
-
 import './style.css'
 
-export class List extends Component {
+export default class List extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      activeUser: null,
+      userSelected: null,
       searchText: '',
-      friends: []
+      users: []
     }
 
     this.renderConversationList = this.renderConversationList.bind(this)
@@ -22,25 +20,23 @@ export class List extends Component {
     this.searchInputTextCallback = null
   }
 
-  componentDidMount () {
-    // This should be moved to query the DB for a list of friends
-    // this.setState({
-    //   friends: this.props.friends[0],
-    //   userSelected:
-    //     this.props.friends[0].length > 0 ? this.props.friends[0].data[0] : null
-    // })
-    // console.log('COMP ', this.props.friends)
-  }
-
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.friends !== this.state.friends) {
+    if (prevState.userSelected !== this.state.userSelected) {
+      this.setState({
+        userSelected: this.state.userSelected,
+        messages: [],
+        conversationId: null
+      })
+    }
+
+    if (prevState.users !== this.state.users) {
       this.setState(
         {
-          friends: this.state.friends
+          users: this.state.users
         },
         () => {
-          if (this.state.activeUser === null && this.state.friends.length > 0) {
-            this.activateUser(this.state.friends[0])
+          if (this.state.userSelected === null && this.state.users.length > 0) {
+            this.activateUser(this.state.users[0])
           }
         }
       )
@@ -48,7 +44,11 @@ export class List extends Component {
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
-    if (nextProps.friends !== prevState.friends) { return { friends: nextProps.friends } } else return null
+    if (nextProps.userSelected !== prevState.userSelected) {
+      return { userSelected: nextProps.userSelected }
+    } else if (nextProps.users !== prevState.users) {
+      return { users: nextProps.users }
+    } else return null
   }
 
   handleCreateNewConversation () {
@@ -57,24 +57,25 @@ export class List extends Component {
 
   activateUser (user) {
     this.setState({
-      activeUser: user
+      userSelected: user
     })
 
     this.props.selectUser(user)
   }
 
   handleSearchBarChange (e) {
-    // Wait 1000ms after typing stops
+    // Wait 500ms after typing stops
     // Do a query & filter friends.
     // Search one friend at a time with their message history
     this.setState({
       searchText: e.target.value
     })
 
-    if (this.searchMessagesInputTextCallback) { clearTimeout(this.searchMessagesInputTextCallback) }
+    if (this.searchMessagesInputTextCallback) {
+      clearTimeout(this.searchMessagesInputTextCallback)
+    }
 
     const callback = () => {
-      console.log(this.state.friends)
       // do search stuff
 
       delete this.searchMessagesInputTextCallback
@@ -84,12 +85,12 @@ export class List extends Component {
   }
 
   renderConversationList () {
-    if (!this.state.friends) return
+    if (!this.state.users) return
 
-    return this.state.friends.map((friend, index) => {
+    return this.state.users.map((friend, index) => {
       let classes = 'friend-row'
       if (friend.online) classes += ' online'
-      if (this.state.activeUser === friend) classes += ' active'
+      if (this.state.userSelected === friend) classes += ' active'
 
       return (
         <div
@@ -106,7 +107,10 @@ export class List extends Component {
               </svg>
             )}
           </div>
-          <span>{friend.name || 'User'}</span>
+          <div className='friend-row-meta'>
+            <span>{friend.name || 'User'}</span>
+            <span>{friend.lastMessage}</span>
+          </div>
         </div>
       )
     })
@@ -149,9 +153,3 @@ export class List extends Component {
     )
   }
 }
-
-const mapStateToProps = state => ({
-  ...state
-})
-
-export default connect(mapStateToProps)(List)
