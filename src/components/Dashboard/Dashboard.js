@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { setLoggedInUser, setListOfFriends } from '../../actions/index'
 
 import Header from '../Header/Header'
+import Onboarding from '../Onboarding/Onboarding'
 
 import './style.css'
 
@@ -14,9 +15,11 @@ export class Dashboard extends Component {
     super(props)
     this.state = {
       isAuthenticated: false,
-      username: null,
-      token: null
+      token: null,
+      isOnboarded: null
     }
+
+    this.handleOnboardingComplete = this.handleOnboardingComplete.bind(this)
   }
 
   componentDidMount () {
@@ -39,17 +42,18 @@ export class Dashboard extends Component {
         this.setState(
           {
             isAuthenticated: true,
+            isOnboarded: res.data.isOnboarded,
             username: res.data.username,
             token: token
           },
           () => {
             this.setLoggedInUser(
-              res.data.name,
+              res.data.firstName,
+              res.data.lastName,
               res.data.username,
+              res.data.profileImg,
               res.data.email
             )
-
-            // this.setListOfFriends(token)
           }
         )
       })
@@ -73,25 +77,37 @@ export class Dashboard extends Component {
       .catch(err => console.log(err))
   }
 
-  setLoggedInUser (name, username, email) {
+  setLoggedInUser (firstName, lastName, username, profileImg, email) {
     const payload = {
-      name: name,
+      firstName: firstName,
+      lastName: lastName,
       username: username,
+      profileImg: profileImg,
       email: email
     }
 
     this.props.setLoggedInUser(payload)
   }
 
+  handleOnboardingComplete () {
+    this.setState({
+      isOnboarded: true
+    })
+  }
+
   render () {
     return (
-      this.state.isAuthenticated && (
+      this.state.isAuthenticated && this.state.isOnboarded !== null && (
         <div className='dashboard-container'>
-          <div style={{ width: '100%' }}>
-            <Header />
+          {this.state.isOnboarded
+            ? (
+              <div style={{ width: '100%' }}>
+                <Header />
 
-            {this.props.children}
-          </div>
+                {this.props.children}
+              </div>
+            )
+            : <Onboarding token={this.state.token} onOnboardingComplete={this.handleOnboardingComplete} />}
         </div>
       )
     )

@@ -12,10 +12,20 @@ const UserSchema = new Schema(
     },
     username: {
       type: String,
-      unique: true, // Don't allow multiple users with the same username
-      required: true
+      unique: true // Don't allow multiple users with the same username
+      // required: true
     },
-    name: {
+    firstName: {
+      type: String
+    },
+    lastName: {
+      type: String
+    },
+    isOnboarded: {
+      type: Boolean,
+      default: false
+    },
+    profileImg: {
       type: String
     },
     password: {

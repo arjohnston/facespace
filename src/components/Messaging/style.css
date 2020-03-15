@@ -110,10 +110,14 @@
   background: #EFEFEF;
   margin-right: 12px;
   position: relative;
+  overflow: hidden;
 }
 .friend-img-container svg {
   fill: white;
   height: 30px;
+}
+.friend-img-container img {
+  height: 100%;
 }
 
 .friend-row.online .friend-img-container::before {
@@ -207,10 +211,14 @@
   background: #EFEFEF;
   margin-right: 18px;
   position: relative;
+  overflow: hidden
 }
 .friend-header-img svg {
   fill: white;
   height: 50px;
+}
+.friend-header-img img {
+  height: 100%;
 }
 
 .message-box .messages {
@@ -238,6 +246,11 @@
   background: #EFEFEF;
   margin-right: 12px;
   border: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.message-cta-container .profile-img img {
+  height: 100%;
 }
 
 .message-cta-container .message-input textarea {
@@ -278,9 +291,13 @@
   margin-right: 18px;
   position: relative;
   fill: #FFF;
+  overflow: hidden;
 }
 .message-profile-img svg {
   height: 30px;
+}
+.message-profile-img img {
+  height: 100%;
 }
 .message-date-break {
   display: flex;

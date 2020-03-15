@@ -235,7 +235,8 @@ export class MessageBox extends Component {
 
     const callback = () => {
       const filteredFriends = this.state.friends.filter(friend => {
-        return friend.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        const name = friend.firstName + ' ' + friend.lastName
+        return name.toLowerCase().indexOf(value.toLowerCase()) !== -1
       })
 
       this.setState({
@@ -258,7 +259,7 @@ export class MessageBox extends Component {
           className='filtered-friend-row'
           onClick={this.handleCreateNewConversation.bind(this, friend)}
         >
-          <span>{friend.name}</span>
+          <span>{`${friend.firstName} ${friend.lastName}`}</span>
         </div>
       )
     })
@@ -320,6 +321,7 @@ export class MessageBox extends Component {
           let minutes = date.getMinutes()
           const label = hours >= 12 ? ' PM' : ' AM'
           if (hours > 12) hours = hours - 12
+          if (hours === 0) hours = 12
           if (minutes < 10) minutes = '0' + minutes
           const formattedDate = hours + ':' + minutes + label
 
@@ -337,8 +339,12 @@ export class MessageBox extends Component {
 
           const name =
             message.from === this.state.userSelected._id
-              ? this.state.userSelected.name
-              : this.props.user.name
+              ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName
+              : this.props.user.firstName + ' ' + this.props.user.lastName
+
+          const profileImg = message.from === this.state.userSelected._id
+            ? this.state.userSelected.profileImg
+            : this.props.user.profileImg
 
           return (
             <div key={index}>
@@ -352,10 +358,10 @@ export class MessageBox extends Component {
 
               <div className={classes}>
                 <div className='message-profile-img'>
-                  {this.state.userSelected.profileImg ? (
+                  {profileImg ? (
                     <img
-                      src={this.state.userSelected.profileImg}
-                      alt={this.state.userSelected.name}
+                      src={profileImg}
+                      alt={name}
                     />
                   ) : (
                     <svg viewBox='0 0 24 24'>
@@ -413,7 +419,6 @@ export class MessageBox extends Component {
           imageLoadedSrc: readerEvent.target.result,
           imageLoadedName: files[0].name
         })
-        console.log(files[0].name)
       }
     }
 
@@ -489,7 +494,7 @@ export class MessageBox extends Component {
                 {this.props.user.profileImg ? (
                   <img
                     src={this.props.user.profileImg}
-                    alt={this.props.user.name}
+                    alt={`${this.props.user.firstName} ${this.props.user.lastName}`}
                   />
                 ) : (
                   <svg viewBox='0 0 24 24'>
@@ -599,7 +604,7 @@ export class MessageBox extends Component {
             {this.state.userSelected.profileImg ? (
               <img
                 src={this.state.userSelected.profileImg}
-                alt={this.state.userSelected.name}
+                alt={`${this.state.userSelected.firstName} ${this.state.userSelected.lastName}`}
               />
             ) : (
               <svg viewBox='0 0 24 24'>
@@ -607,7 +612,7 @@ export class MessageBox extends Component {
               </svg>
             )}
           </div>
-          <span>{this.state.userSelected.name || 'Your Friend'}</span>
+          <span>{this.state.userSelected.firstName ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName : 'Your Friend'}</span>
         </div>
 
         <div className='messages'>{this.renderMessages()}</div>
@@ -618,7 +623,7 @@ export class MessageBox extends Component {
               {this.props.user.profileImg ? (
                 <img
                   src={this.props.user.profileImg}
-                  alt={this.props.user.name}
+                  alt={`${this.props.user.firstName} ${this.props.user.lastName}`}
                 />
               ) : (
                 <svg viewBox='0 0 24 24'>

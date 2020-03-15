@@ -4,7 +4,9 @@ export default function user (state = {}, action) {
   switch (action.type) {
     case 'SET_USER_LOGGED_IN':
       return {
-        name: action.payload.name,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
+        profileImg: action.payload.profileImg,
         username: action.payload.username,
         email: action.payload.email
       }

@@ -131,6 +131,32 @@ nav a.nav-active {
   transition: all 0.2s;
 }
 
+.profile-menu-wrapper .profile-menu-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-menu-wrapper .profile-menu-img img {
+  height: 30px;
+}
+
+.profile-menu-wrapper .profile-user-account-img {
+  height: 45px;
+  width: 45px;
+  /* border-radius: 50%; */
+  overflow: hidden;
+  margin-right: 6px;
+}
+
+.profile-menu-wrapper .profile-user-account-img img {
+  height: 45px;
+}
+
 .profile-menu-wrapper:hover {
   border-bottom: 3px solid white;
 }

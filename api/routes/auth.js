@@ -181,15 +181,14 @@ router.post('/updatePassword', (req, res) => {
 // @return statusCode
 router.post('/register', function (req, res) {
   // If the username, email or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.email || !req.body.username || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Create a new user with the supplied username and password
-  if (req.body.email && req.body.username && req.body.password) {
+  if (req.body.email && req.body.password) {
     const newUser = new User({
       email: req.body.email,
-      username: req.body.username,
       password: req.body.password
     })
 
@@ -257,10 +256,13 @@ router.post('/login', function (req, res) {
             // Data to be passed to the token stored in Local Storage
             const userToBeSigned = {
               username: user.username,
-              name: user.name,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
               email: user.email,
               lastLogin: user.lastLogin,
-              id: user.id
+              id: user.id,
+              isOnboarded: user.isOnboarded
             }
 
             // Sign the token using the data provided above, the secretKey and JWT options

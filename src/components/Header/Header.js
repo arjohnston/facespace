@@ -54,9 +54,18 @@ export class Header extends Component {
                 alignItems: 'center'
               }}
             >
-              <svg className='profile-menu-icon' viewBox='0 0 24 24'>
-                <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-              </svg>
+              <div className='profile-menu-img'>
+                {this.props.user.profileImg ? (
+                  <img
+                    src={this.props.user.profileImg}
+                    alt={`${this.state.firstName} ${this.state.lastName}`}
+                  />
+                ) : (
+                  <svg viewBox='0 0 24 24' className='profile-menu-icon'>
+                    <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                  </svg>
+                )}
+              </div>
               <div className='profile-menu-label'>
                 <span>Me</span>
                 <svg className='profile-menu-down-icon' viewBox='0 0 24 24'>
@@ -67,9 +76,18 @@ export class Header extends Component {
 
             <div className='profile-menu'>
               <div className='profile-user-account'>
-                <svg className='profile-menu-icon' viewBox='0 0 24 24'>
-                  <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-                </svg>
+                {this.props.user.profileImg ? (
+                  <div className='profile-user-account-img'>
+                    <img
+                      src={this.props.user.profileImg}
+                      alt={`${this.state.firstName} ${this.state.lastName}`}
+                    />
+                  </div>
+                ) : (
+                  <svg viewBox='0 0 24 24'>
+                    <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                  </svg>
+                )}
                 <div className='profile-user-account-details'>
                   <span style={{ fontSize: '0.8em', color: '#777' }}>
                     User Account
