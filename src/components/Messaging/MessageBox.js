@@ -84,7 +84,9 @@ export class MessageBox extends Component {
         },
         () => {
           this.getConversationMessages()
-          if (!this.state.userSelected) { this.newConversationInput.current.focus() }
+          if (!this.state.userSelected) {
+            this.newConversationInput.current.focus()
+          }
         }
       )
     }
@@ -108,7 +110,9 @@ export class MessageBox extends Component {
     if (
       message.conversation !== this.state.conversationId &&
       this.state.conversationId
-    ) { return }
+    ) {
+      return
+    }
 
     const messages = [...this.state.messages]
     messages.push(message)
@@ -182,7 +186,9 @@ export class MessageBox extends Component {
     if (e) e.preventDefault()
 
     if (!this.state.userSelected) return
-    if (this.state.messageInput === '' && this.state.imageLoadedSrc === '') { return }
+    if (this.state.messageInput === '' && this.state.imageLoadedSrc === '') {
+      return
+    }
 
     const payload = {
       token: this.state.token,
@@ -371,12 +377,14 @@ export class MessageBox extends Component {
                   </div>
                   {message.type === 'message' && <span>{message.message}</span>}
                   {message.type === 'image' && (
-                    <img
-                      src={message.data}
-                      alt={message.name}
-                      title={message.name}
-                      onClick={this.toggleOpenImageViewer.bind(this, message)}
-                    />
+                    <div className='message-image-wrapper'>
+                      <img
+                        src={message.data}
+                        alt={message.name}
+                        title={message.name}
+                        onClick={this.toggleOpenImageViewer.bind(this, message)}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -454,6 +462,7 @@ export class MessageBox extends Component {
             <AttachmentInput
               onCloseAttachment={this.handleToggleAttachmentInputShown}
               onFileInput={this.handleFileInput}
+              isOpen={this.state.attachmentInputShown}
             />
           </div>
 
@@ -588,6 +597,7 @@ export class MessageBox extends Component {
           <AttachmentInput
             onCloseAttachment={this.handleToggleAttachmentInputShown}
             onFileInput={this.handleFileInput}
+            isOpen={this.state.attachmentInputShown}
           />
         </div>
 

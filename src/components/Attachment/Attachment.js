@@ -13,7 +13,8 @@ export default class Attachment extends Component {
     super(props)
     this.state = {
       attachmentDragState: DRAG_ENUM.idle,
-      dragging: false
+      dragging: false,
+      error: ''
     }
 
     this.dropRef = React.createRef()
@@ -22,6 +23,7 @@ export default class Attachment extends Component {
     this.handleDrag = this.handleDrag.bind(this)
     this.handleDrop = this.handleDrop.bind(this)
     this.handleFileInput = this.handleFileInput.bind(this)
+    this.handleClickOutside = this.handleClickOutside.bind(this)
   }
 
   componentDidMount () {
@@ -30,6 +32,7 @@ export default class Attachment extends Component {
     div.addEventListener('dragleave', this.handleDragOut)
     div.addEventListener('dragover', this.handleDrag)
     div.addEventListener('drop', this.handleDrop)
+    document.addEventListener('mousedown', this.handleClickOutside)
 
     this.dragCounter = 0
   }
@@ -40,6 +43,15 @@ export default class Attachment extends Component {
     div.removeEventListener('dragleave', this.handleDragOut)
     div.removeEventListener('dragover', this.handleDrag)
     div.removeEventListener('drop', this.handleDrop)
+    document.removeEventListener('mousedown', this.handleClickOutside)
+  }
+
+  handleClickOutside (e) {
+    if (!this.props.isOpen) return
+
+    if (this.dropRef && !this.dropRef.current.contains(e.target)) {
+      this.props.onCloseAttachment()
+    }
   }
 
   handleDrag (e) {
@@ -79,6 +91,22 @@ export default class Attachment extends Component {
 
     const files = e.dataTransfer.files
 
+    if (files && files.length > 0) {
+      if (!files[0].type.includes('image')) {
+        return this.setState({
+          error: 'Only images are supported.',
+          attachmentDragState: DRAG_ENUM.idle
+        })
+      }
+
+      if (files[0].size > 1000000) {
+        return this.setState({
+          error: 'File must be less than 1Mb.',
+          attachmentDragState: DRAG_ENUM.idle
+        })
+      }
+    }
+
     this.setState(
       {
         dragging: false,
@@ -96,7 +124,7 @@ export default class Attachment extends Component {
               attachmentDragState: DRAG_ENUM.idle
             })
           }.bind(this),
-          2000
+          1500
         )
       }
     )
@@ -109,6 +137,22 @@ export default class Attachment extends Component {
   handleFileInput (e) {
     const files = e.target.files
 
+    if (files && files.length > 0) {
+      if (!files[0].type.includes('image')) {
+        return this.setState({
+          error: 'Only images are supported.',
+          attachmentDragState: DRAG_ENUM.idle
+        })
+      }
+
+      if (files[0].size > 1000000) {
+        return this.setState({
+          error: 'File must be less than 1Mb.',
+          attachmentDragState: DRAG_ENUM.idle
+        })
+      }
+    }
+
     this.setState(
       {
         dragging: false,
@@ -126,7 +170,7 @@ export default class Attachment extends Component {
               attachmentDragState: DRAG_ENUM.idle
             })
           }.bind(this),
-          2000
+          1500
         )
       }
     )
@@ -159,6 +203,9 @@ export default class Attachment extends Component {
       <div className='attachment-input-wrapper'>
         <div className='attachment-input' ref={this.dropRef}>
           <div className='attachment-input-title'>File Upload</div>
+          {this.state.error !== '' && (
+            <span className='attachment-input-error'>{this.state.error}</span>
+          )}
           <div className='attachment-drag-drop'>
             <div className={`upload-wrapper ${classes}`}>
               <div className='upload-img'>

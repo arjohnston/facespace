@@ -13,9 +13,9 @@ import MessageBox from '../components/Messaging/MessageBox'
 // Limit msg count to 50 when first loading. Query for more msgs
 // Search msgs + names
 // DONE Attach img
-// Click outside AttachmentInput, should close popup
-// check size of upload to ensure its less than 1MB
-// Check image type when dragging
+// DONE Click outside AttachmentInput, should close popup
+// DONE check size of upload to ensure its less than 1MB
+// DONE - Check image type when dragging
 
 // Messenger UI
 

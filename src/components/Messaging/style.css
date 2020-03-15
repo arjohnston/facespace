@@ -387,6 +387,7 @@
   height: 75px;
   margin-right: auto;
   cursor: pointer;
+  position: relative;
 }
 
 .image-viewer {
@@ -427,8 +428,17 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.image-viewer-wrapper .close-button:hover {
+  transform: translateY(-2px);
 }
 
 .image-viewer-wrapper .close-button svg {
   width: 35px;
+}
+
+.message-image-wrapper {
+  position: relative;
 }
