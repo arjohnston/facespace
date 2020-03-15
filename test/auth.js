@@ -301,7 +301,7 @@ describe('Users', () => {
         .then(function (res) {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
-          res.body.should.have.property('username')
+          res.body.should.have.property('email')
 
           done()
         })
@@ -424,7 +424,6 @@ describe('Users', () => {
         .then(function (res) {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
-          res.body.should.have.property('username')
 
           done()
         })

@@ -19,10 +19,10 @@ import MessageBox from '../components/Messaging/MessageBox'
 
 // Messenger UI
 
-// Onboarding:
-// Username
-// first name, last name
-// profile pic
+// DONE - Onboarding:
+// DONE - Username
+// DONE - first name, last name
+// DONE - profile pic
 
 // Unit tests
 // Mobile friendly
