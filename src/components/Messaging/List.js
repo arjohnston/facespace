@@ -8,7 +8,8 @@ export default class List extends Component {
     this.state = {
       userSelected: null,
       searchText: '',
-      users: []
+      users: [],
+      onlineUsers: []
     }
 
     this.renderConversationList = this.renderConversationList.bind(this)
@@ -23,9 +24,7 @@ export default class List extends Component {
   componentDidUpdate (prevProps, prevState) {
     if (prevState.userSelected !== this.state.userSelected) {
       this.setState({
-        userSelected: this.state.userSelected,
-        messages: [],
-        conversationId: null
+        userSelected: this.state.userSelected
       })
     }
 
@@ -41,6 +40,12 @@ export default class List extends Component {
         }
       )
     }
+
+    if (prevState.onlineUsers !== this.state.onlineUsers) {
+      this.setState({
+        onlineUsers: this.state.onlineUsers
+      })
+    }
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
@@ -48,6 +53,8 @@ export default class List extends Component {
       return { userSelected: nextProps.userSelected }
     } else if (nextProps.users !== prevState.users) {
       return { users: nextProps.users }
+    } else if (nextProps.onlineUsers !== prevState.onlineUsers) {
+      return { onlineUsers: nextProps.onlineUsers }
     } else return null
   }
 
@@ -89,7 +96,8 @@ export default class List extends Component {
 
     return this.state.users.map((friend, index) => {
       let classes = 'friend-row'
-      if (friend.online) classes += ' online'
+      if (this.state.onlineUsers && this.state.onlineUsers.includes(friend._id)) classes += ' online'
+
       if (this.state.userSelected === friend) classes += ' active'
 
       return (

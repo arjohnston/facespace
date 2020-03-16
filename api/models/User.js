@@ -13,7 +13,6 @@ const UserSchema = new Schema(
     username: {
       type: String,
       unique: true // Don't allow multiple users with the same username
-      // required: true
     },
     firstName: {
       type: String
@@ -34,6 +33,10 @@ const UserSchema = new Schema(
     },
     lastLogin: {
       type: Date
+    },
+    online: {
+      type: Boolean,
+      default: false
     }
   },
   { collection: 'User' }

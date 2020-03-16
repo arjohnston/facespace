@@ -8,7 +8,7 @@ import MessageBox from '../components/Messaging/MessageBox'
 // DONE - The List should update the lastMessage when a new message is sent
 // DONE - Creating a new conversation doesn't post the message to the UI???
 // DONE - Creating a new convo doesnt add to List
-// Online status
+// DONE - Online status
 // typing bubbles
 // Limit msg count to 50 when first loading. Query for more msgs
 // Search msgs + names
@@ -26,16 +26,18 @@ import MessageBox from '../components/Messaging/MessageBox'
 
 // Unit tests
 // Mobile friendly
-// Recaptcha on registering. Try out V3
 
 // DONE - Dark mode (boolean). true by default if the browser reports prefers-color-scheme: dark.
+
+// DONE - Messages flash when sending a message now???
 
 export class Messaging extends Component {
   constructor (props) {
     super(props)
     this.state = {
       userSelected: null,
-      users: null
+      users: null,
+      onlineUsers: []
     }
 
     this.selectUser = this.selectUser.bind(this)
@@ -61,6 +63,20 @@ export class Messaging extends Component {
       },
       () => this.getConversationList(token)
     )
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.onlineUsers !== this.state.onlineUsers) {
+      this.setState({
+        onlineUsers: this.state.onlineUsers
+      })
+    }
+  }
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (nextProps.onlineUsers !== prevState.onlineUsers) {
+      return { onlineUsers: nextProps.onlineUsers }
+    } else return null
   }
 
   refreshConversationList () {
@@ -97,7 +113,8 @@ export class Messaging extends Component {
           .reverse()
 
         this.setState({
-          users: users
+          users: users,
+          userSelected: users[0]
         })
       })
       .catch(err => console.log(err))
@@ -110,6 +127,7 @@ export class Messaging extends Component {
           users={this.state.users}
           userSelected={this.state.userSelected}
           selectUser={this.selectUser}
+          onlineUsers={this.state.onlineUsers}
         />
         <MessageBox
           userSelected={this.state.userSelected}

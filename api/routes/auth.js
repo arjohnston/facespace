@@ -110,7 +110,7 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
-        if (error) res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+        if (error) return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
 
         if (result.nModified < 1) {
           return res
@@ -121,6 +121,38 @@ router.post('/edit', (req, res) => {
         return res
           .status(OK)
           .send({ message: `${req.body.queryEmail} was updated.` })
+      })
+    }
+  })
+})
+
+router.post('/logout', (req, res) => {
+  // Strip JWT from the token
+  if (!req.body.token) return res.sendStatus(BAD_REQUEST)
+
+  const token = req.body.token.replace(/^JWT\s/, '')
+
+  jwt.verify(token, config.secretKey, function (error, decoded) {
+    if (error) {
+      // Unauthorized
+      return res.sendStatus(UNAUTHORIZED)
+    } else {
+      // Ok
+      // Build this out to search for a user
+      User.updateOne({ email: decoded.email }, { online: false }, function (error, result) {
+        if (error) return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+
+        if (result.nModified < 1) {
+          return res
+            .status(NOT_FOUND)
+            .send({ message: `${decoded.email} not found.` })
+        }
+
+        req.io.sockets.emit('user-disconnected', { userId: decoded.id })
+
+        return res
+          .status(OK)
+          .send({ message: `${decoded.email} was updated.` })
       })
     }
   })
@@ -264,6 +296,8 @@ router.post('/login', function (req, res) {
               id: user.id,
               isOnboarded: user.isOnboarded
             }
+
+            req.io.sockets.emit('user-connected', { userId: user.id })
 
             // Sign the token using the data provided above, the secretKey and JWT options
             const token = jwt.sign(userToBeSigned, config.secretKey, jwtOptions)

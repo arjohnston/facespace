@@ -28,7 +28,8 @@ export class MessageBox extends Component {
       imageLoadedName: '',
       openImageViewer: false,
       imageViewerSrc: '',
-      imageViewerName: ''
+      imageViewerName: '',
+      onlineUsers: []
     }
 
     this.renderMessages = this.renderMessages.bind(this)
@@ -75,7 +76,21 @@ export class MessageBox extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
+    if (prevState.friends !== this.state.friends) {
+      this.setState({
+        friends: this.state.friends
+      })
+    }
+
+    if (prevState.onlineUsers !== this.state.onlineUsers) {
+      this.setState({
+        onlineUsers: this.state.onlineUsers
+      })
+    }
+
     if (prevState.userSelected !== this.state.userSelected) {
+      if (prevState.userSelected && prevState.userSelected._id === this.state.userSelected._id) return
+
       this.setState(
         {
           userSelected: this.state.userSelected,
@@ -90,12 +105,6 @@ export class MessageBox extends Component {
         }
       )
     }
-
-    if (prevState.friends !== this.state.friends) {
-      this.setState({
-        friends: this.state.friends
-      })
-    }
   }
 
   static getDerivedStateFromProps (nextProps, prevState) {
@@ -103,6 +112,8 @@ export class MessageBox extends Component {
       return { userSelected: nextProps.userSelected }
     } else if (nextProps.friends !== prevState.friends) {
       return { friends: nextProps.friends }
+    } else if (nextProps.onlineUsers !== prevState.onlineUsers) {
+      return { onlineUsers: nextProps.onlineUsers }
     } else return null
   }
 
@@ -114,11 +125,11 @@ export class MessageBox extends Component {
       return
     }
 
-    const messages = [...this.state.messages]
-    messages.push(message)
+    // const messages = [...this.state.messages]
+    // messages.push(message)
     this.setState(
       {
-        messages: messages
+        messages: [...this.state.messages, message]
       },
       () => {
         this.scrollIntoView(true)
@@ -612,7 +623,10 @@ export class MessageBox extends Component {
               </svg>
             )}
           </div>
-          <span>{this.state.userSelected.firstName ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName : 'Your Friend'}</span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span>{this.state.userSelected.firstName ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName : 'Your Friend'}</span>
+            {this.state.onlineUsers && this.state.onlineUsers.includes(this.state.userSelected._id) && <span className='friend-online'>online</span>}
+          </div>
         </div>
 
         <div className='messages'>{this.renderMessages()}</div>

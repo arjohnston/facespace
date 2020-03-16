@@ -93,6 +93,8 @@ class Server {
       next()
     })
 
+    io.on('connection', this.onNewWebsocketConnection)
+
     // Routes for all APIs here
     this.app.use('/api/auth', auth)
     this.app.use('/api/messages', messages)
@@ -153,6 +155,47 @@ class Server {
         }
       }
     })
+  }
+
+  onNewWebsocketConnection (socket) {
+    // let addedUser = false
+    //
+    // console.log('SOCKET1')
+    //
+    // socket.on('add-user', (id) => {
+    //   if (addedUser) return
+    //
+    //   console.log('ADD USER: ', id)
+    //
+    //   socket.userId = id
+    //   addedUser = true
+    //
+    //   socket.broadcast.emit('user-connected', {
+    //     userId: socket.userId
+    //   })
+    // })
+    //
+    // socket.on('start-typing', () => {
+    //   socket.broadcast.emit('typing', {
+    //     userId: socket.userId
+    //   })
+    // })
+    //
+    // socket.on('stop-typing', () => {
+    //   socket.broadcast.emit('stop typing', {
+    //     userId: socket.userId
+    //   })
+    // })
+    //
+    // socket.on('disconnect', () => {
+    //   if (addedUser) {
+    //     console.log('DISCONNECT USER: ', socket.userId)
+    //
+    //     socket.broadcast.emit('user-disconnected', {
+    //       userId: socket.userId
+    //     })
+    //   }
+    // })
   }
 
   closeConnection (done) {

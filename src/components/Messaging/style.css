@@ -120,16 +120,36 @@
   height: 100%;
 }
 
-.friend-row.online .friend-img-container::before {
-  width: 10px;
-  height: 10px;
+.friend-online {
+  color: #777;
+  position: relative;
+  padding-left: 16px;
+  margin-top: 6px;
+  font-size: 0.8em;
+}
+.friend-online::before {
+  width: 8px;
+  height: 8px;
   background: #5da668;
   content: '';
   display: block;
   border-radius: 50%;
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: 4px;
+  left: 0px;
+  /* bottom: 0px; */
+}
+
+.friend-row.online .friend-img-container::before {
+  width: 8px;
+  height: 8px;
+  background: #5da668;
+  content: '';
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .search-bar {

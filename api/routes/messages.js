@@ -159,14 +159,11 @@ router.post('/getConversationMessages', (req, res) => {
       )
 
       Promise.all(promises).then(() => {
-        // console.log('HIT3 ', messagesArray)
         messagesArray.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         )
         return res.status(OK).send(messagesArray)
       })
-
-      // return res.status(OK).send(messagesArray)
     }
   })
 })

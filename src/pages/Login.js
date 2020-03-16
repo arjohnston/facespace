@@ -74,6 +74,7 @@ export default class extends Component {
       .post('/api/auth/edit', {
         queryEmail: email,
         lastLogin: new Date(),
+        online: true,
         // This token must be passed in for authentication
         token: token
       })

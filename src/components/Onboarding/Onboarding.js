@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import axios from 'axios'
+// import io from 'socket.io-client'
 
 import AttachmentInput from '../Attachment/Attachment'
 
@@ -24,11 +25,14 @@ export class Onboarding extends Component {
       attachmentInputShown: false
     }
 
+    this.handleLogout = this.handleLogout.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleCheckIfUsernameExists = this.handleCheckIfUsernameExists.bind(this)
     this.handleToggleAttachmentInputShown = this.handleToggleAttachmentInputShown.bind(this)
     this.handleFileInput = this.handleFileInput.bind(this)
+
+    // this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
   }
 
   componentDidMount () {
@@ -138,8 +142,11 @@ export class Onboarding extends Component {
   }
 
   handleLogout () {
-    window.localStorage.removeItem('jwtToken')
-    window.location.reload()
+    // this.socket.emit('disconnect', this.props.user.id)
+
+    // window.localStorage.removeItem('jwtToken')
+    // window.location.reload()
+    this.props.logout()
   }
 
   handleToggleAttachmentInputShown () {
