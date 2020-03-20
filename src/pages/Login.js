@@ -108,7 +108,7 @@ export default class extends Component {
     return (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '60px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
         </div>
         <h1>Welcome</h1>
 

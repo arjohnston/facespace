@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import axios from 'axios'
-// import io from 'socket.io-client'
 
 import AttachmentInput from '../Attachment/Attachment'
 
@@ -31,8 +30,6 @@ export class Onboarding extends Component {
     this.handleCheckIfUsernameExists = this.handleCheckIfUsernameExists.bind(this)
     this.handleToggleAttachmentInputShown = this.handleToggleAttachmentInputShown.bind(this)
     this.handleFileInput = this.handleFileInput.bind(this)
-
-    // this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
   }
 
   componentDidMount () {
@@ -73,7 +70,6 @@ export class Onboarding extends Component {
           usernameAvailable: false,
           message: ''
         }, () => {
-          // console.log('HIT')
           if (this.state.recommendingUsername) this.recommendUserName()
         })
       })
@@ -188,7 +184,7 @@ export class Onboarding extends Component {
           />
         </div>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '60px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
 
           <div onClick={this.handleLogout} className='header-logout'>
             <svg viewBox='0 0 24 24'>

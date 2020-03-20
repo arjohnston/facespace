@@ -43,6 +43,8 @@ export class Dashboard extends Component {
       ? window.localStorage.getItem('jwtToken')
       : ''
 
+    console.log('2: ', this.socket)
+
     // Immediately direct to /login if no jwtToken token present
     if (!token) {
       if (this.props.history) this.props.history.push('/login')

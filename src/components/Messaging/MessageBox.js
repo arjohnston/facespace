@@ -50,7 +50,7 @@ export class MessageBox extends Component {
     this.chatInput = React.createRef()
     this.newConversationInput = React.createRef()
 
-    this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
+    this.socket = io('http://localhost:3000', { transports: ['websocket'] })
 
     this.socket.on('message', message => {
       this.appendMessage(message)
@@ -61,6 +61,7 @@ export class MessageBox extends Component {
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')
       : ''
+    console.log('2: ', this.socket.id)
 
     this.setState(
       {
@@ -497,7 +498,9 @@ export class MessageBox extends Component {
             )}
           </div>
 
-          <div className='messages'>{this.renderMessages()}</div>
+          <div className='messages'>
+            {this.renderMessages()}
+          </div>
 
           <div className='message-cta-container'>
             <div className='message-input'>

@@ -131,6 +131,32 @@ nav a.nav-active {
   transition: all 0.2s;
 }
 
+@media (max-width: 500px) {
+  .header {
+    padding: 0 6px;
+  }
+
+  nav a span {
+    display: none;
+  }
+
+  nav a {
+    padding: 0 12px;
+  }
+
+  .profile-menu-label {
+    display: none;
+  }
+
+  .profile-menu-wrapper {
+    padding: 0 12px;
+  }
+
+  .profile-menu-wrapper a span {
+    display: flex;
+  }
+}
+
 .profile-menu-wrapper .profile-menu-img {
   height: 30px;
   width: 30px;

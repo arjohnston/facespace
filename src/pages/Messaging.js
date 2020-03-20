@@ -5,31 +5,16 @@ import { connect } from 'react-redux'
 import List from '../components/Messaging/List'
 import MessageBox from '../components/Messaging/MessageBox'
 
-// DONE - The List should update the lastMessage when a new message is sent
-// DONE - Creating a new conversation doesn't post the message to the UI???
-// DONE - Creating a new convo doesnt add to List
-// DONE - Online status
 // typing bubbles
-// Limit msg count to 50 when first loading. Query for more msgs
 // Search msgs + names
-// DONE - Attach img
-// DONE - Click outside AttachmentInput, should close popup
-// DONE - check size of upload to ensure its less than 1MB
-// DONE - Check image type when dragging
-
+// heartbeat to determine if people are online still
 // Messenger UI
-
-// DONE - Onboarding:
-// DONE - Username
-// DONE - first name, last name
-// DONE - profile pic
-
 // Unit tests
-// Mobile friendly
+// DONE - Mobile friendly
+// refactor socket
+// fix issue w/ safari viewport height
 
-// DONE - Dark mode (boolean). true by default if the browser reports prefers-color-scheme: dark.
-
-// DONE - Messages flash when sending a message now???
+// https://www.reddit.com/r/reactjs/comments/8pv2v4/where_to_initialise_socket_connection_in_a_react/
 
 export class Messaging extends Component {
   constructor (props) {

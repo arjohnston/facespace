@@ -87,13 +87,34 @@ class Server {
     this.server = http.createServer(this.app)
 
     const io = require('socket.io')(this.server)
+    io.set('heartbeat timeout', 90000) // 90 sec
+    io.set('heartbeat interval', 60000) // 60 sec
 
     this.app.use(function (req, res, next) {
       req.io = io
       next()
     })
 
-    io.on('connection', this.onNewWebsocketConnection)
+    // io.sockets.on('message', () => {
+    //   console.log('hit....')
+    // })
+
+    io.sockets.on('connection', socket => {
+      console.log('socket.id ', socket.id)
+      socket.on('heartbeat timeout', () => {
+        console.log('HIT')
+      })
+    })
+
+    // io.on('connection', socket => {
+    //   socket.on('heartbeat timeout', () => {
+    //     console.log('HIT')
+    //   })
+    //
+    //   socket.on('message', () => {
+    //     console.log('hit')
+    //   })
+    // })
 
     // Routes for all APIs here
     this.app.use('/api/auth', auth)
@@ -155,47 +176,6 @@ class Server {
         }
       }
     })
-  }
-
-  onNewWebsocketConnection (socket) {
-    // let addedUser = false
-    //
-    // console.log('SOCKET1')
-    //
-    // socket.on('add-user', (id) => {
-    //   if (addedUser) return
-    //
-    //   console.log('ADD USER: ', id)
-    //
-    //   socket.userId = id
-    //   addedUser = true
-    //
-    //   socket.broadcast.emit('user-connected', {
-    //     userId: socket.userId
-    //   })
-    // })
-    //
-    // socket.on('start-typing', () => {
-    //   socket.broadcast.emit('typing', {
-    //     userId: socket.userId
-    //   })
-    // })
-    //
-    // socket.on('stop-typing', () => {
-    //   socket.broadcast.emit('stop typing', {
-    //     userId: socket.userId
-    //   })
-    // })
-    //
-    // socket.on('disconnect', () => {
-    //   if (addedUser) {
-    //     console.log('DISCONNECT USER: ', socket.userId)
-    //
-    //     socket.broadcast.emit('user-disconnected', {
-    //       userId: socket.userId
-    //     })
-    //   }
-    // })
   }
 
   closeConnection (done) {
