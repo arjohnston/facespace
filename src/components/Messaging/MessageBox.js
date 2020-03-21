@@ -9,7 +9,9 @@ import { Picker } from 'emoji-mart'
 import { connect } from 'react-redux'
 
 import {
-  sendSocketMessage
+  sendSocketMessage,
+  startTyping,
+  stopTyping
 } from '../../actions/index'
 
 import './style.css'
@@ -18,7 +20,6 @@ export class MessageBox extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      socket: null,
       userSelected: null,
       messages: [],
       messageInput: '',
@@ -32,7 +33,9 @@ export class MessageBox extends Component {
       openImageViewer: false,
       imageViewerSrc: '',
       imageViewerName: '',
-      onlineUsers: []
+      onlineUsers: [],
+      userSelectedIsTyping: false,
+      usersTyping: []
     }
 
     this.renderMessages = this.renderMessages.bind(this)
@@ -53,20 +56,13 @@ export class MessageBox extends Component {
     this.chatInput = React.createRef()
     this.newConversationInput = React.createRef()
 
-    // this.socket = io('http://localhost:3000', { transports: ['websocket'] })
-
-    // Change this to receiving msg in componentDidUpdate for props
-    // When I get a message, I need to make sure its the right user
-    // this.props.socket.on('message', message => {
-    //   this.appendMessage(message)
-    // })
+    this.typingTimer = null
   }
 
   componentDidMount () {
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')
       : ''
-    // console.log('2: ', this.socket.id)
 
     this.setState(
       {
@@ -76,10 +72,6 @@ export class MessageBox extends Component {
       () => this.getConversationMessages()
     )
   }
-
-  // componentWillUnmount () {
-  //   this.socket.removeAllListeners('message')
-  // }
 
   componentDidUpdate (prevProps, prevState) {
     if (prevState.friends !== this.state.friends) {
@@ -100,6 +92,12 @@ export class MessageBox extends Component {
       })
 
       this.appendMessage(this.state.receivedMessage)
+    }
+
+    if (prevState.usersTyping !== this.state.usersTyping) {
+      this.setState({
+        usersTyping: this.state.usersTyping
+      }, () => this.scrollIntoView(true))
     }
 
     if (prevState.userSelected !== this.state.userSelected) {
@@ -130,7 +128,13 @@ export class MessageBox extends Component {
       return { onlineUsers: nextProps.onlineUsers }
     } else if (nextProps.receivedMessage !== prevState.receivedMessage) {
       return { receivedMessage: nextProps.receivedMessage }
+    } else if (nextProps.usersTyping !== prevState.usersTyping) {
+      return { usersTyping: nextProps.usersTyping }
     } else return null
+  }
+
+  componentWillUnmount () {
+    if (this.typingTimer) clearTimeout(this.typingTimer)
   }
 
   appendMessage (message) {
@@ -201,12 +205,33 @@ export class MessageBox extends Component {
     this.setState({
       messageInput: e.target.value
     })
+
+    this.startTyping()
   }
 
   handleSelectEmoji (e) {
     this.setState({
       messageInput: this.state.messageInput + e
     })
+  }
+
+  // Emit that I started typing
+  startTyping () {
+    // If the timer is null, then this is the first time the user is typing
+    if (!this.typingTimer) this.props.startTyping(this.props.user.userId)
+
+    // Clearout the timer...
+    if (this.typingTimer) clearTimeout(this.typingTimer)
+
+    this.typingTimer = setTimeout(() => {
+      this.typingTimer = null
+      this.stopTyping()
+    }, 5000) // 5s
+  }
+
+  // Emit that I'm not typing anymore
+  stopTyping () {
+    this.props.stopTyping(this.props.user.userId)
   }
 
   handleSendMessage (e) {
@@ -216,6 +241,8 @@ export class MessageBox extends Component {
     if (this.state.messageInput === '' && this.state.imageLoadedSrc === '') {
       return
     }
+
+    this.stopTyping(this.props.user.userId)
 
     const payload = {
       token: this.state.token,
@@ -228,8 +255,8 @@ export class MessageBox extends Component {
     }
 
     if (this.state.imageLoadedSrc !== '') {
-      payload.imageSrc = this.state.imageLoadedSrc
-      payload.imageAlt = this.state.imageLoadedName
+      payload.data = this.state.imageLoadedSrc
+      payload.name = this.state.imageLoadedName
       payload.type = 'image'
     }
 
@@ -244,6 +271,7 @@ export class MessageBox extends Component {
 
         payload.conversation = res.data.conversationId
         payload.date = Date.now()
+        payload.from = this.props.user.userId
         delete payload.token
 
         this.props.sendSocketMessage(payload)
@@ -431,6 +459,40 @@ export class MessageBox extends Component {
             </div>
           )
         })}
+
+        {this.state.usersTyping.includes(this.state.userSelected._id) && (
+          <div className='message'>
+            <div className='message-profile-img'>
+              {this.state.userSelected.profileImg ? (
+                <img
+                  src={this.state.userSelected.profileImg}
+                  alt={this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName}
+                />
+              ) : (
+                <svg viewBox='0 0 24 24'>
+                  <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+                </svg>
+              )}
+            </div>
+            <div className='message-container'>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginBottom: '8px'
+                }}
+              >
+                {this.state.userSelected.firstName && <span className='message-name'>{this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName}</span>}
+              </div>
+              <div className='user-typing'>
+                <div className='user-typing-bubble' />
+                <div className='user-typing-bubble' />
+                <div className='user-typing-bubble' />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={this.chatBottom} />
       </div>
     )
@@ -735,7 +797,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  sendSocketMessage: payload => dispatch(sendSocketMessage(payload))
+  sendSocketMessage: payload => dispatch(sendSocketMessage(payload)),
+  startTyping: payload => dispatch(startTyping(payload)),
+  stopTyping: payload => dispatch(stopTyping(payload))
 })
 
 export default connect(

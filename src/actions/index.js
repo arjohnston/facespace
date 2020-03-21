@@ -25,3 +25,31 @@ export function setOnlineUsers (payload) {
     payload
   }
 }
+
+// export function startTyping (payload) {
+//   return {
+//     type: 'SET_USER_TYPING',
+//     payload
+//   }
+// }
+//
+// export function stopTyping (payload) {
+//   return {
+//     type: 'REMOVE_USER_TYPING',
+//     payload
+//   }
+// }
+
+export function startTyping (payload) {
+  return {
+    type: 'START_TYPING',
+    payload
+  }
+}
+
+export function stopTyping (payload) {
+  return {
+    type: 'STOP_TYPING',
+    payload
+  }
+}

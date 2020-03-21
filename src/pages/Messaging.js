@@ -5,13 +5,12 @@ import { connect } from 'react-redux'
 import List from '../components/Messaging/List'
 import MessageBox from '../components/Messaging/MessageBox'
 
-// typing bubbles
 // Search msgs + names
-// DONE - heartbeat to determine if people are online still
 // Messenger UI
 // Unit tests
-// DONE - refactor socket
 // Clicking on emoji on iphone doesnt close emoji picker
+// remove hover state on page click mobile
+// Adding image increases box size beyond screen
 
 export class Messaging extends Component {
   constructor (props) {

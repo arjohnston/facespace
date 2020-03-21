@@ -8,7 +8,8 @@ export default function user (state = {}, action) {
         lastName: action.payload.lastName,
         profileImg: action.payload.profileImg,
         username: action.payload.username,
-        email: action.payload.email
+        email: action.payload.email,
+        userId: action.payload.userId
       }
 
     default:

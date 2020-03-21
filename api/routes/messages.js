@@ -210,15 +210,6 @@ router.post('/sendMessage', (req, res) => {
               message: req.body.message
             })
 
-            // req.io.sockets.emit('message', {
-            //   conversation: conversation._id,
-            //   to: req.body.to,
-            //   from: decoded.id,
-            //   message: req.body.message,
-            //   date: Date.now(),
-            //   type: 'message'
-            // })
-
             return message.save(err => {
               if (err) {
                 return res.status(BAD_REQUEST).send({ message: 'Failure.' })
@@ -236,19 +227,9 @@ router.post('/sendMessage', (req, res) => {
               conversation: conversation._id,
               to: req.body.to,
               from: decoded.id,
-              data: req.body.imageSrc,
-              name: req.body.imageAlt
+              data: req.body.data,
+              name: req.body.name
             })
-
-            // req.io.sockets.emit('message', {
-            //   conversation: conversation._id,
-            //   to: req.body.to,
-            //   from: decoded.id,
-            //   data: req.body.imageSrc,
-            //   name: req.body.imageAlt,
-            //   date: Date.now(),
-            //   type: 'image'
-            // })
 
             return message.save(err => {
               if (err) {

@@ -100,6 +100,14 @@ class Server {
         socket.broadcast.emit('message', payload)
       })
 
+      socket.on('start-typing', (payload) => {
+        socket.broadcast.emit('user-started-typing', payload)
+      })
+
+      socket.on('stop-typing', (payload) => {
+        socket.broadcast.emit('user-stopped-typing', payload)
+      })
+
       socket.on('user-connected', (userId) => {
         users.push({
           userId: userId,

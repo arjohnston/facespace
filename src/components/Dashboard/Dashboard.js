@@ -59,15 +59,15 @@ export class Dashboard extends Component {
               res.data.email,
               res.data.id
             )
+
+            this.setListOfFriends(token)
           }
         )
       })
       .catch(() => {
         // if err statusCode == 401, then logout
-        this.logout(this.state.token)
+        this.logout()
       })
-
-    this.setListOfFriends(token)
 
     if (window) {
       this.setState({
@@ -97,7 +97,7 @@ export class Dashboard extends Component {
       username: username,
       profileImg: profileImg,
       email: email,
-      id: id
+      userId: id
     }
 
     this.props.setLoggedInUser(payload)
@@ -110,15 +110,8 @@ export class Dashboard extends Component {
   }
 
   logout () {
-    if (!this.state.token) return
-
-    axios
-      .post('/api/auth/logout', { token: this.state.token })
-      .then(() => {
-        window.localStorage.removeItem('jwtToken')
-        window.location.reload()
-      })
-      .catch(err => console.log(err))
+    window.localStorage.removeItem('jwtToken')
+    window.location.reload()
   }
 
   render () {
