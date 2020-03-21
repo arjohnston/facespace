@@ -22,7 +22,8 @@ export class Dashboard extends Component {
     this.state = {
       isAuthenticated: false,
       token: null,
-      isOnboarded: null
+      isOnboarded: null,
+      windowHeight: 100
     }
 
     this.handleOnboardingComplete = this.handleOnboardingComplete.bind(this)
@@ -43,7 +44,7 @@ export class Dashboard extends Component {
       ? window.localStorage.getItem('jwtToken')
       : ''
 
-    console.log('2: ', this.socket)
+    // console.log('2: ', this.socket)
 
     // Immediately direct to /login if no jwtToken token present
     if (!token) {
@@ -86,6 +87,13 @@ export class Dashboard extends Component {
       })
 
     this.setListOfFriends(token)
+
+    if (window) {
+      this.setState({
+        windowHeight: window.innerHeight
+      })
+      // console.log(window.screen.availHeight)
+    }
   }
 
   componentWillUnmount () {
@@ -136,7 +144,6 @@ export class Dashboard extends Component {
   }
 
   logout () {
-    // console.log('HIT!!!')
     if (!this.state.token) return
 
     axios
@@ -150,17 +157,31 @@ export class Dashboard extends Component {
 
   render () {
     return (
-      this.state.isAuthenticated && this.state.isOnboarded !== null && (
-        <div className='dashboard-container'>
-          {this.state.isOnboarded
-            ? (
-              <div style={{ width: '100%' }}>
-                <Header token={this.state.token} logout={this.logout.bind(this, this.state.token)} />
+      this.state.isAuthenticated &&
+      this.state.isOnboarded !== null && (
+        <div
+          className='dashboard-container'
+          style={{
+            minHeight: this.state.windowHeight + 'px',
+            maxHeight: this.state.windowHeight + 'px'
+          }}
+        >
+          {this.state.isOnboarded ? (
+            <div style={{ width: '100%' }}>
+              <Header
+                token={this.state.token}
+                logout={this.logout.bind(this, this.state.token)}
+              />
 
-                {this.props.children}
-              </div>
-            )
-            : <Onboarding token={this.state.token} onOnboardingComplete={this.handleOnboardingComplete} logout={this.logout.bind(this, this.state.token)} />}
+              {this.props.children}
+            </div>
+          ) : (
+            <Onboarding
+              token={this.state.token}
+              onOnboardingComplete={this.handleOnboardingComplete}
+              logout={this.logout.bind(this, this.state.token)}
+            />
+          )}
         </div>
       )
     )

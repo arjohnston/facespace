@@ -1,5 +1,5 @@
 .messaging-container {
-  max-height: 80vh;
+  max-height: calc(100% - 79px);
   height: 100%;
   margin: 24px auto 0;
   display: flex;
@@ -12,7 +12,6 @@
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   margin: 10px;
-  /* transition: height 0.2s ease-in-out; */
 }
 .friend-list {
   overflow: hidden;
@@ -31,6 +30,7 @@
   display: flex;
   flex-direction: column;
   max-width: 600px;
+  max-height: -webkit-fill-available;
 }
 
 @media (max-width: 767px) {
@@ -39,7 +39,6 @@
     align-items: center;
     justify-content: initial;
     overflow: hidden;
-    max-height: 90vh;
   }
 
   .messaging-container .friend-list-wrapper {
@@ -238,7 +237,6 @@
   position: relative;
   display: flex;
   align-items: center;
-  /* justify-content: space-between; */
 }
 
 .search-bar svg {
@@ -336,7 +334,6 @@
 
 .message-box .messages {
   height: 100%;
-  /* padding: 12px; */
   overflow-y: scroll;
 }
 

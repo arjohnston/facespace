@@ -12,7 +12,7 @@ import MessageBox from '../components/Messaging/MessageBox'
 // Unit tests
 // DONE - Mobile friendly
 // refactor socket
-// fix issue w/ safari viewport height
+// DONE - fix issue w/ safari viewport height
 
 // https://www.reddit.com/r/reactjs/comments/8pv2v4/where_to_initialise_socket_connection_in_a_react/
 
