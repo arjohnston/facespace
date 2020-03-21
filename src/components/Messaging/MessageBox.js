@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import io from 'socket.io-client'
 import axios from 'axios'
 
 import AttachmentInput from '../Attachment/Attachment'
@@ -8,6 +7,10 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 
 import { connect } from 'react-redux'
+
+import {
+  sendSocketMessage
+} from '../../actions/index'
 
 import './style.css'
 
@@ -50,18 +53,20 @@ export class MessageBox extends Component {
     this.chatInput = React.createRef()
     this.newConversationInput = React.createRef()
 
-    this.socket = io('http://localhost:3000', { transports: ['websocket'] })
+    // this.socket = io('http://localhost:3000', { transports: ['websocket'] })
 
-    this.socket.on('message', message => {
-      this.appendMessage(message)
-    })
+    // Change this to receiving msg in componentDidUpdate for props
+    // When I get a message, I need to make sure its the right user
+    // this.props.socket.on('message', message => {
+    //   this.appendMessage(message)
+    // })
   }
 
   componentDidMount () {
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')
       : ''
-    console.log('2: ', this.socket.id)
+    // console.log('2: ', this.socket.id)
 
     this.setState(
       {
@@ -72,9 +77,9 @@ export class MessageBox extends Component {
     )
   }
 
-  componentWillUnmount () {
-    this.socket.removeAllListeners('message')
-  }
+  // componentWillUnmount () {
+  //   this.socket.removeAllListeners('message')
+  // }
 
   componentDidUpdate (prevProps, prevState) {
     if (prevState.friends !== this.state.friends) {
@@ -89,8 +94,16 @@ export class MessageBox extends Component {
       })
     }
 
+    if (prevState.receivedMessage !== this.state.receivedMessage) {
+      this.setState({
+        receivedMessage: this.state.receivedMessage
+      })
+
+      this.appendMessage(this.state.receivedMessage)
+    }
+
     if (prevState.userSelected !== this.state.userSelected) {
-      if (prevState.userSelected && prevState.userSelected._id === this.state.userSelected._id) return
+      if (prevState.userSelected && this.state.userSelected && prevState.userSelected._id === this.state.userSelected._id) return
 
       this.setState(
         {
@@ -115,6 +128,8 @@ export class MessageBox extends Component {
       return { friends: nextProps.friends }
     } else if (nextProps.onlineUsers !== prevState.onlineUsers) {
       return { onlineUsers: nextProps.onlineUsers }
+    } else if (nextProps.receivedMessage !== prevState.receivedMessage) {
+      return { receivedMessage: nextProps.receivedMessage }
     } else return null
   }
 
@@ -126,8 +141,6 @@ export class MessageBox extends Component {
       return
     }
 
-    // const messages = [...this.state.messages]
-    // messages.push(message)
     this.setState(
       {
         messages: [...this.state.messages, message]
@@ -165,6 +178,8 @@ export class MessageBox extends Component {
   }
 
   scrollIntoView (effect) {
+    if (!this.chatBottom.current) return
+
     if (effect) {
       return this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
     }
@@ -220,12 +235,19 @@ export class MessageBox extends Component {
 
     axios
       .post('/api/messages/sendMessage', payload)
-      .then(() => {
+      .then((res) => {
         this.setState({
           messageInput: '',
           imageLoadedSrc: '',
           imageLoadedName: ''
         })
+
+        payload.conversation = res.data.conversationId
+        payload.date = Date.now()
+        delete payload.token
+
+        this.props.sendSocketMessage(payload)
+        this.appendMessage(payload)
       })
       .catch(err => console.log(err))
   }
@@ -564,7 +586,7 @@ export class MessageBox extends Component {
                       bottom: '0px',
                       right: '0px'
                     }}
-                    onSelect={emoji => this.handleSelectEmoji(emoji.native)}
+                    onClick={emoji => this.handleSelectEmoji(emoji.native)}
                   />
                 </div>
               </div>
@@ -628,7 +650,7 @@ export class MessageBox extends Component {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span>{this.state.userSelected.firstName ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName : 'Your Friend'}</span>
-            {this.state.onlineUsers && this.state.onlineUsers.includes(this.state.userSelected._id) && <span className='friend-online'>online</span>}
+            {this.state.onlineUsers && this.state.onlineUsers.map((user) => user.userId).includes(this.state.userSelected._id) && <span className='friend-online'>online</span>}
           </div>
         </div>
 
@@ -692,7 +714,7 @@ export class MessageBox extends Component {
                   showPreview={false}
                   showSkinTones={false}
                   style={{ position: 'absolute', bottom: '0px', right: '0px' }}
-                  onSelect={emoji => this.handleSelectEmoji(emoji.native)}
+                  onClick={emoji => this.handleSelectEmoji(emoji.native)}
                 />
               </div>
             </div>
@@ -712,4 +734,11 @@ const mapStateToProps = state => ({
   ...state
 })
 
-export default connect(mapStateToProps)(MessageBox)
+const mapDispatchToProps = dispatch => ({
+  sendSocketMessage: payload => dispatch(sendSocketMessage(payload))
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessageBox)

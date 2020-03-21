@@ -5,6 +5,13 @@ export function setLoggedInUser (payload) {
   }
 }
 
+export function sendSocketMessage (payload) {
+  return {
+    type: 'SEND_SOCKET_MESSAGE',
+    payload
+  }
+}
+
 export function setListOfFriends (payload) {
   return {
     type: 'SET_LIST_OF_FRIENDS',
@@ -12,16 +19,9 @@ export function setListOfFriends (payload) {
   }
 }
 
-export function setOnlineUser (payload) {
+export function setOnlineUsers (payload) {
   return {
-    type: 'SET_ONLINE_USER',
-    payload
-  }
-}
-
-export function removeOnlineUser (payload) {
-  return {
-    type: 'REMOVE_ONLINE_USER',
+    type: 'SET_ONLINE_USERS',
     payload
   }
 }

@@ -7,14 +7,11 @@ import MessageBox from '../components/Messaging/MessageBox'
 
 // typing bubbles
 // Search msgs + names
-// heartbeat to determine if people are online still
+// DONE - heartbeat to determine if people are online still
 // Messenger UI
 // Unit tests
-// DONE - Mobile friendly
-// refactor socket
-// DONE - fix issue w/ safari viewport height
-
-// https://www.reddit.com/r/reactjs/comments/8pv2v4/where_to_initialise_socket_connection_in_a_react/
+// DONE - refactor socket
+// Clicking on emoji on iphone doesnt close emoji picker
 
 export class Messaging extends Component {
   constructor (props) {

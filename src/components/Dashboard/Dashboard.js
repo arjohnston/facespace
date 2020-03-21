@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
-import io from 'socket.io-client'
 import { withRouter } from 'react-router'
 import axios from 'axios'
 
 import { connect } from 'react-redux'
 import {
   setLoggedInUser,
-  setListOfFriends,
-  setOnlineUser,
-  removeOnlineUser
+  setListOfFriends
 } from '../../actions/index'
 
 import Header from '../Header/Header'
@@ -27,24 +24,12 @@ export class Dashboard extends Component {
     }
 
     this.handleOnboardingComplete = this.handleOnboardingComplete.bind(this)
-
-    this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
-
-    this.socket.on('user-connected', payload => {
-      this.updateOnlineStatus(payload.userId)
-    })
-
-    this.socket.on('user-disconnected', payload => {
-      this.updateOfflineStatus(payload.userId)
-    })
   }
 
   componentDidMount () {
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')
       : ''
-
-    // console.log('2: ', this.socket)
 
     // Immediately direct to /login if no jwtToken token present
     if (!token) {
@@ -71,19 +56,15 @@ export class Dashboard extends Component {
               res.data.lastName,
               res.data.username,
               res.data.profileImg,
-              res.data.email
+              res.data.email,
+              res.data.id
             )
           }
         )
       })
       .catch(() => {
-        // if err statusCode == 401, then remove token & push /login
-        // otherwise log the token
-        // this.socket.emit('user-disconnected', { userId: this.props.user.id })
+        // if err statusCode == 401, then logout
         this.logout(this.state.token)
-
-        window.localStorage.removeItem('jwtToken')
-        if (this.props.history) this.props.history.push('/login')
       })
 
     this.setListOfFriends(token)
@@ -92,23 +73,11 @@ export class Dashboard extends Component {
       this.setState({
         windowHeight: window.innerHeight
       })
-      // console.log(window.screen.availHeight)
     }
   }
 
   componentWillUnmount () {
     this.logout()
-
-    this.socket.removeAllListeners('user-connected')
-    this.socket.removeAllListeners('user-disconnected')
-  }
-
-  updateOnlineStatus (id) {
-    this.props.setOnlineUser(id)
-  }
-
-  updateOfflineStatus (id) {
-    this.props.removeOnlineUser(id)
   }
 
   // TODO: Once friends list is implemented, change this to friend list
@@ -117,21 +86,18 @@ export class Dashboard extends Component {
       .post('/api/auth/getAllUsers', { token: token })
       .then(res => {
         this.props.setListOfFriends(res.data)
-
-        for (const user in res.data) {
-          if (res.data[user].online) this.updateOnlineStatus(res.data[user]._id)
-        }
       })
       .catch(err => console.log(err))
   }
 
-  setLoggedInUser (firstName, lastName, username, profileImg, email) {
+  setLoggedInUser (firstName, lastName, username, profileImg, email, id) {
     const payload = {
       firstName: firstName,
       lastName: lastName,
       username: username,
       profileImg: profileImg,
-      email: email
+      email: email,
+      id: id
     }
 
     this.props.setLoggedInUser(payload)
@@ -194,9 +160,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setLoggedInUser: payload => dispatch(setLoggedInUser(payload)),
-  setListOfFriends: payload => dispatch(setListOfFriends(payload)),
-  setOnlineUser: payload => dispatch(setOnlineUser(payload)),
-  removeOnlineUser: payload => dispatch(removeOnlineUser(payload))
+  setListOfFriends: payload => dispatch(setListOfFriends(payload))
 })
 
 export default connect(

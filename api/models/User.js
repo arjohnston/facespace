@@ -33,10 +33,6 @@ const UserSchema = new Schema(
     },
     lastLogin: {
       type: Date
-    },
-    online: {
-      type: Boolean,
-      default: false
     }
   },
   { collection: 'User' }

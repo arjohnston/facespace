@@ -384,28 +384,6 @@ router.post('/getAllUsers', function (req, res) {
             res.status(OK).send(users)
           }
         })
-
-      // User.find(
-      //   {
-      //     _id: { $not: { $eq: id } }
-      //   },
-      //   function (error, users) {
-      //     if (error) {
-      //       // Bad Request
-      //       return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
-      //     }
-      //
-      //     if (!users) {
-      //       // Unauthorized if the email does not match any records in the database
-      //       res.status(NOT_FOUND).send({
-      //         message: 'Could not find any users'
-      //       })
-      //     } else {
-      //       // Check if password matches database
-      //       res.status(OK).send(users)
-      //     }
-      //   }
-      // )
     }
   })
 })

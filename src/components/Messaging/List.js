@@ -105,7 +105,7 @@ export default class List extends Component {
 
     return this.state.users.map((friend, index) => {
       let classes = 'friend-row'
-      if (this.state.onlineUsers && this.state.onlineUsers.includes(friend._id)) classes += ' online'
+      if (this.state.onlineUsers && this.state.onlineUsers.map((user) => user.userId).includes(friend._id)) classes += ' online'
 
       if (this.state.userSelected === friend) classes += ' active'
 

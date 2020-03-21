@@ -90,31 +90,30 @@ class Server {
     io.set('heartbeat timeout', 90000) // 90 sec
     io.set('heartbeat interval', 60000) // 60 sec
 
-    this.app.use(function (req, res, next) {
-      req.io = io
-      next()
-    })
+    const users = []
 
-    // io.sockets.on('message', () => {
-    //   console.log('hit....')
-    // })
+    io.on('connection', socket => {
+      // get list of online users when connecting
+      socket.emit('online-users', users)
 
-    io.sockets.on('connection', socket => {
-      console.log('socket.id ', socket.id)
-      socket.on('heartbeat timeout', () => {
-        console.log('HIT')
+      socket.on('message', (payload) => {
+        socket.broadcast.emit('message', payload)
+      })
+
+      socket.on('user-connected', (userId) => {
+        users.push({
+          userId: userId,
+          socketId: socket.id
+        })
+        socket.broadcast.emit('online-users', users)
+      })
+
+      // Disconnect
+      socket.on('disconnect', () => {
+        users.splice(users.map((user) => user.socketId).indexOf(socket.id), 1)
+        socket.broadcast.emit('online-users', users)
       })
     })
-
-    // io.on('connection', socket => {
-    //   socket.on('heartbeat timeout', () => {
-    //     console.log('HIT')
-    //   })
-    //
-    //   socket.on('message', () => {
-    //     console.log('hit')
-    //   })
-    // })
 
     // Routes for all APIs here
     this.app.use('/api/auth', auth)
