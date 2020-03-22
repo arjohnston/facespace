@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 
 import './style.css'
 
@@ -10,7 +11,8 @@ export default class List extends Component {
       searchText: '',
       users: [],
       onlineUsers: [],
-      mobileListOpen: false
+      mobileListOpen: false,
+      filteredUsers: []
     }
 
     this.renderConversationList = this.renderConversationList.bind(this)
@@ -18,7 +20,10 @@ export default class List extends Component {
     this.handleCreateNewConversation = this.handleCreateNewConversation.bind(
       this
     )
-    this.handleMobileListShownToggle = this.handleMobileListShownToggle.bind(this)
+    this.handleMobileListShownToggle = this.handleMobileListShownToggle.bind(
+      this
+    )
+    this.handleClearSearchText = this.handleClearSearchText.bind(this)
 
     this.searchInputTextCallback = null
   }
@@ -80,24 +85,79 @@ export default class List extends Component {
   }
 
   handleSearchBarChange (e) {
+    const searchText = e.target.value
     // Wait 500ms after typing stops
     // Do a query & filter friends.
     // Search one friend at a time with their message history
     this.setState({
-      searchText: e.target.value
+      searchText: searchText
     })
 
     if (this.searchMessagesInputTextCallback) {
       clearTimeout(this.searchMessagesInputTextCallback)
     }
 
-    const callback = () => {
-      // do search stuff
+    const callback = async () => {
+      const users = [...this.state.users]
+      const filteredUsers = []
+      const promises = []
 
-      delete this.searchMessagesInputTextCallback
+      for (const user in users) {
+        promises.push(
+          new Promise((resolve, reject) => {
+            const name = users[user].firstname + ' ' + users[user].lastName
+
+            if (name.toLowerCase().includes(searchText.toLowerCase())) {
+              filteredUsers.push(users[user])
+              return resolve()
+            }
+
+            axios
+              .post('/api/messages/getConversationMessages', {
+                token: this.props.token,
+                userId: users[user]._id
+              })
+              .then(res => {
+                if (
+                  res.data.some(msg =>
+                    msg.type === 'message'
+                      ? msg.message
+                        .toLowerCase()
+                        .includes(searchText.toLowerCase())
+                      : false
+                  )
+                ) {
+                  filteredUsers.push(users[user])
+
+                  resolve()
+                } else {
+                  resolve()
+                }
+              })
+              .catch(err => {
+                reject(err)
+              })
+          })
+        )
+      }
+
+      Promise.all(promises).then(() => {
+        this.setState({
+          filteredUsers: filteredUsers
+        })
+
+        delete this.searchMessagesInputTextCallback
+      })
     }
 
     this.searchMessagesInputTextCallback = setTimeout(callback, 500)
+  }
+
+  handleClearSearchText () {
+    this.setState({
+      searchText: '',
+      filteredUsers: []
+    })
   }
 
   handleMobileListShownToggle () {
@@ -109,9 +169,17 @@ export default class List extends Component {
   renderConversationList () {
     if (!this.state.users) return
 
-    return this.state.users.map((friend, index) => {
+    const users =
+      this.state.filteredUsers.length > 0
+        ? [...this.state.filteredUsers]
+        : [...this.state.users]
+
+    return users.map((friend, index) => {
       let classes = 'friend-row'
-      if (this.state.onlineUsers && this.state.onlineUsers.map((user) => user.userId).includes(friend._id)) classes += ' online'
+      if (
+        this.state.onlineUsers &&
+        this.state.onlineUsers.map(user => user.userId).includes(friend._id)
+      ) { classes += ' online' }
 
       if (this.state.userSelected === friend) classes += ' active'
 
@@ -123,7 +191,10 @@ export default class List extends Component {
         >
           <div className='friend-img-container'>
             {friend.profileImg ? (
-              <img src={friend.profileImg} alt={`${friend.firstName} ${friend.lastName}` || 'User'} />
+              <img
+                src={friend.profileImg}
+                alt={`${friend.firstName} ${friend.lastName}` || 'User'}
+              />
             ) : (
               <svg viewBox='0 0 24 24'>
                 <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
@@ -141,7 +212,11 @@ export default class List extends Component {
 
   render () {
     return (
-      <div className={`friend-list-wrapper${!this.state.mobileListOpen ? ' mobile-closed' : ''}`}>
+      <div
+        className={`friend-list-wrapper${
+          !this.state.mobileListOpen ? ' mobile-closed' : ''
+        }`}
+      >
         <div className='friend-list-cta-wrapper'>
           <div className='friend-list-title-wrapper'>
             <span className='friend-list-title'>Messaging</span>
@@ -153,11 +228,6 @@ export default class List extends Component {
                 <path d='M8,12H16V14H8V12M10,20H6V4H13V9H18V12.1L20,10.1V8L14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H10V20M8,18H12.1L13,17.1V16H8V18M20.2,13C20.3,13 20.5,13.1 20.6,13.2L21.9,14.5C22.1,14.7 22.1,15.1 21.9,15.3L20.9,16.3L18.8,14.2L19.8,13.2C19.9,13.1 20,13 20.2,13M20.2,16.9L14.1,23H12V20.9L18.1,14.8L20.2,16.9Z' />
               </svg>
             </div>
-            {/* <div className='mobile-list-chevron' onClick={this.handleMobileListShownToggle}>
-              <svg viewBox='0 0 24 24'>
-                <path d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z' />
-              </svg>
-            </div> */}
           </div>
           <div className='search-bar'>
             <label htmlFor='friend-search'>
@@ -174,14 +244,16 @@ export default class List extends Component {
               value={this.state.searchText}
             />
 
-            {/* <div
-              className='mobile-create-new-conversation'
-              onClick={this.handleCreateNewConversation}
+            <div
+              className={`clear-search-bar ${
+                this.state.searchText.length > 0 ? 'is-active' : ''
+              }`}
+              onClick={this.handleClearSearchText}
             >
               <svg viewBox='0 0 24 24'>
-                <path d='M8,12H16V14H8V12M10,20H6V4H13V9H18V12.1L20,10.1V8L14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H10V20M8,18H12.1L13,17.1V16H8V18M20.2,13C20.3,13 20.5,13.1 20.6,13.2L21.9,14.5C22.1,14.7 22.1,15.1 21.9,15.3L20.9,16.3L18.8,14.2L19.8,13.2C19.9,13.1 20,13 20.2,13M20.2,16.9L14.1,23H12V20.9L18.1,14.8L20.2,16.9Z' />
+                <path d='M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z' />
               </svg>
-            </div> */}
+            </div>
           </div>
         </div>
 

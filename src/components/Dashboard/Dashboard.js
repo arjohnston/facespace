@@ -3,10 +3,7 @@ import { withRouter } from 'react-router'
 import axios from 'axios'
 
 import { connect } from 'react-redux'
-import {
-  setLoggedInUser,
-  setListOfFriends
-} from '../../actions/index'
+import { setLoggedInUser, setListOfFriends } from '../../actions/index'
 
 import Header from '../Header/Header'
 import Onboarding from '../Onboarding/Onboarding'
@@ -120,8 +117,8 @@ export class Dashboard extends Component {
   }
 
   logout () {
-    // window.localStorage.removeItem('jwtToken')
-    // window.location.reload()
+    window.localStorage.removeItem('jwtToken')
+    window.location.reload()
   }
 
   render () {

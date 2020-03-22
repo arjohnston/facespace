@@ -256,6 +256,22 @@
   width: calc(100% - 6px);
 }
 
+.clear-search-bar {
+  display: none;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+.clear-search-bar.is-active {
+  display: flex;
+}
+.clear-search-bar svg {
+  left: auto;
+  right: 12px;
+  width: 24px;
+
+}
+
 .friend-header {
   display: flex;
   padding: 12px;

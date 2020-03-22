@@ -7,7 +7,6 @@ import MessageBox from '../components/Messaging/MessageBox'
 
 // Search msgs + names
 // Messenger UI
-// Unit tests
 
 export class Messaging extends Component {
   constructor (props) {
@@ -117,13 +116,20 @@ export class Messaging extends Component {
   render () {
     return (
       <div className='messaging-container'>
-        <div className={`messaging-slider-track ${this.state.userSelected || this.state.createNewConversation ? 'user-selected' : ''}`}>
+        <div
+          className={`messaging-slider-track ${
+            this.state.userSelected || this.state.createNewConversation
+              ? 'user-selected'
+              : ''
+          }`}
+        >
           <List
             users={this.state.users}
             userSelected={this.state.userSelected}
             selectUser={this.selectUser}
             onlineUsers={this.state.onlineUsers}
             createNewConversation={this.createNewConversation}
+            token={this.state.token}
           />
           <MessageBox
             userSelected={this.state.userSelected}
