@@ -8,9 +8,6 @@ import MessageBox from '../components/Messaging/MessageBox'
 // Search msgs + names
 // Messenger UI
 // Unit tests
-// Clicking on emoji on iphone doesnt close emoji picker
-// remove hover state on page click mobile
-// Adding image increases box size beyond screen
 
 export class Messaging extends Component {
   constructor (props) {
@@ -18,16 +15,19 @@ export class Messaging extends Component {
     this.state = {
       userSelected: null,
       users: null,
-      onlineUsers: []
+      onlineUsers: [],
+      createNewConversation: false
     }
 
     this.selectUser = this.selectUser.bind(this)
     this.refreshConversationList = this.refreshConversationList.bind(this)
+    this.createNewConversation = this.createNewConversation.bind(this)
   }
 
   selectUser (user) {
     this.setState({
-      userSelected: user
+      userSelected: user,
+      createNewConversation: false
     })
   }
 
@@ -58,6 +58,13 @@ export class Messaging extends Component {
     if (nextProps.onlineUsers !== prevState.onlineUsers) {
       return { onlineUsers: nextProps.onlineUsers }
     } else return null
+  }
+
+  createNewConversation () {
+    this.setState({
+      createNewConversation: true,
+      userSelected: null
+    })
   }
 
   refreshConversationList () {
@@ -93,10 +100,16 @@ export class Messaging extends Component {
           )
           .reverse()
 
-        this.setState({
-          users: users,
-          userSelected: users[0]
-        })
+        if (window && window.innerWidth < 767) {
+          this.setState({
+            users: users
+          })
+        } else {
+          this.setState({
+            users: users,
+            userSelected: users[0]
+          })
+        }
       })
       .catch(err => console.log(err))
   }
@@ -104,17 +117,20 @@ export class Messaging extends Component {
   render () {
     return (
       <div className='messaging-container'>
-        <List
-          users={this.state.users}
-          userSelected={this.state.userSelected}
-          selectUser={this.selectUser}
-          onlineUsers={this.state.onlineUsers}
-        />
-        <MessageBox
-          userSelected={this.state.userSelected}
-          selectUser={this.selectUser}
-          refreshConversationList={this.refreshConversationList}
-        />
+        <div className={`messaging-slider-track ${this.state.userSelected || this.state.createNewConversation ? 'user-selected' : ''}`}>
+          <List
+            users={this.state.users}
+            userSelected={this.state.userSelected}
+            selectUser={this.selectUser}
+            onlineUsers={this.state.onlineUsers}
+            createNewConversation={this.createNewConversation}
+          />
+          <MessageBox
+            userSelected={this.state.userSelected}
+            selectUser={this.selectUser}
+            refreshConversationList={this.refreshConversationList}
+          />
+        </div>
       </div>
     )
   }

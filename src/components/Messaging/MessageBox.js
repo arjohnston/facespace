@@ -35,7 +35,8 @@ export class MessageBox extends Component {
       imageViewerName: '',
       onlineUsers: [],
       userSelectedIsTyping: false,
-      usersTyping: []
+      usersTyping: [],
+      backButtonPressed: false
     }
 
     this.renderMessages = this.renderMessages.bind(this)
@@ -111,9 +112,13 @@ export class MessageBox extends Component {
         },
         () => {
           this.getConversationMessages()
-          if (!this.state.userSelected) {
+          if (!this.state.userSelected && !this.state.backButtonPressed) {
             this.newConversationInput.current.focus()
           }
+
+          this.setState({
+            backButtonPressed: false
+          })
         }
       )
     }
@@ -183,14 +188,23 @@ export class MessageBox extends Component {
 
   scrollIntoView (effect) {
     if (!this.chatBottom.current) return
+    if (!this.state.userSelected) return
 
     if (effect) {
       return this.chatBottom.current.scrollIntoView({ behavior: 'smooth' })
     }
-    this.chatBottom.current.scrollIntoView()
+
+    if (window && window.innerWidth < 767) {
+      setTimeout(() => {
+        this.chatBottom.current.scrollIntoView()
+      }, 300)
+    } else {
+      this.chatBottom.current.scrollIntoView()
+    }
   }
 
   setInputIntoFocus () {
+    if (!this.state.userSelected) return
     this.chatInput.current.focus()
   }
 
@@ -213,6 +227,8 @@ export class MessageBox extends Component {
     this.setState({
       messageInput: this.state.messageInput + e
     })
+
+    if (document) document.activeElement.blur()
   }
 
   // Emit that I started typing
@@ -339,6 +355,19 @@ export class MessageBox extends Component {
     })
 
     this.props.selectUser(friendSelected)
+  }
+
+  handleGoBack () {
+    // this.chatInput.current.blur()
+    // this.newConversationInput.current.blur()
+
+    // if (document) document.activeElement.blur()
+
+    this.setState({
+      backButtonPressed: true
+    })
+
+    this.props.selectUser(null)
   }
 
   toggleOpenImageViewer (message) {
@@ -565,7 +594,15 @@ export class MessageBox extends Component {
           </div>
 
           <div className='friend-header-new'>
-            <span>New message</span>
+            <div className='friend-header-new-title-wrapper'>
+              <div className='mobile-back-button' onClick={this.handleGoBack.bind(this)}>
+                <svg viewBox='0 0 24 24'>
+                  <path d='M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z' />
+                </svg>
+              </div>
+
+              <span>New message</span>
+            </div>
 
             <input
               type='text'
@@ -698,6 +735,11 @@ export class MessageBox extends Component {
         </div>
 
         <div className='friend-header'>
+          <div className='mobile-back-button' onClick={this.handleGoBack.bind(this)}>
+            <svg viewBox='0 0 24 24'>
+              <path d='M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z' />
+            </svg>
+          </div>
           <div className='friend-header-img'>
             {this.state.userSelected.profileImg ? (
               <img

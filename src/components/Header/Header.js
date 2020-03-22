@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
-// import io from 'socket.io-client'
 
 import './style.css'
 
@@ -12,24 +11,15 @@ export class Header extends Component {
     this.state = {}
 
     this.handleLogout = this.handleLogout.bind(this)
-
-    // this.socket = io('ws://localhost:8080', { transports: ['websocket'] })
   }
 
   handleLogout () {
-    // this.socket.emit('user-disconnected', { userId: this.props.user.id })
-    // axios
-    //   .post('/api/auth/logout', { token: this.props.token })
-    //   .catch(err => console.log(err))
-
-    // window.localStorage.removeItem('jwtToken')
-    // window.location.reload()
     this.props.logout()
   }
 
   render () {
     return (
-      <div className='header'>
+      <div className='header' id='header'>
         <div>
           <Link to='/'>
             <img src='/logo.svg' alt='MyFace logo' className='logo' />

@@ -12,7 +12,9 @@ const UserSchema = new Schema(
     },
     username: {
       type: String,
-      unique: true // Don't allow multiple users with the same username
+      unique: true, // Don't allow multiple users with the same username
+      index: true,
+      sparse: true
     },
     firstName: {
       type: String

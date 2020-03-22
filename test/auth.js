@@ -12,6 +12,7 @@ const server = require('../server')
 const expect = chai.expect
 const {
   OK,
+  NOT_FOUND,
   UNAUTHORIZED,
   BAD_REQUEST,
   CONFLICT
@@ -84,6 +85,46 @@ describe('Users', () => {
       chai
         .request(app)
         .post('/api/auth/checkIfEmailExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST checkIfUsernameExists with no users added yet', () => {
+    it('Should not return statusCode 200 when an username is not provided', done => {
+      // Create an empty user
+      const user = {}
+
+      // Try to send the empty used to the API
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          // Expect to get a BAD_REQUEST back from the server
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a user does not exist', done => {
+      const user = {
+        username: 'abc'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
         .send(user)
         .then(function (res) {
           expect(res).to.have.status(OK)
@@ -181,7 +222,7 @@ describe('Users', () => {
 
   // Login with the username and password created above
   describe('/POST /api/auth/login', () => {
-    it('Should return statusCode 400 if an email, username and/or password is not provided', done => {
+    it('Should return statusCode 400 if an email and/or password is not provided', done => {
       const user = {}
       chai
         .request(app)
@@ -200,7 +241,6 @@ describe('Users', () => {
     it('Should return statusCode 401 if an email/pass combo does not match a record in the DB', done => {
       const user = {
         email: 'nota@b.c',
-        username: 'abc',
         password: 'notpass'
       }
       chai
@@ -220,7 +260,6 @@ describe('Users', () => {
     it('Should return statusCode 401 if the email exists but password is incorrect', done => {
       const user = {
         email: 'a@b.c',
-        username: 'abc',
         password: 'notpass'
       }
       chai
@@ -240,7 +279,6 @@ describe('Users', () => {
     it('Should return statusCode 200 and a JWT token if the email/pass is correct', done => {
       const user = {
         email: 'a@b.c',
-        username: 'abc',
         password: 'StrongPassword$1'
       }
       chai
@@ -302,6 +340,107 @@ describe('Users', () => {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
           res.body.should.have.property('email')
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST edit an account for adding a username', () => {
+    it('Should return statusCode 409 when a queryEmail is not passed in', done => {
+      const user = {
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(NOT_FOUND)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 404 when a queryEmail is not found', done => {
+      const user = {
+        queryEmail: 'a2@c.c',
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(NOT_FOUND)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a record was updated', done => {
+      const user = {
+        queryEmail: 'a@b.c',
+        username: 'abc',
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  // Check if the user exists after registering the user above
+  describe('/POST checkIfUsernameExists with a user added', () => {
+    it('Should return statusCode 409 when a user already exists', done => {
+      const user = {
+        username: 'abc'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(CONFLICT)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a username doesnt exist', done => {
+      const user = {
+        username: 'bca'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
 
           done()
         })

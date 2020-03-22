@@ -24,6 +24,7 @@ export class Dashboard extends Component {
     }
 
     this.handleOnboardingComplete = this.handleOnboardingComplete.bind(this)
+    this.handleWindowResize = this.handleWindowResize.bind(this)
   }
 
   componentDidMount () {
@@ -70,14 +71,23 @@ export class Dashboard extends Component {
       })
 
     if (window) {
-      this.setState({
-        windowHeight: window.innerHeight
-      })
+      this.handleWindowResize()
+
+      window.addEventListener('resize', this.handleWindowResize)
     }
   }
 
   componentWillUnmount () {
     this.logout()
+
+    if (window) window.removeEventListener('resize', this.handleWindowResize)
+  }
+
+  handleWindowResize () {
+    if (!window) return
+    this.setState({
+      windowHeight: window.innerHeight
+    })
   }
 
   // TODO: Once friends list is implemented, change this to friend list
@@ -110,8 +120,8 @@ export class Dashboard extends Component {
   }
 
   logout () {
-    window.localStorage.removeItem('jwtToken')
-    window.location.reload()
+    // window.localStorage.removeItem('jwtToken')
+    // window.location.reload()
   }
 
   render () {
@@ -126,7 +136,7 @@ export class Dashboard extends Component {
           }}
         >
           {this.state.isOnboarded ? (
-            <div style={{ width: '100%' }}>
+            <div style={{ width: '100%', overflow: 'hidden' }}>
               <Header
                 token={this.state.token}
                 logout={this.logout.bind(this, this.state.token)}

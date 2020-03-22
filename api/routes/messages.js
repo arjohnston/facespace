@@ -169,7 +169,9 @@ router.post('/getConversationMessages', (req, res) => {
 })
 
 router.post('/sendMessage', (req, res) => {
-  if (!req.body.token) return res.sendStatus(BAD_REQUEST)
+  if (!req.body.token) {
+    return res.sendStatus(BAD_REQUEST)
+  }
   const token = req.body.token.replace(/^JWT\s/, '')
 
   jwt.verify(token, config.secretKey, function (error, decoded) {
