@@ -2,32 +2,34 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import reducer from './reducers/index'
 import io from 'socket.io-client'
 
-const createMySocketMiddleware = (store) => {
+const createMySocketMiddleware = store => {
   if (process.env.NODE_ENV !== 'test') {
-    const socket = io('ws://localhost:8080', { transports: ['websocket', 'polling'] })
+    const socket = io('ws://myface.dev', {
+      transports: ['websocket', 'polling']
+    })
 
-    socket.on('message', (message) => {
+    socket.on('message', message => {
       store.dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: message
       })
     })
 
-    socket.on('online-users', (users) => {
+    socket.on('online-users', users => {
       store.dispatch({
         type: 'SET_ONLINE_USERS',
         payload: users
       })
     })
 
-    socket.on('user-started-typing', (user) => {
+    socket.on('user-started-typing', user => {
       store.dispatch({
         type: 'SET_USER_TYPING',
         payload: user
       })
     })
 
-    socket.on('user-stopped-typing', (user) => {
+    socket.on('user-stopped-typing', user => {
       store.dispatch({
         type: 'REMOVE_USER_TYPING',
         payload: user
