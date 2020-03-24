@@ -4,8 +4,9 @@ import io from 'socket.io-client'
 
 const createMySocketMiddleware = store => {
   if (process.env.NODE_ENV !== 'test') {
-    const socket = io('ws://myface.dev', {
-      transports: ['websocket', 'polling']
+    const socket = io('/', {
+      transports: ['websocket', 'polling'],
+      path: 'ws/socket.io'
     })
 
     socket.on('message', message => {
