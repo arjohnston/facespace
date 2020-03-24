@@ -84,10 +84,6 @@ export class Messenger extends Component {
   }
 
   handleCreateNewConversationInput (e) {
-    // this.setState({
-    //   creatingNewConversationInputText: e.target.value
-    // })
-
     const value = e.target.value
 
     this.setState({
@@ -98,12 +94,12 @@ export class Messenger extends Component {
       clearTimeout(this.searchFriendListCallback)
     }
 
-    if (this.state.users.length <= 0) return
+    if (this.props.friends.length <= 0) return
 
     if (value === '') return this.setState({ filteredFriends: [] })
 
     const callback = () => {
-      const filteredFriends = this.state.users.filter(friend => {
+      const filteredFriends = this.props.friends.filter(friend => {
         const name = friend.firstName + ' ' + friend.lastName
         return name.toLowerCase().indexOf(value.toLowerCase()) !== -1
       })

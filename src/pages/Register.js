@@ -20,34 +20,12 @@ export default class extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-    // this.handleCheckIfUsernameExists = this.handleCheckIfUsernameExists.bind(this)
     this.handleCheckIfEmailExists = this.handleCheckIfEmailExists.bind(this)
   }
 
   componentDidMount () {
     document.title = 'myface: Sign Up'
   }
-
-  // handleCheckIfUsernameExists () {
-  //   if (!this.state.username) return
-  //
-  //   axios
-  //     .post('/api/auth/checkIfUsernameExists', { username: this.state.username })
-  //     .then(result => {
-  //       if (result.status >= 200 && result.status < 300) {
-  //         this.setState({
-  //           usernameAvailable: true,
-  //           message: ''
-  //         })
-  //       }
-  //     })
-  //     .catch(() => {
-  //       this.setState({
-  //         usernameAvailable: false,
-  //         message: ''
-  //       })
-  //     })
-  // }
 
   handleCheckIfEmailExists () {
     if (!this.state.email) return
@@ -81,6 +59,10 @@ export default class extends Component {
   handleChange (e) {
     const state = Object.assign({}, { ...this.state }, null)
     state[e.target.name] = e.target.value
+    if (e.target.name === 'email') {
+      state.emailAvailable = null
+      state.message = ''
+    }
     this.setState(state)
 
     if (e.target.name === 'password') {

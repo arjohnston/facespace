@@ -93,32 +93,32 @@ export class Onboarding extends Component {
     // TODO
     axios
       .post('/api/auth/edit', { queryEmail, firstName, lastName, username, isOnboarded: true, profileImg: profileImgSrc, token: this.props.token })
-      .then(() => {
-        this.setState({ message: '' })
-        this.setLoggedInUser(firstName, lastName, username, profileImgSrc, queryEmail)
-      })
+      // .then(() => {
+      //   this.setState({ message: '' })
+      //   this.setLoggedInUser(firstName, lastName, username, profileImgSrc, queryEmail)
+      // })
       .then(() => {
         this.props.onOnboardingComplete()
       })
       .catch(error => {
-        console.log(error)
+        // console.log(error)
         this.setState({
           message: error.response.data.message
         })
       })
   }
 
-  setLoggedInUser (firstName, lastName, username, profileImg, email) {
-    const payload = {
-      firstName: firstName,
-      lastName: lastName,
-      username: username,
-      profileImg: profileImg,
-      email: email
-    }
-
-    this.props.setLoggedInUser(payload)
-  }
+  // setLoggedInUser (firstName, lastName, username, profileImg, email) {
+  //   const payload = {
+  //     firstName: firstName,
+  //     lastName: lastName,
+  //     username: username,
+  //     profileImg: profileImg,
+  //     email: email
+  //   }
+  //
+  //   this.props.setLoggedInUser(payload)
+  // }
 
   recommendUserName () {
     let recommendedUserName = ''

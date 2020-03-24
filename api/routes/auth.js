@@ -312,7 +312,13 @@ router.post('/getUser', function (req, res) {
             // Check if password matches database
             res.status(OK).send({
               lastLogin: user.lastLogin,
-              username: user.username
+              username: user.username,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
+              id: user._id,
+              isOnboarded: user.isOnboarded
             })
           }
         }

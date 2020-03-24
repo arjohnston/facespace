@@ -45,19 +45,10 @@ export class Dashboard extends Component {
         this.setState(
           {
             isAuthenticated: true,
-            isOnboarded: res.data.isOnboarded,
-            username: res.data.username,
             token: token
           },
           () => {
-            this.setLoggedInUser(
-              res.data.firstName,
-              res.data.lastName,
-              res.data.username,
-              res.data.profileImg,
-              res.data.email,
-              res.data.id
-            )
+            this.getUser(token)
 
             this.setListOfFriends(token)
           }
@@ -81,6 +72,23 @@ export class Dashboard extends Component {
     if (window) window.removeEventListener('resize', this.handleWindowResize)
   }
 
+  getUser (token) {
+    axios
+      .post('/api/auth/getUser', { token: token })
+      .then(res => {
+        this.setLoggedInUser(
+          res.data.firstName,
+          res.data.lastName,
+          res.data.username,
+          res.data.profileImg,
+          res.data.email,
+          res.data.id,
+          res.data.isOnboarded
+        )
+      })
+      .catch(err => console.log(err))
+  }
+
   handleWindowResize () {
     if (!window) return
     this.setState({
@@ -98,7 +106,7 @@ export class Dashboard extends Component {
       .catch(err => console.log(err))
   }
 
-  setLoggedInUser (firstName, lastName, username, profileImg, email, id) {
+  setLoggedInUser (firstName, lastName, username, profileImg, email, id, isOnboarded) {
     const payload = {
       firstName: firstName,
       lastName: lastName,
@@ -108,13 +116,18 @@ export class Dashboard extends Component {
       userId: id
     }
 
+    this.setState({
+      isOnboarded: isOnboarded
+    })
+
     this.props.setLoggedInUser(payload)
   }
 
   handleOnboardingComplete () {
-    this.setState({
-      isOnboarded: true
-    })
+    // this.setState({
+    //   isOnboarded: true
+    // })
+    this.getUser(this.state.token)
   }
 
   logout () {

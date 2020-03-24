@@ -178,6 +178,8 @@ nav a.nav-active {
   /* border-radius: 50%; */
   overflow: hidden;
   margin-right: 6px;
+  justify-content: center;
+  display: flex;
 }
 
 .profile-menu-wrapper .profile-user-account-img img {

@@ -409,6 +409,8 @@
   margin-right: 12px;
   border: 1px solid #ddd;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
 }
 
 .message-cta-container .profile-img img {
@@ -881,6 +883,11 @@
   color: #FFF;
 }
 
+.messenger-header .filtered-friend-row {
+  background: #EFEFEF;
+  border: 1px solid #DDD;
+}
+
 @media (prefers-color-scheme: dark) {
   .message-box,
   .friend-list-cta-wrapper,
@@ -1106,5 +1113,13 @@
   }
   .messenger-header label svg {
     fill: white;
+  }
+
+  .messenger-header .filtered-friend-row {
+    border: 1px solid #555;
+    background: #1f2b33;
+  }
+  .messenger-header .filtered-friend-row:hover {
+    background: rgba(58, 171, 144, 0.08);
   }
 }
