@@ -54,7 +54,7 @@ export default class extends Component {
     return !this.state.submitted ? (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '60px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
         </div>
         <h1>Forgot Password</h1>
         <form onSubmit={this.handleSubmit}>
@@ -90,9 +90,9 @@ export default class extends Component {
     ) : (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '100px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
         </div>
-        <h1>{message}</h1>
+        <h1 style={{ maxWidth: '800px' }}>{message}</h1>
         <p style={{ fontSize: '1em' }}>
           <Link to='/login'>Return to login</Link>
         </p>
