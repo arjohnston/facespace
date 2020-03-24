@@ -7,6 +7,7 @@ import { setLoggedInUser, setListOfFriends } from '../../actions/index'
 
 import Header from '../Header/Header'
 import Onboarding from '../Onboarding/Onboarding'
+import Messenger from '../Messaging/Messenger'
 
 import './style.css'
 
@@ -138,6 +139,8 @@ export class Dashboard extends Component {
                 token={this.state.token}
                 logout={this.logout.bind(this, this.state.token)}
               />
+
+              <Messenger token={this.state.token} />
 
               {this.props.children}
             </div>

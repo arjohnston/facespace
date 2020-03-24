@@ -5,9 +5,6 @@ import { connect } from 'react-redux'
 import List from '../components/Messaging/List'
 import MessageBox from '../components/Messaging/MessageBox'
 
-// Search msgs + names
-// Messenger UI
-
 export class Messaging extends Component {
   constructor (props) {
     super(props)

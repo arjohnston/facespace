@@ -562,7 +562,7 @@ export class MessageBox extends Component {
       return (
         <div className='message-box'>
           <div
-            style={{ display: this.state.openImageViewer ? 'block' : 'none' }}
+            style={{ display: this.state.openImageViewer ? 'flex' : 'none' }}
             className='image-viewer'
             onClick={this.toggleOpenImageViewer.bind(this, null)}
           >

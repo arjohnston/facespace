@@ -1,10 +1,7 @@
 .dashboard-container {
   display: flex;
-  /* min-height: 100vh; */
   background: #EFEFEF;
-  /* max-height: 100vh; */
   overflow: hidden;
-  /* flex: 1; */
 }
 
 @media (prefers-color-scheme: dark) {
