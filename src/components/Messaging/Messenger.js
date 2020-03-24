@@ -573,7 +573,7 @@ export class Messenger extends Component {
 
   handleSelectNewConversation (friend, e) {
     e.stopPropagation()
-    
+
     this.setState({
       userSelected: friend,
       creatingNewConversation: false,
