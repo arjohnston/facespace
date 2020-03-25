@@ -6,7 +6,8 @@ const createMySocketMiddleware = store => {
   if (process.env.NODE_ENV !== 'test') {
     const socket = io('/', {
       transports: ['websocket', 'polling'],
-      path: '/ws/socket.io'
+      secure: true,
+      port: 8080
     })
 
     socket.on('message', message => {
