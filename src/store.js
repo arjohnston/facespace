@@ -2,15 +2,20 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import reducer from './reducers/index'
 import io from 'socket.io-client'
 
+// For testing on localhost, uncomment this
+// const URL = 'localhost:8080'
+const URL = '/'
+
 const createMySocketMiddleware = store => {
   if (process.env.NODE_ENV !== 'test') {
-    const socket = io('/', {
-      transports: ['websocket', 'polling'],
+    const socket = io(URL, {
+      transports: ['websocket'],
       secure: true,
       port: 8080
     })
 
     socket.on('message', message => {
+      console.log('recieved...')
       store.dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: message
@@ -40,6 +45,7 @@ const createMySocketMiddleware = store => {
 
     return next => action => {
       if (action.type === 'SEND_SOCKET_MESSAGE') {
+        console.log('emitting socket..')
         socket.emit('message', action.payload)
         return
       }

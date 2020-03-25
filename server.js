@@ -96,19 +96,20 @@ class Server {
       // get list of online users when connecting
       socket.emit('online-users', users)
 
-      socket.on('message', (payload) => {
+      socket.on('message', payload => {
+        console.log('message: ', payload)
         socket.broadcast.emit('message', payload)
       })
 
-      socket.on('start-typing', (payload) => {
+      socket.on('start-typing', payload => {
         socket.broadcast.emit('user-started-typing', payload)
       })
 
-      socket.on('stop-typing', (payload) => {
+      socket.on('stop-typing', payload => {
         socket.broadcast.emit('user-stopped-typing', payload)
       })
 
-      socket.on('user-connected', (userId) => {
+      socket.on('user-connected', userId => {
         users.push({
           userId: userId,
           socketId: socket.id
@@ -118,7 +119,7 @@ class Server {
 
       // Disconnect
       socket.on('disconnect', () => {
-        users.splice(users.map((user) => user.socketId).indexOf(socket.id), 1)
+        users.splice(users.map(user => user.socketId).indexOf(socket.id), 1)
         socket.broadcast.emit('online-users', users)
       })
     })
