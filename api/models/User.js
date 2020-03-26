@@ -35,6 +35,13 @@ const UserSchema = new Schema(
     },
     lastLogin: {
       type: Date
+    },
+    loginAttempts: {
+      type: Number,
+      default: 0
+    },
+    lastLoginAttempt: {
+      type: Date
     }
   },
   { collection: 'User' }

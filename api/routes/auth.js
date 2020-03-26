@@ -110,7 +110,7 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
-        if (error) return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+        if (error) { return res.status(BAD_REQUEST).send({ message: 'Bad Request.' }) }
 
         if (result.nModified < 1) {
           return res
@@ -242,6 +242,22 @@ router.post('/login', function (req, res) {
           .status(UNAUTHORIZED)
           .send({ message: 'Email or password does not match our records.' })
       } else {
+        // Check if the last login attempt is less than 15 minutes from now
+        // If so:
+        // Check if the user is locked out (e.g. user.loginAttempts >= 5)
+        // If so, return a 400 error w/ message Too many login attempts. Try again later.
+        const FIFTEEN_MINUTES = 15 * 60 * 1000
+        if (
+          user.lastLoginAttempt &&
+          new Date() - user.lastLoginAttempt < FIFTEEN_MINUTES
+        ) {
+          if (user.loginAttempts >= 5) {
+            return res
+              .status(UNAUTHORIZED)
+              .send({ message: 'Too many login attempts. Try again later.' })
+          }
+        }
+
         // Check if password matches database
         user.comparePassword(req.body.password, function (error, isMatch) {
           if (isMatch && !error) {
@@ -265,12 +281,29 @@ router.post('/login', function (req, res) {
               isOnboarded: user.isOnboarded
             }
 
+            // Reset the loginAttempts to 0
+            user.loginAttempts = 0
+            user.lastLogin = new Date()
+            user.save(error => {
+              if (error) console.log(error)
+            })
+
             // Sign the token using the data provided above, the secretKey and JWT options
             const token = jwt.sign(userToBeSigned, config.secretKey, jwtOptions)
             res
               .status(OK)
               .send({ token: 'JWT ' + token, lastLogin: user.lastLogin })
           } else {
+            // Failed login attempt
+            // Increment loginAttempts by 1
+            // Set lastLoginAttempt to now
+            user.loginAttempts += 1
+            user.lastLoginAttempt = new Date()
+
+            user.save(error => {
+              if (error) console.log(error)
+            })
+
             // Unauthorized
             res.status(UNAUTHORIZED).send({
               message: 'Email or password does not match our records.'
