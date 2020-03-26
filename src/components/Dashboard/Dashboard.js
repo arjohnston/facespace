@@ -106,7 +106,15 @@ export class Dashboard extends Component {
       .catch(err => console.log(err))
   }
 
-  setLoggedInUser (firstName, lastName, username, profileImg, email, id, isOnboarded) {
+  setLoggedInUser (
+    firstName,
+    lastName,
+    username,
+    profileImg,
+    email,
+    id,
+    isOnboarded
+  ) {
     const payload = {
       firstName: firstName,
       lastName: lastName,
@@ -124,15 +132,13 @@ export class Dashboard extends Component {
   }
 
   handleOnboardingComplete () {
-    // this.setState({
-    //   isOnboarded: true
-    // })
     this.getUser(this.state.token)
   }
 
   logout () {
     window.localStorage.removeItem('jwtToken')
-    window.location.reload()
+    if (this.props.history) this.props.history.push('/login')
+    else window.location.reload()
   }
 
   render () {

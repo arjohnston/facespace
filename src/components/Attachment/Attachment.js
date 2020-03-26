@@ -226,16 +226,18 @@ export default class Attachment extends Component {
             </div>
             <span>Drag images to upload, or</span>
           </div>
-          <label htmlFor='file-upload'>
-            Choose File
-            <input
-              name='file-upload'
-              id='file-upload'
-              type='file'
-              accept='image/*'
-              onChange={this.handleFileInput}
-            />
-          </label>
+          {this.props.isOpen && (
+            <label htmlFor='file-upload'>
+              Choose File
+              <input
+                name='file-upload'
+                id='file-upload'
+                type='file'
+                accept='image/*'
+                onChange={this.handleFileInput}
+              />
+            </label>
+          )}
 
           <div
             className='attachment-input-close-button'

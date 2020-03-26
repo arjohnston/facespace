@@ -97,7 +97,6 @@ class Server {
       socket.emit('online-users', users)
 
       socket.on('message', payload => {
-        console.log('message: ', payload)
         socket.broadcast.emit('message', payload)
       })
 

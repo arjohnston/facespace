@@ -15,7 +15,6 @@ const createMySocketMiddleware = store => {
     })
 
     socket.on('message', message => {
-      console.log('recieved...')
       store.dispatch({
         type: 'RECEIVE_MESSAGE',
         payload: message
@@ -45,7 +44,6 @@ const createMySocketMiddleware = store => {
 
     return next => action => {
       if (action.type === 'SEND_SOCKET_MESSAGE') {
-        console.log('emitting socket..')
         socket.emit('message', action.payload)
         return
       }
