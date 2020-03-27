@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-// Create a new schema for the Message
-const MessageSchema = new Schema(
+// Create a new schema for the Image
+const MessageImageSchema = new Schema(
   {
     conversation: {
       type: Schema.Types.ObjectId,
@@ -16,7 +16,11 @@ const MessageSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'users'
     },
-    message: {
+    data: {
+      type: String,
+      required: true
+    },
+    name: {
       type: String,
       required: true
     },
@@ -25,10 +29,10 @@ const MessageSchema = new Schema(
       default: Date.now
     }
   },
-  { collection: 'Message' }
+  { collection: 'MessageImage' }
 )
 
 module.exports =
-  mongoose.models && mongoose.models.Message
-    ? mongoose.models.Message
-    : mongoose.model('Message', MessageSchema)
+  mongoose.models && mongoose.models.MessageImage
+    ? mongoose.models.MessageImage
+    : mongoose.model('MessageImage', MessageImageSchema)

@@ -13,9 +13,20 @@ const UserSchema = new Schema(
     username: {
       type: String,
       unique: true, // Don't allow multiple users with the same username
-      required: true
+      index: true,
+      sparse: true
     },
-    name: {
+    firstName: {
+      type: String
+    },
+    lastName: {
+      type: String
+    },
+    isOnboarded: {
+      type: Boolean,
+      default: false
+    },
+    profileImg: {
       type: String
     },
     password: {
@@ -23,6 +34,13 @@ const UserSchema = new Schema(
       required: true
     },
     lastLogin: {
+      type: Date
+    },
+    loginAttempts: {
+      type: Number,
+      default: 0
+    },
+    lastLoginAttempt: {
       type: Date
     }
   },

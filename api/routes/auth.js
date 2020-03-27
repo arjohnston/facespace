@@ -110,7 +110,7 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
-        if (error) res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+        if (error) { return res.status(BAD_REQUEST).send({ message: 'Bad Request.' }) }
 
         if (result.nModified < 1) {
           return res
@@ -181,15 +181,14 @@ router.post('/updatePassword', (req, res) => {
 // @return statusCode
 router.post('/register', function (req, res) {
   // If the username, email or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.email || !req.body.username || !req.body.password) {
+  if (!req.body.email || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Create a new user with the supplied username and password
-  if (req.body.email && req.body.username && req.body.password) {
+  if (req.body.email && req.body.password) {
     const newUser = new User({
       email: req.body.email,
-      username: req.body.username,
       password: req.body.password
     })
 
@@ -243,6 +242,22 @@ router.post('/login', function (req, res) {
           .status(UNAUTHORIZED)
           .send({ message: 'Email or password does not match our records.' })
       } else {
+        // Check if the last login attempt is less than 15 minutes from now
+        // If so:
+        // Check if the user is locked out (e.g. user.loginAttempts >= 5)
+        // If so, return a 400 error w/ message Too many login attempts. Try again later.
+        const FIFTEEN_MINUTES = 15 * 60 * 1000
+        if (
+          user.lastLoginAttempt &&
+          new Date() - user.lastLoginAttempt < FIFTEEN_MINUTES
+        ) {
+          if (user.loginAttempts >= 5) {
+            return res
+              .status(UNAUTHORIZED)
+              .send({ message: 'Too many login attempts. Try again later.' })
+          }
+        }
+
         // Check if password matches database
         user.comparePassword(req.body.password, function (error, isMatch) {
           if (isMatch && !error) {
@@ -257,11 +272,21 @@ router.post('/login', function (req, res) {
             // Data to be passed to the token stored in Local Storage
             const userToBeSigned = {
               username: user.username,
-              name: user.name,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
               email: user.email,
               lastLogin: user.lastLogin,
-              id: user.id
+              id: user.id,
+              isOnboarded: user.isOnboarded
             }
+
+            // Reset the loginAttempts to 0
+            user.loginAttempts = 0
+            user.lastLogin = new Date()
+            user.save(error => {
+              if (error) console.log(error)
+            })
 
             // Sign the token using the data provided above, the secretKey and JWT options
             const token = jwt.sign(userToBeSigned, config.secretKey, jwtOptions)
@@ -269,6 +294,16 @@ router.post('/login', function (req, res) {
               .status(OK)
               .send({ token: 'JWT ' + token, lastLogin: user.lastLogin })
           } else {
+            // Failed login attempt
+            // Increment loginAttempts by 1
+            // Set lastLoginAttempt to now
+            user.loginAttempts += 1
+            user.lastLoginAttempt = new Date()
+
+            user.save(error => {
+              if (error) console.log(error)
+            })
+
             // Unauthorized
             res.status(UNAUTHORIZED).send({
               message: 'Email or password does not match our records.'
@@ -310,7 +345,13 @@ router.post('/getUser', function (req, res) {
             // Check if password matches database
             res.status(OK).send({
               lastLogin: user.lastLogin,
-              username: user.username
+              username: user.username,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
+              id: user._id,
+              isOnboarded: user.isOnboarded
             })
           }
         }
@@ -348,28 +389,6 @@ router.post('/getAllUsers', function (req, res) {
             res.status(OK).send(users)
           }
         })
-
-      // User.find(
-      //   {
-      //     _id: { $not: { $eq: id } }
-      //   },
-      //   function (error, users) {
-      //     if (error) {
-      //       // Bad Request
-      //       return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
-      //     }
-      //
-      //     if (!users) {
-      //       // Unauthorized if the email does not match any records in the database
-      //       res.status(NOT_FOUND).send({
-      //         message: 'Could not find any users'
-      //       })
-      //     } else {
-      //       // Check if password matches database
-      //       res.status(OK).send(users)
-      //     }
-      //   }
-      // )
     }
   })
 })
