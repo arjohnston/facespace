@@ -172,6 +172,10 @@ nav a.nav-active {
   height: 30px;
 }
 
+.profile-user-account {
+  display: flex;
+}
+
 .profile-menu-wrapper .profile-user-account-img {
   height: 45px;
   width: 45px;
@@ -180,6 +184,7 @@ nav a.nav-active {
   margin-right: 6px;
   justify-content: center;
   display: flex;
+  cursor: pointer;
 }
 
 .profile-menu-wrapper .profile-user-account-img img {
@@ -207,6 +212,7 @@ nav a.nav-active {
   height: 45px;
   fill: white;
   background: #3aab90;
+  cursor: pointer;
 }
 .profile-user-account-details {
   display: flex;
@@ -214,6 +220,7 @@ nav a.nav-active {
   font-size: 0.9em;
   max-width: 200px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {

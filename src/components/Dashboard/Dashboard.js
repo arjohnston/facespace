@@ -18,7 +18,8 @@ export class Dashboard extends Component {
       isAuthenticated: false,
       token: null,
       isOnboarded: null,
-      windowHeight: 100
+      windowHeight: 100,
+      location: null
     }
 
     this.handleOnboardingComplete = this.handleOnboardingComplete.bind(this)
@@ -45,7 +46,8 @@ export class Dashboard extends Component {
         this.setState(
           {
             isAuthenticated: true,
-            token: token
+            token: token,
+            location: this.props.location
           },
           () => {
             this.getUser(token)
@@ -70,6 +72,20 @@ export class Dashboard extends Component {
     this.logout()
 
     if (window) window.removeEventListener('resize', this.handleWindowResize)
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.location !== this.state.location) {
+      this.setState({
+        location: this.state.location
+      })
+    }
+  }
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (nextProps.location !== prevState.location) {
+      return { location: nextProps.location }
+    } else return null
   }
 
   getUser (token) {
@@ -159,7 +175,9 @@ export class Dashboard extends Component {
                 logout={this.logout.bind(this, this.state.token)}
               />
 
-              <Messenger token={this.state.token} />
+              {this.state.location &&
+                this.state.location.pathname !== '/messaging' &&
+                  <Messenger token={this.state.token} />}
 
               {this.props.children}
             </div>

@@ -12,6 +12,7 @@ const express = require('express')
 // Import routes
 const auth = require('./api/routes/auth')
 const messages = require('./api/routes/messages')
+const posts = require('./api/routes/posts')
 
 // Set the port to 3000 for development and 8080 for production
 const DEV =
@@ -126,6 +127,7 @@ class Server {
     // Routes for all APIs here
     this.app.use('/api/auth', auth)
     this.app.use('/api/messages', messages)
+    this.app.use('/api/posts', posts)
 
     // Catch 404 and forward to error handler
     // if not in test mode

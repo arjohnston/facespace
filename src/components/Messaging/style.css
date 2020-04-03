@@ -272,6 +272,11 @@
   margin-left: 12px;
 }
 
+.messenger-header a {
+  color: white;
+  text-decoration: none;
+}
+
 .clear-search-bar {
   display: none;
   cursor: pointer;
@@ -563,7 +568,7 @@
 .emoji-picker {
   display: none;
 }
-.emoji-wrapper:hover .emoji-picker {
+.emoji-wrapper.is-open .emoji-picker {
   display: block;
 }
 
