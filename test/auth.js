@@ -12,6 +12,7 @@ const server = require('../server')
 const expect = chai.expect
 const {
   OK,
+  NOT_FOUND,
   UNAUTHORIZED,
   BAD_REQUEST,
   CONFLICT
@@ -56,7 +57,7 @@ describe('Users', () => {
   let token = ''
 
   // Check to see if the user exists
-  describe('/POST checkIfUserExists with no users added yet', () => {
+  describe('/POST checkIfEmailExists with no users added yet', () => {
     it('Should not return statusCode 200 when an email is not provided', done => {
       // Create an empty user
       const user = {}
@@ -64,7 +65,7 @@ describe('Users', () => {
       // Try to send the empty used to the API
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
         .send(user)
         .then(function (res) {
           // Expect to get a BAD_REQUEST back from the server
@@ -79,11 +80,51 @@ describe('Users', () => {
 
     it('Should return statusCode 200 when a user does not exist', done => {
       const user = {
-        username: 'a@b.c'
+        email: 'a@b.c'
       }
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST checkIfUsernameExists with no users added yet', () => {
+    it('Should not return statusCode 200 when an username is not provided', done => {
+      // Create an empty user
+      const user = {}
+
+      // Try to send the empty used to the API
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          // Expect to get a BAD_REQUEST back from the server
+          expect(res).to.have.status(BAD_REQUEST)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a user does not exist', done => {
+      const user = {
+        username: 'abc'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
         .send(user)
         .then(function (res) {
           expect(res).to.have.status(OK)
@@ -98,7 +139,7 @@ describe('Users', () => {
 
   // Register a user
   describe('/POST /api/auth/register', () => {
-    it('Should not register a user without email or password', done => {
+    it('Should not register a user without email, username or password', done => {
       const user = {}
 
       chai
@@ -115,9 +156,10 @@ describe('Users', () => {
         })
     })
 
-    it('Should successfully register a user with email and password', done => {
+    it('Should successfully register a user with email, username and password', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'StrongPassword$1'
       }
 
@@ -137,7 +179,8 @@ describe('Users', () => {
 
     it('Should not allow a second registration with the same email as a user in the database', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
+        username: 'abc',
         password: 'StrongPassword$1'
       }
 
@@ -157,14 +200,14 @@ describe('Users', () => {
   })
 
   // Check if the user exists after registering the user above
-  describe('/POST checkIfUserExists with a user added', () => {
+  describe('/POST checkIfEmailExists with a user added', () => {
     it('Should return statusCode 409 when a user already exists', done => {
       const user = {
-        username: 'a@b.c'
+        email: 'a@b.c'
       }
       chai
         .request(app)
-        .post('/api/auth/checkIfUserExists')
+        .post('/api/auth/checkIfEmailExists')
         .send(user)
         .then(function (res) {
           expect(res).to.have.status(CONFLICT)
@@ -197,7 +240,7 @@ describe('Users', () => {
 
     it('Should return statusCode 401 if an email/pass combo does not match a record in the DB', done => {
       const user = {
-        username: 'nota@b.c',
+        email: 'nota@b.c',
         password: 'notpass'
       }
       chai
@@ -216,7 +259,7 @@ describe('Users', () => {
 
     it('Should return statusCode 401 if the email exists but password is incorrect', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
         password: 'notpass'
       }
       chai
@@ -235,7 +278,7 @@ describe('Users', () => {
 
     it('Should return statusCode 200 and a JWT token if the email/pass is correct', done => {
       const user = {
-        username: 'a@b.c',
+        email: 'a@b.c',
         password: 'StrongPassword$1'
       }
       chai
@@ -296,7 +339,108 @@ describe('Users', () => {
         .then(function (res) {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
-          res.body.should.have.property('username')
+          res.body.should.have.property('email')
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  describe('/POST edit an account for adding a username', () => {
+    it('Should return statusCode 409 when a queryEmail is not passed in', done => {
+      const user = {
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(NOT_FOUND)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 404 when a queryEmail is not found', done => {
+      const user = {
+        queryEmail: 'a2@c.c',
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(NOT_FOUND)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a record was updated', done => {
+      const user = {
+        queryEmail: 'a@b.c',
+        username: 'abc',
+        token: token
+      }
+
+      chai
+        .request(app)
+        .post('/api/auth/edit')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+  })
+
+  // Check if the user exists after registering the user above
+  describe('/POST checkIfUsernameExists with a user added', () => {
+    it('Should return statusCode 409 when a user already exists', done => {
+      const user = {
+        username: 'abc'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(CONFLICT)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 when a username doesnt exist', done => {
+      const user = {
+        username: 'bca'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/checkIfUsernameExists')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
 
           done()
         })
@@ -307,7 +451,7 @@ describe('Users', () => {
   })
 
   describe('/POST /api/auth/forgot-password', () => {
-    it('Should return statusCode 400 if a username was not passed in', done => {
+    it('Should return statusCode 400 if a email was not passed in', done => {
       chai
         .request(app)
         .post('/api/auth/forgot-password')
@@ -322,11 +466,11 @@ describe('Users', () => {
         })
     })
 
-    it('Should return statusCode 200 if a username was passed in always', done => {
+    it('Should return statusCode 200 if a email was passed in always', done => {
       chai
         .request(app)
         .post('/api/auth/forgot-password')
-        .send({ username: 'a@b.c' })
+        .send({ email: 'a@b.c' })
         .then(function (res) {
           expect(res).to.have.status(OK)
 
@@ -419,7 +563,6 @@ describe('Users', () => {
         .then(function (res) {
           expect(res).to.have.status(OK)
           res.body.should.be.a('object')
-          res.body.should.have.property('username')
 
           done()
         })

@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 const passport = require('passport')
 require('../config/passport')(passport)
+const mongoose = require('mongoose')
 const User = require('../models/User')
 const config = require('../../util/settings')
 const {
@@ -16,7 +17,7 @@ const {
 // Check if the user exists
 // @parameter username: String
 // @return: statusCode
-router.post('/checkIfUserExists', (req, res) => {
+router.post('/checkIfUsernameExists', (req, res) => {
   // If a username is passed in, return a BAD_REQUEST
   if (!req.body.username) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
@@ -44,9 +45,40 @@ router.post('/checkIfUserExists', (req, res) => {
   )
 })
 
+// Check if the email exists
+// @parameter email: String
+// @return: statusCode
+router.post('/checkIfEmailExists', (req, res) => {
+  // If a email is not passed in, return a BAD_REQUEST
+  if (!req.body.email) {
+    return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+  }
+
+  // Try and find the user in the database
+  User.findOne(
+    {
+      email: req.body.email.toLowerCase()
+    },
+    function (error, user) {
+      if (error) {
+        // Bad Request
+        return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+      }
+
+      if (!user) {
+        // Member email does not exist
+        res.sendStatus(OK)
+      } else {
+        // User email does exist
+        res.sendStatus(CONFLICT)
+      }
+    }
+  )
+})
+
 router.post('/forgot-password', (req, res) => {
-  // If a username is passed in, return a BAD_REQUEST
-  if (!req.body.username) {
+  // If a email is passed in, return a BAD_REQUEST
+  if (!req.body.email) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
@@ -59,13 +91,13 @@ router.post('/edit', (req, res) => {
   if (!req.body.token) return res.sendStatus(BAD_REQUEST)
 
   const token = req.body.token.replace(/^JWT\s/, '')
-  const query = { username: req.body.queryUsername }
+  const query = { email: req.body.queryEmail }
   const user = {
     ...req.body
   }
 
   // Remove the auth token from the form getting edited
-  delete user.queryUsername
+  delete user.queryEmail
   delete user.token
   delete user.password // don't allow password updates
 
@@ -76,19 +108,19 @@ router.post('/edit', (req, res) => {
     } else {
       // Ok
       // Build this out to search for a user
-      if (!query.username) query.username = decoded.username
+      if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
-        if (error) res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+        if (error) { return res.status(BAD_REQUEST).send({ message: 'Bad Request.' }) }
 
         if (result.nModified < 1) {
           return res
             .status(NOT_FOUND)
-            .send({ message: `${req.body.queryUsername} not found.` })
+            .send({ message: `${req.body.queryEmail} not found.` })
         }
 
         return res
           .status(OK)
-          .send({ message: `${req.body.queryUsername} was updated.` })
+          .send({ message: `${req.body.queryEmail} was updated.` })
       })
     }
   })
@@ -99,7 +131,7 @@ router.post('/updatePassword', (req, res) => {
   if (!req.body.token || !req.body.password) return res.sendStatus(BAD_REQUEST)
 
   const token = req.body.token.replace(/^JWT\s/, '')
-  const query = { username: req.body.queryUsername }
+  const query = { email: req.body.queryEmail }
   const password = req.body.password
 
   jwt.verify(token, config.secretKey, function (error, decoded) {
@@ -109,7 +141,7 @@ router.post('/updatePassword', (req, res) => {
     } else {
       // Ok
       // Build this out to search for a user
-      if (!query.username) query.username = decoded.username
+      if (!query.email) query.email = decoded.email
 
       User.findOne(
         {
@@ -122,7 +154,7 @@ router.post('/updatePassword', (req, res) => {
           }
 
           if (!user) {
-            // Unauthorized if the username does not match any records in the database
+            // Unauthorized if the email does not match any records in the database
             res.status(404).send({ message: 'User not found.' })
           } else {
             user.password = password
@@ -142,20 +174,21 @@ router.post('/updatePassword', (req, res) => {
   })
 })
 
-// Registers a new user if the username is unique
+// Registers a new user if the email is unique
+// @parameter email: String
 // @parameter username: String
 // @parameter password: String
 // @return statusCode
 router.post('/register', function (req, res) {
-  // If the username or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.username || !req.body.password) {
+  // If the username, email or password isn't supplied, return a BAD_REQUEST
+  if (!req.body.email || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Create a new user with the supplied username and password
-  if (req.body.username && req.body.password) {
+  if (req.body.email && req.body.password) {
     const newUser = new User({
-      username: req.body.username,
+      email: req.body.email,
       password: req.body.password
     })
 
@@ -183,19 +216,19 @@ router.post('/register', function (req, res) {
 })
 
 // Logs the user in if the password and username match the database
-// @parameter username: String
+// @parameter email: String
 // @paratmeter password: String
 // @return: statusCode & JWT token
 router.post('/login', function (req, res) {
-  // If the username or password isn't supplied, return a BAD_REQUEST
-  if (!req.body.username || !req.body.password) {
+  // If the email or password isn't supplied, return a BAD_REQUEST
+  if (!req.body.email || !req.body.password) {
     return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
   }
 
   // Try and find a user in the database
   User.findOne(
     {
-      username: req.body.username
+      email: req.body.email
     },
     function (error, user) {
       if (error) {
@@ -204,27 +237,56 @@ router.post('/login', function (req, res) {
       }
 
       if (!user) {
-        // Unauthorized if the username does not match any records in the database
+        // Unauthorized if the email does not match any records in the database
         res
           .status(UNAUTHORIZED)
-          .send({ message: 'Username or password does not match our records.' })
+          .send({ message: 'Email or password does not match our records.' })
       } else {
+        // Check if the last login attempt is less than 15 minutes from now
+        // If so:
+        // Check if the user is locked out (e.g. user.loginAttempts >= 5)
+        // If so, return a 400 error w/ message Too many login attempts. Try again later.
+        const FIFTEEN_MINUTES = 15 * 60 * 1000
+        if (
+          user.lastLoginAttempt &&
+          new Date() - user.lastLoginAttempt < FIFTEEN_MINUTES
+        ) {
+          if (user.loginAttempts >= 5) {
+            return res
+              .status(UNAUTHORIZED)
+              .send({ message: 'Too many login attempts. Try again later.' })
+          }
+        }
+
         // Check if password matches database
         user.comparePassword(req.body.password, function (error, isMatch) {
           if (isMatch && !error) {
-            // If the username and password matches the database, assign and
+            // If the email and password matches the database, assign and
             // return a jwt token
 
             // Set the expiration time
             const jwtOptions = {
-              expiresIn: '4h' // 4 hours
+              expiresIn: req.body.remember ? '7d' : '4h' // 7 days or 4 hours
             }
 
             // Data to be passed to the token stored in Local Storage
             const userToBeSigned = {
               username: user.username,
-              lastLogin: user.lastLogin
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
+              email: user.email,
+              lastLogin: user.lastLogin,
+              id: user.id,
+              isOnboarded: user.isOnboarded
             }
+
+            // Reset the loginAttempts to 0
+            user.loginAttempts = 0
+            user.lastLogin = new Date()
+            user.save(error => {
+              if (error) console.log(error)
+            })
 
             // Sign the token using the data provided above, the secretKey and JWT options
             const token = jwt.sign(userToBeSigned, config.secretKey, jwtOptions)
@@ -232,9 +294,19 @@ router.post('/login', function (req, res) {
               .status(OK)
               .send({ token: 'JWT ' + token, lastLogin: user.lastLogin })
           } else {
+            // Failed login attempt
+            // Increment loginAttempts by 1
+            // Set lastLoginAttempt to now
+            user.loginAttempts += 1
+            user.lastLoginAttempt = new Date()
+
+            user.save(error => {
+              if (error) console.log(error)
+            })
+
             // Unauthorized
             res.status(UNAUTHORIZED).send({
-              message: 'Username or password does not match our records.'
+              message: 'Email or password does not match our records.'
             })
           }
         })
@@ -256,7 +328,7 @@ router.post('/getUser', function (req, res) {
       // Build this out to search for a user
       User.findOne(
         {
-          username: decoded.username
+          email: decoded.email
         },
         function (error, user) {
           if (error) {
@@ -265,19 +337,58 @@ router.post('/getUser', function (req, res) {
           }
 
           if (!user) {
-            // Unauthorized if the username does not match any records in the database
+            // Unauthorized if the email does not match any records in the database
             res.status(UNAUTHORIZED).send({
-              message: 'Username or password does not match our records.'
+              message: 'Email or password does not match our records.'
             })
           } else {
             // Check if password matches database
             res.status(OK).send({
               lastLogin: user.lastLogin,
-              username: user.username
+              username: user.username,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
+              id: user._id,
+              isOnboarded: user.isOnboarded
             })
           }
         }
       )
+    }
+  })
+})
+
+// TEMP while the Friends function is being created
+router.post('/getAllUsers', function (req, res) {
+  if (!req.body.token) return res.sendStatus(BAD_REQUEST)
+  const token = req.body.token.replace(/^JWT\s/, '')
+
+  jwt.verify(token, config.secretKey, function (error, decoded) {
+    if (error) {
+      // Unauthorized
+      res.sendStatus(UNAUTHORIZED)
+    } else {
+      // Ok
+      // Build this out to search for a user
+      const id = mongoose.Types.ObjectId(decoded.id)
+
+      User.aggregate()
+        .match({ _id: { $not: { $eq: id } } })
+        .project({
+          password: 0,
+          __v: 0,
+          lastLogin: 0,
+          username: 0
+        })
+        .exec((err, users) => {
+          if (err) {
+            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+          } else {
+            res.status(OK).send(users)
+          }
+        })
     }
   })
 })
@@ -292,7 +403,7 @@ router.post('/deleteUser', (req, res) => {
       // Unauthorized
       res.sendStatus(UNAUTHORIZED)
     } else {
-      User.deleteOne({ username: decoded.username }, (error, entries) => {
+      User.deleteOne({ email: decoded.email }, (error, entries) => {
         if (error) {
           return res.sendStatus(BAD_REQUEST)
         }

@@ -11,6 +11,8 @@ const express = require('express')
 
 // Import routes
 const auth = require('./api/routes/auth')
+const messages = require('./api/routes/messages')
+const posts = require('./api/routes/posts')
 
 // Set the port to 3000 for development and 8080 for production
 const DEV =
@@ -37,8 +39,12 @@ class Server {
     this.app.set('port', PORT)
 
     // Use body-parser
-    this.app.use(bodyParser.json())
-    this.app.use(bodyParser.urlencoded({ extended: 'false' }))
+    this.app.use(bodyParser.json({ limit: '1mb' }))
+    this.app.use(
+      bodyParser.urlencoded({
+        extended: 'false'
+      })
+    )
 
     // Serve the index.html build
     this.app.use(express.static(path.join(__dirname, 'build')))
@@ -52,28 +58,6 @@ class Server {
     if (DEV) {
       this.app.use(morgan('dev'))
     }
-
-    // Routes for all APIs here
-    this.app.use('/api/auth', auth)
-
-    // Catch 404 and forward to error handler
-    // if not in test mode
-    if (!TEST) {
-      this.app.use(function (req, res, next) {
-        const error = new Error('Not Found')
-        error.status = 404
-        next(error)
-      })
-    }
-
-    // Error handler
-    this.app.use(function (error, req, res, next) {
-      console.log(error)
-
-      if (!DEV) delete error.stack
-
-      res.status(error.statusCode || 500).json(error)
-    })
   }
 
   openConnection () {
@@ -98,8 +82,71 @@ class Server {
       })
       .catch(error => console.error(error))
 
+    this.mongoose.set('useFindAndModify', false)
+
     // Create HTTP server.
     this.server = http.createServer(this.app)
+
+    const io = require('socket.io')(this.server)
+    io.set('heartbeat timeout', 90000) // 90 sec
+    io.set('heartbeat interval', 60000) // 60 sec
+
+    const users = []
+
+    io.on('connection', socket => {
+      // get list of online users when connecting
+      socket.emit('online-users', users)
+
+      socket.on('message', payload => {
+        socket.broadcast.emit('message', payload)
+      })
+
+      socket.on('start-typing', payload => {
+        socket.broadcast.emit('user-started-typing', payload)
+      })
+
+      socket.on('stop-typing', payload => {
+        socket.broadcast.emit('user-stopped-typing', payload)
+      })
+
+      socket.on('user-connected', userId => {
+        users.push({
+          userId: userId,
+          socketId: socket.id
+        })
+        socket.broadcast.emit('online-users', users)
+      })
+
+      // Disconnect
+      socket.on('disconnect', () => {
+        users.splice(users.map(user => user.socketId).indexOf(socket.id), 1)
+        socket.broadcast.emit('online-users', users)
+      })
+    })
+
+    // Routes for all APIs here
+    this.app.use('/api/auth', auth)
+    this.app.use('/api/messages', messages)
+    this.app.use('/api/posts', posts)
+
+    // Catch 404 and forward to error handler
+    // if not in test mode
+    if (!TEST) {
+      this.app.use(function (req, res, next) {
+        const error = new Error('Not Found')
+        error.status = 404
+        next(error)
+      })
+    }
+
+    // Error handler
+    this.app.use(function (error, req, res, next) {
+      console.log(error)
+
+      if (!DEV) delete error.stack
+
+      res.status(error.statusCode || 500).json(error)
+    })
 
     // Listen on provided port, on all network interfaces.
     this.server.listen(PORT, error => {

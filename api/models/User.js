@@ -5,16 +5,42 @@ const bcrypt = require('bcrypt-nodejs')
 // Create a new schema for the User
 const UserSchema = new Schema(
   {
+    email: {
+      type: String,
+      unique: true,
+      required: true
+    },
     username: {
       type: String,
       unique: true, // Don't allow multiple users with the same username
-      required: true
+      index: true,
+      sparse: true
+    },
+    firstName: {
+      type: String
+    },
+    lastName: {
+      type: String
+    },
+    isOnboarded: {
+      type: Boolean,
+      default: false
+    },
+    profileImg: {
+      type: String
     },
     password: {
       type: String,
       required: true
     },
     lastLogin: {
+      type: Date
+    },
+    loginAttempts: {
+      type: Number,
+      default: 0
+    },
+    lastLoginAttempt: {
       type: Date
     }
   },

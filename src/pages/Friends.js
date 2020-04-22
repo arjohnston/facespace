@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Search from '../components/Friends/Search'
+import FriendList from '../components/Friends/FriendList'
 
 export default class Friends extends Component {
   constructor (props) {
@@ -9,8 +9,8 @@ export default class Friends extends Component {
 
   render () {
     return (
-      <div>
-        <Search />
+      <div className='friends-page-container'>
+        <FriendList />
         Hello there, friend.
       </div>
     )
