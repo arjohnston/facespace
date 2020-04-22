@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
+import ProfileMeta from "../components/Profile/ProfileMeta"
 
-export default class Friends extends Component {
+export default class Profile extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+
+    }
+  }
+
+  componentDidMount() {
+
   }
 
   render () {
-    return <div>Hello there, MY PROFILE!.</div>
+
+    return (
+      <div>
+        <ProfileMeta />
+      </div>
+    )
   }
 }
