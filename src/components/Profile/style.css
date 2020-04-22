@@ -1,0 +1,30 @@
+.profile-meta {
+  display: flex;
+  max-width: 800px;
+  width: 100%;
+  margin: 24px auto 0;
+}
+
+.profile-meta-image{
+  height: 100px;
+  width: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.profile-meta-image svg{
+  fill: white;
+  height: 48px;
+}
+
+.profile-meta p{
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  margin: 10px;
+}
