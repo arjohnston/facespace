@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { connect } from 'react-redux'
 import { Picker } from 'emoji-mart'
@@ -31,7 +32,8 @@ export class Messenger extends Component {
       imageViewerName: '',
       creatingNewConversation: false,
       creatingNewConversationInputText: '',
-      filteredFriendsForNewConversation: []
+      filteredFriendsForNewConversation: [],
+      emojiMenuOpen: false
     }
 
     this.handleCreateNewConversation = this.handleCreateNewConversation.bind(this)
@@ -39,6 +41,7 @@ export class Messenger extends Component {
     this.handleClearSearchText = this.handleClearSearchText.bind(this)
     this.handleSearchBarChange = this.handleSearchBarChange.bind(this)
     this.handleCloseMessages = this.handleCloseMessages.bind(this)
+    this.handleMinimizeMenus = this.handleMinimizeMenus.bind(this)
 
     this.renderMessages = this.renderMessages.bind(this)
     this.handleSendMessage = this.handleSendMessage.bind(this)
@@ -50,6 +53,9 @@ export class Messenger extends Component {
     )
     this.handleFileInput = this.handleFileInput.bind(this)
     this.handleDeleteImage = this.handleDeleteImage.bind(this)
+
+    this.handleEmojiMouseEnter = this.handleEmojiMouseEnter.bind(this)
+    this.handleEmojiMouseLeave = this.handleEmojiMouseLeave.bind(this)
 
     this.messengerChatBottom = React.createRef()
   }
@@ -71,6 +77,14 @@ export class Messenger extends Component {
     if (nextProps.onlineUsers !== prevState.onlineUsers) {
       return { onlineUsers: nextProps.onlineUsers }
     } else return null
+  }
+
+  
+  handleMinimizeMenus () {
+    this.setState({
+      messagesMinimized: true,
+      listMinimized: true
+    })
   }
 
   handleCreateNewConversation (e) {
@@ -363,10 +377,21 @@ export class Messenger extends Component {
 
   handleSelectEmoji (e) {
     this.setState({
-      messageInput: this.state.messageInput + e
+      messageInput: this.state.messageInput + e,
+      emojiMenuOpen: false
     })
+  }
 
-    if (document) document.activeElement.blur()
+  handleEmojiMouseEnter () {
+    this.setState({
+      emojiMenuOpen: true
+    })
+  }
+
+  handleEmojiMouseLeave () {
+    this.setState({
+      emojiMenuOpen: false
+    })
   }
 
   handleSendMessage (e) {
@@ -671,7 +696,13 @@ export class Messenger extends Component {
                   </label>
                 )
                 : (
-                  <span>{this.state.userSelected ? this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName : 'Conversation'}</span>
+                  this.state.userSelected
+                    ? (
+                      <Link to={`/user/${this.state.userSelected.username}`}>
+                        <span onClick={this.handleMinimizeMenus}>{this.state.userSelected.firstName + ' ' + this.state.userSelected.lastName}</span>
+                      </Link>
+                    )
+                    : <span>Conversation</span>
                 )}
 
               <div className='messenger-header-cta-wrapper'>
@@ -737,7 +768,7 @@ export class Messenger extends Component {
                     <path d='M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M13.96,12.29L11.21,15.83L9.25,13.47L6.5,17H17.5L13.96,12.29Z' />
                   </svg>
                 </div>
-                <div className='emoji-wrapper'>
+                <div className={`emoji-wrapper ${this.state.emojiMenuOpen ? 'is-open' : ''}`} onMouseEnter={this.handleEmojiMouseEnter} onMouseLeave={this.handleEmojiMouseLeave}>
                   <svg viewBox='0 0 24 24'>
                     <path d='M12,17.5C14.33,17.5 16.3,16.04 17.11,14H6.89C7.69,16.04 9.67,17.5 12,17.5M8.5,11A1.5,1.5 0 0,0 10,9.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 7,9.5A1.5,1.5 0 0,0 8.5,11M15.5,11A1.5,1.5 0 0,0 17,9.5A1.5,1.5 0 0,0 15.5,8A1.5,1.5 0 0,0 14,9.5A1.5,1.5 0 0,0 15.5,11M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z' />
                   </svg>

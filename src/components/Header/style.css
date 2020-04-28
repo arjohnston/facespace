@@ -1,15 +1,17 @@
 .header {
   width: 100%;
-  height: 70px;
-  background: pink;
+  height: 55px;
+  min-height: 55px;
+  background: #3AAB90;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.28);
 }
 
 .logo {
-  height: 60px;
+  height: 35px;
 }
 
 nav {
@@ -21,12 +23,280 @@ nav a {
   color: white;
   transition: all 0.2s;
   text-decoration: none;
-  padding: 0 12px;
+  padding: 0 24px;
   height: 100%;
   display: flex;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.8em;
+  border-bottom: 3px solid transparent;
+  max-width: 85px;
 }
 
 nav a:hover {
-  color: rgba(255,255,255,0.7);
+  border-bottom: 3px solid white;
+}
+
+nav a svg {
+  height: 25px;
+  fill: white;
+}
+
+nav a.nav-active {
+  border-bottom: 3px solid white;
+}
+
+.profile-menu-icon {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  fill: #3aab90;
+}
+
+.profile-menu-down-icon {
+  fill: #CCC;
+  width: 24px;
+}
+
+.profile-menu {
+  display: none;
+  position: absolute;
+  top: 55px;
+  right: 0;
+  flex-direction: column;
+  background: #FFF;
+  border: 1px solid #DDD;
+  z-index: 1;
+}
+
+.profile-menu a {
+  flex-direction: initial;
+  justify-content: initial;
+}
+
+.profile-menu-label {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8em;
+  height: 16px;
+}
+
+.profile-menu > * {
+  padding: 12px 12px 12px 24px;
+  display: flex;
+  text-decoration: none;
+  color: #555;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 1px solid #EEE;
+  font-size: 0.9em;
+  min-width: 225px;
+}
+
+.profile-menu > *:last-child {
+  border-bottom: 1px solid transparent;
+}
+
+.profile-menu > *:hover {
+  background-color: #EEE;
+  color: #3aab90;
+  transition: all 0.2s;
+}
+
+.profile-menu > *:hover svg {
+  fill: #3aab90;
+}
+
+.profile-menu > * svg {
+  height: 24px;
+  width: 24px;
+  fill: #555;
+  margin-right: 12px;
+}
+
+.profile-menu-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 0 24px;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+@media (max-width: 500px) {
+  .header {
+    padding: 0 6px;
+  }
+
+  nav a span {
+    display: none;
+  }
+
+  nav a {
+    padding: 0 12px;
+  }
+
+  .profile-menu-label {
+    display: none;
+  }
+
+  .profile-menu-wrapper {
+    padding: 0 12px;
+  }
+
+  .profile-menu-wrapper a span {
+    display: flex;
+  }
+}
+
+.profile-menu-wrapper .profile-menu-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-menu-wrapper .profile-menu-img img {
+  height: 30px;
+}
+
+.profile-user-account {
+  display: flex;
+}
+
+.profile-menu-wrapper .profile-user-account-img {
+  height: 45px;
+  width: 45px;
+  /* border-radius: 50%; */
+  overflow: hidden;
+  margin-right: 6px;
+  justify-content: center;
+  display: flex;
+  cursor: pointer;
+}
+
+.profile-menu-wrapper .profile-user-account-img img {
+  height: 45px;
+}
+
+.profile-menu-wrapper:hover {
+  border-bottom: 3px solid white;
+}
+
+.profile-menu-wrapper:hover .profile-menu {
+  display: flex;
+}
+
+.profile-user-account:hover {
+  background: #FFF;
+  color: #515151;
+  cursor: default;
+}
+.profile-user-account:hover svg {
+  fill: white;
+}
+.profile-user-account svg {
+  width: 45px;
+  height: 45px;
+  fill: white;
+  background: #3aab90;
+  cursor: pointer;
+}
+.profile-user-account-details {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  max-width: 200px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+  .header {
+    background: #1b252b;
+  }
+
+  nav a {
+    color: #DDD;
+  }
+
+  nav a:hover {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  nav a svg {
+    fill: #DDD;
+  }
+
+  nav a.nav-active {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  .profile-menu-icon {
+    background: transparent;
+    fill: #FFF;
+    border: 1px solid #3aab90;
+  }
+
+  .profile-menu-down-icon {
+    fill: #CCC;
+  }
+
+  .profile-menu {
+    background: #1b252b;
+    border: 1px solid #555;
+  }
+
+  .profile-menu-label {
+    color: white;
+  }
+
+  .profile-menu > * {
+    color: #FFF;
+    border-bottom: none;
+  }
+
+  .profile-menu > *:hover {
+    background-color: #3aab90;
+    color: #FFF;
+    border-bottom: none;
+  }
+
+  .profile-menu > *:hover svg {
+    fill: #FFF;
+  }
+
+  .profile-menu > * svg {
+    fill: #FFF;
+  }
+
+  .profile-menu-wrapper:hover {
+    border-bottom: 3px solid #3aab90;
+  }
+
+  .profile-user-account:hover {
+    background: #3aab90;
+    color: #FFF;
+  }
+  .profile-user-account:hover svg {
+    fill: white;
+  }
+
+  .profile-user-account svg {
+    fill: #3aab90;
+    background: none;
+    border: 1px solid white;
+  }
 }

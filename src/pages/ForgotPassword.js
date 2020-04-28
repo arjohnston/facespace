@@ -9,13 +9,17 @@ export default class extends Component {
   constructor () {
     super()
     this.state = {
-      username: '',
+      email: '',
       message: '',
       submitted: false
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  componentDidMount () {
+    document.title = 'myface: Recover Password'
   }
 
   handleChange (e) {
@@ -27,10 +31,10 @@ export default class extends Component {
   handleSubmit (e) {
     e.preventDefault()
 
-    const { username } = this.state
+    const { email } = this.state
 
     axios
-      .post('/api/auth/forgot-password', { username })
+      .post('/api/auth/forgot-password', { email })
       .then(() => {
         this.setState({
           message: 'An email has been sent to the users email address.',
@@ -45,22 +49,22 @@ export default class extends Component {
   }
 
   render () {
-    const { username, message } = this.state
+    const { email, message } = this.state
 
     return !this.state.submitted ? (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '100px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
         </div>
         <h1>Forgot Password</h1>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor='username'>Username</label>
+          <label htmlFor='email'>Email</label>
           <div className='form-input-wrapper'>
             <input
               type='email'
-              name='username'
-              id='username'
-              value={username}
+              name='email'
+              id='email'
+              value={email}
               onChange={this.handleChange}
               onBlur={this.handleCheckIfUserExists}
               required
@@ -71,8 +75,8 @@ export default class extends Component {
           </div>
 
           <button
-            disabled={!this.state.username.length > 0}
-            className={this.state.username.length > 0 ? 'active' : 'inactive'}
+            disabled={!this.state.email.length > 0}
+            className={this.state.email.length > 0 ? 'active' : 'inactive'}
             type='submit'
           >
             Send email with reset link
@@ -86,9 +90,9 @@ export default class extends Component {
     ) : (
       <div className='login-container'>
         <div className='login-header'>
-          <img src='/logo.svg' alt='logo' style={{ height: '100px' }} />
+          <img src='/logo.svg' alt='logo' style={{ height: '50px' }} />
         </div>
-        <h1>{message}</h1>
+        <h1 style={{ maxWidth: '800px' }}>{message}</h1>
         <p style={{ fontSize: '1em' }}>
           <Link to='/login'>Return to login</Link>
         </p>
