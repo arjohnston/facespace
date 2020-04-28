@@ -50,6 +50,18 @@ export default class ProfileMeta extends Component {
               <button>
                 Change Your Face
               </button>
+
+              <button>
+                Update Email
+              </button>
+
+              <button>
+                Change Password
+              </button>
+
+              <button id="delete-button">
+                Delete Account
+              </button>
             </div>
           </div>
 

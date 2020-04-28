@@ -50,3 +50,10 @@
   font-size: 0.8em;
   font-weight: 500;
 }
+
+.profile-settings button #delete-button{
+  background: #FF0000;
+  color: #777;
+  font-size: 0.8em;
+  font-weight: 500; 
+}
