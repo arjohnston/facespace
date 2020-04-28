@@ -28,3 +28,25 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   margin: 10px;
 }
+
+.profile-image-settings-column{
+  flex-direction: column;
+}
+
+.profile-settings{
+  display: flex;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  align-items: center;
+  margin: 10px;
+}
+
+.profile-settings p{
+  align-content: center;
+}
+
+.profile-settings button{
+  background: none;
+  color: #777;
+  font-size: 0.8em;
+  font-weight: 500;
+}
