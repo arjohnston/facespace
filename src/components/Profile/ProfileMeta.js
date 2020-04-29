@@ -31,37 +31,38 @@ export default class ProfileMeta extends Component {
 
     return (
         <div className="profile-meta">
-          <div className="profile-image-settings-column">
+          <div className="profile-image-settings-container">
             <div className="profile-meta-image">
-            {this.state.profileImg ? (
-              <img
-                src={this.state.profileImg}
-                alt={name}
-                />
-            ) : (
-            <svg viewBox='0 0 24 24'>
-              <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-            </svg>
-          )}
-          </div>
+              {this.state.profileImg ? (
+                <img
+                  src={this.state.profileImg}
+                  alt={name}
+                  />
+                ) : (
+              <svg viewBox='0 0 24 24'>
+                <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+              </svg>
+              )}
+            </div>
 
             <div className="profle-settings">
-              <p>Your Account</p>
+              <p>Your Account
+
               <button>
                 Change Your Face
-              </button>
+              </button><br/>
 
               <button>
                 Update Email
-              </button>
+              </button><br/>
 
               <button>
                 Change Password
-              </button>
+              </button><br/>
 
               <button id="delete-button">
                 Delete Account
-              </button>
+              </button></p>
             </div>
           </div>
 

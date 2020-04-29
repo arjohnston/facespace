@@ -3,16 +3,28 @@
   max-width: 800px;
   width: 100%;
   margin: 24px auto 0;
+  justify-content: space-evenly;
+}
+
+.profile-meta p{
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  max-height: 150px;
+  margin: 10px;
+}
+
+.profile-image-settings-container{
+  flex-direction: column;
+  justify-content: center;
+  min-width: 200px;
 }
 
 .profile-meta-image{
-  height: 100px;
-  width: 100px;
-  min-width: 100px;
-  min-height: 100px;
-  margin: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+  height: 150px;
+  width: 150px;
+  min-height: 150px;
   display: flex;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   justify-content: center;
   align-items: center;
   overflow: hidden;
@@ -23,37 +35,31 @@
   height: 48px;
 }
 
-.profile-meta p{
-  color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
-  margin: 10px;
-}
-
-.profile-image-settings-column{
-  flex-direction: column;
-}
-
 .profile-settings{
-  display: flex;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
-  align-items: center;
-  margin: 10px;
+  width: 150px;
+  min-height: 200px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20);
+  flex-direction: column;
+  justify-content: center;
 }
 
 .profile-settings p{
+  color: white;
   align-content: center;
 }
 
 .profile-settings button{
   background: none;
-  color: #777;
+  color: white;
+  border: none;
+  margin: 12px 6px 6px 0;
   font-size: 0.8em;
   font-weight: 500;
+  min-width: 60px;
+  min-height: 30px;
 }
 
-.profile-settings button #delete-button{
+#delete-button{
   background: #FF0000;
-  color: #777;
-  font-size: 0.8em;
-  font-weight: 500; 
 }
