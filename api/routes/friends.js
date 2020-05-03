@@ -54,10 +54,14 @@ router.post('/getFriends', function (req, res) {
                   User.findOne({ _id: user.friends[friend] }, (error, user) => {
                     if (error) return console.log(error)
 
-                    delete user.password
-                    delete user.__v
+                    const frnd = {
+                      _id: user._id,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      email: user.email
+                    }
 
-                    friendsDecoded.push(user)
+                    friendsDecoded.push(frnd)
 
                     resolve()
                   })
@@ -68,7 +72,6 @@ router.post('/getFriends', function (req, res) {
             Promise.all(promises).then(() => {
               res.status(OK).send(friendsDecoded)
             })
-            // res.status(OK).send(friendsDecoded)
           }
         }
       )

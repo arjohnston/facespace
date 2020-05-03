@@ -115,7 +115,7 @@ export class Dashboard extends Component {
   // TODO: Once friends list is implemented, change this to friend list
   setListOfFriends (token) {
     axios
-      .post('/api/auth/getAllUsers', { token: token })
+      .post('/api/friends/getFriends', { token: token })
       .then(res => {
         this.props.setListOfFriends(res.data)
       })
