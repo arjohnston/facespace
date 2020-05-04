@@ -17,7 +17,12 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <ProfileMeta />
+        <ProfileHeader />
+
+        <div>
+          <ProfileManagement /> 
+        </div>
+
       </div>
     )
   }
