@@ -37,7 +37,6 @@ export default class extends Component {
     this.renderPosts = this.renderPosts.bind(this)
     this.createPost = this.createPost.bind(this)
     this.updateComments = this.updateComments.bind(this)
-
   }
 
   componentDidMount () {
@@ -57,7 +56,7 @@ export default class extends Component {
   getPosts () {
     console.log('getpostcall')
     axios
-      .post('/api/posts/getPosts', { token: this.state.token })
+      .post('/api/posts/getFeed', { token: this.state.token })
       .then(res => {
         console.log('resdata ', res.data)
         this.setState({
@@ -94,7 +93,7 @@ export default class extends Component {
         comments: comments
       })
       .then(res => {
-      console.log(res)
+        console.log(res)
       })
       .catch(error => {
         // if err statusCode == 401, then remove token & push /login

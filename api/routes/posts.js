@@ -12,6 +12,51 @@ const {
   BAD_REQUEST
 } = require('../../util/statusCodes')
 
+router.post('/getUser', function (req, res) {
+  if (!req.body.token) return res.sendStatus(BAD_REQUEST)
+  const token = req.body.token.replace(/^JWT\s/, '')
+
+  jwt.verify(token, config.secretKey, function (error, decoded) {
+    if (error) {
+      // Unauthorized
+      res.sendStatus(UNAUTHORIZED)
+    } else {
+      // Ok
+      // Build this out to search for a user
+      User.findOne(
+        {
+          _id: decoded.userId
+        },
+        function (error, user) {
+          if (error) {
+            // Bad Request
+            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+          }
+
+          if (!user) {
+            // Unauthorized if the email does not match any records in the database
+            res.status(UNAUTHORIZED).send({
+              message: 'Email or password does not match our records.'
+            })
+          } else {
+            // Check if password matches database
+            res.status(OK).send({
+              lastLogin: user.lastLogin,
+              username: user.username,
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              profileImg: user.profileImg,
+              id: user._id,
+              isOnboarded: user.isOnboarded
+            })
+          }
+        }
+      )
+    }
+  })
+})
+
 router.post('/getPosts', function (req, res) {
   if (!req.body.token) return res.sendStatus(BAD_REQUEST)
   const token = req.body.token.replace(/^JWT\s/, '')
@@ -169,6 +214,7 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       Post.updateOne(query, { ...post }, function (error, result) {
         if (error) {
+          console.log(error)
           return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
         }
 
