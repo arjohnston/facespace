@@ -1,4 +1,4 @@
-.profile-meta {
+.profile-header {
   display: flex;
   max-width: 800px;
   width: 100%;
@@ -6,7 +6,7 @@
   justify-content: space-evenly;
 }
 
-.profile-meta p{
+.profile-bio {
   color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   max-height: 200px;
@@ -16,14 +16,7 @@
   font-size: 1.1em;
 }
 
-.profile-image-settings-container{
-  flex-direction: column;
-  min-width: 170px;
-  padding: 5px 0 0 0;
-  align-items: center;
-}
-
-.profile-meta-image{
+.profile-image{
   height: 200px;
   width: 200px;
   min-height: 200px;
@@ -35,12 +28,12 @@
   margin: 0 0 15px 0;
 }
 
-.profile-meta-image svg{
+.profile-image svg{
   fill: white;
   height: 48px;
 }
 
-.profile-settings{
+.profile-management{
   display: flex;
   width: 200px;
   min-height: 200px;
@@ -49,20 +42,20 @@
   align-items: center;
 }
 
-.profile-settings-header{
+.profile-management-header{
   display: flex;
   color: white;
   font-size: 1.2em;
   margin: 8px 0 0;
 }
 
-.profile-settings-buttons{
+.profile-management-buttons{
   margin: 8px 0 8px;
   flex-direction: column;
   align-items: center;
 }
 
-.profile-settings-buttons button{
+.profile-management-buttons button{
   background: #3AAB90;
   color: white;
   border: none;
@@ -81,6 +74,6 @@ button:hover{
   transition: opacity 0.2s;
 }
 
-.profile-settings-buttons .delete-button{
+.profile-management-buttons .delete-button{
   background: #FF0000;
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import ProfileMeta from "../components/Profile/ProfileMeta"
+import ProfileHeader from "../components/Profile/ProfileHeader"
+import ProfileManagement from "../components/Profile/ProfileManagement"
 
 export default class Profile extends Component {
   constructor (props) {
@@ -17,7 +18,12 @@ export default class Profile extends Component {
 
     return (
       <div>
-        <ProfileMeta />
+        <ProfileHeader />
+
+        <div>
+          <ProfileManagement />
+        </div>
+
       </div>
     )
   }
