@@ -36,6 +36,8 @@ export default class extends Component {
     }
     this.renderPosts = this.renderPosts.bind(this)
     this.createPost = this.createPost.bind(this)
+    this.updateComments = this.updateComments.bind(this)
+
   }
 
   componentDidMount () {
@@ -85,6 +87,22 @@ export default class extends Component {
       })
   }
 
+  updateComments (comments) {
+    axios
+      .post('/api/posts/updatePost', {
+        token: this.state.token,
+        comments: comments
+      })
+      .then(res => {
+      console.log(res)
+      })
+      .catch(error => {
+        // if err statusCode == 401, then remove token & push /login
+        // otherwise log the token
+        console.log(error)
+      })
+  }
+
   createPost (post) {
     this.setState({
       posts: [post, ...this.state.posts] // creates array, makes this post as first element
@@ -98,7 +116,7 @@ export default class extends Component {
     return this.state.posts.map((post, index) => {
       return (
         <div className='post-container' key={index}>
-          <Post post={post} />
+          <Post post={post} createComment={this.updateComments} />
         </div>
       )
     })

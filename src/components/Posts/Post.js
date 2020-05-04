@@ -3,11 +3,91 @@ import './style.css'
 
 // const profilePicture = null
 
+
 export default class Post extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      commentsOpen: false,
+      commentText: "",
+      comments: [],
+      likes: 0
+    }
+    this.toggleCommentsOpen = this.toggleCommentsOpen.bind(this)
+    this.handleCommentTextChange = this.handleCommentTextChange.bind(this)
+    this.handleCommentPost = this.handleCommentPost.bind(this)
+
   }
+
+  componentDidMount() {
+    this.setState({
+      comments: this.props.post.comments,
+      likes: this.props.post.likes
+    })
+  }
+
+  handleCommentTextChange (event) {
+    this.setState({
+      commentText: event.target.value
+    })
+  }
+
+  // function for creating post
+  handleCommentPost () {
+    const comment = {
+      text: this.state.commentText
+    }
+    const post = {
+      ...this.props.post
+    }
+    console.log(post)
+    // post.comments.push(comment)
+    // this.props.createComment(post)
+    this.setState({
+      commentText: '',
+      comments: this.state.comments.push(comment)
+    })
+  }
+
+renderComment() {
+  if (!this.props.post) return
+  return (
+    <div className='comment-area'>
+      {this.state.comments.map((comment, index) => {
+        return (
+          <div className='comment-comment' key={index}>
+            <div className='comment-name'>
+            {comment.user}
+            </div>
+            <div className='comment-text'>
+            {comment.text}
+            </div>
+          </div>
+        )
+      } )}
+
+      <div className='comment-input'>
+        <textarea className='comment-fill-area'
+          placeholder='Comment here'
+          value={this.state.commentText}
+          onChange={this.handleCommentTextChange}
+        />
+        <input
+          onClick={this.handleCommentPost}
+          type='submit'
+          value='Comment'
+          className='comment-button'
+        />
+      </div>
+    </div>
+  )
+}
+
+toggleCommentsOpen() {
+  this.setState({
+    commentsOpen: !this.state.commentsOpen
+  })
+}
 
   render () {
     return (
@@ -38,8 +118,7 @@ export default class Post extends Component {
               <svg viewBox='0 0 24 24'>
                 <path d='M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67, 3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18, 21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z' />
               </svg>
-              {this.props.post.likes ? this.props.post.likes : 0}{' '}
-              {/* if null, 0 */}
+              {this.state.likes}
             </button>
 
             <button>
@@ -58,7 +137,7 @@ export default class Post extends Component {
               Like
             </button>
 
-            <button>
+            <button onClick={this.toggleCommentsOpen}>
               <svg viewBox='0 0 24 24'>
                 <path d='M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H6L4,18V4H20' />
               </svg>
@@ -73,6 +152,11 @@ export default class Post extends Component {
             </button>
           </div>
         </div>
+
+        <div className={`comments ${this.state.commentsOpen ? "is-open" : ""}`}>
+        {this.renderComment()}
+        </div>
+
       </div>
     )
   }
