@@ -1,18 +1,30 @@
 .friends-page-container {
   display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
   align-items: center;
+}
+.friends-page-sub{
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
   height: calc(100% - 48px);
   margin: 24px;
+  /* max-width: 800px; */
+  width: 100%;
+
 }
 
 .friend-list-container {
   background: white;
   width: 250px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
-  max-height: 80vh;
+  margin: 10px;
+  height: calc(100% - 94px);
 }
 
 .friend-list-header {
@@ -56,4 +68,136 @@
   font-size: 1.1em;
   color: #177198;
   font-weight: 500;
+}
+
+.friendlistsearch-bar{
+  width: calc(100% - 10px);
+  display:inline-block;
+  position: relative;
+
+}
+
+.friendlistsearch-bar input{
+  width: 100%;
+  border: none;
+  padding: 12px 24px 12px 36px;
+  margin: 10px 0;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+
+}
+
+.friendlistsearch-bar label{
+  display: flex;
+  position: absolute;
+  left: 14px;
+  top: 22px;
+}
+
+.friendlistsearch-bar label svg{
+  height: 20px;
+  fill: #AAA;
+
+
+}
+
+.finder-list-container{
+  /* background: white; */
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+  height: calc(100% - 94px);
+  /* margin-top: 10px; */
+  overflow-y: scroll;
+  justify-content: space-between;
+
+}
+.finder-list-row {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+.finder-list-row img {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #AAA;
+  margin-right: 6px;
+}
+.finder-list-row svg {
+  width: 50px;
+  height: 50px;
+  background: #DDD;
+  margin-right: 6px;
+  border: 1px solid #AAA;
+}
+.finder-list-header {
+  color: #515151;
+  display: flex;
+  justify-content: center;
+}
+.usercard{
+  width:100%;
+  max-width: 180px;
+  height: 250px;
+  background-color:white;
+  border-radius:5px;
+  box-shadow:3px 3px 10px rgba(0,0,0,0.2);
+  padding:20px;
+  margin: 0px 3px 6px;
+  display:flex;
+  flex-direction: column;
+}
+.usercard span{
+  text-align: center;
+  margin-bottom: 12px;
+  color: #1b17e2;
+}
+.usercard button{
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.usercar-image{
+  width:100px;
+  height:100px;
+  border-radius: 50%;
+  margin-left:15%;
+  object-fit:contain;
+}
+.usercard-name{
+  margin-left:10%;
+  margin-right:10%;
+}
+.usercard-username{
+  margin-left:10%;
+  margin-right:10%;
+  color:blue;
+}
+.usercard-button{
+  width:100px;
+  padding:6px;
+  margin:15px;
+  margin-left:15%;
+  border-radius: 5px;
+  color:white;
+  border:none;
+}
+.accept{
+  background-color:green
+}
+.reject{
+  background-color: red;
+}
+.friendship-request{
+  height: 50px;
+  width: 85%;
+  margin:10px;
+  background: white;
+  display: flex;
+  max-width: 870px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+
 }

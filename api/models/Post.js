@@ -15,9 +15,19 @@ const PostSchema = new Schema({
     type: Array,
     default: []
   },
+  imageData: {
+    type: String
+  },
+  imageName: {
+    type: String
+  },
   user: {
     type: Schema.Types.ObjectId,
     required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 })
 

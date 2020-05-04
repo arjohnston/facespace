@@ -42,6 +42,17 @@ const UserSchema = new Schema(
     },
     lastLoginAttempt: {
       type: Date
+    },
+    biography: {
+      type: String
+    },
+    friends: {
+      type: Array,
+      default: []
+    },
+    friendRequests: {
+      type: Array,
+      default: []
     }
   },
   { collection: 'User' }
