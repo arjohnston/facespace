@@ -61,7 +61,7 @@ export default class ProfileMeta extends Component {
                   Change Password
                 </button><br/>
 
-                <button id="delete-button">
+                <button className="delete-button">
                   Delete Account
                 </button>
               </div>
