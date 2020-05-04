@@ -45,24 +45,26 @@ export default class ProfileMeta extends Component {
               )}
             </div>
 
-            <div className="profle-settings">
-              <p>Your Account
+            <div className="profile-settings">
+              <div className="profile-settings-header">Your Account</div>
 
-              <button>
-                Change Your Face
-              </button><br/>
+              <div className="profile-settings-buttons">
+                <button>
+                  Change Your Face
+                </button><br/>
 
-              <button>
-                Update Email
-              </button><br/>
+                <button>
+                  Update Email
+                </button><br/>
 
-              <button>
-                Change Password
-              </button><br/>
+                <button>
+                  Change Password
+                </button><br/>
 
-              <button id="delete-button">
-                Delete Account
-              </button></p>
+                <button id="delete-button">
+                  Delete Account
+                </button>
+              </div>
             </div>
           </div>
 
