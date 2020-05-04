@@ -3,30 +3,6 @@ import CreatePost from '../components/Posts/CreatePost'
 import Post from '../components/Posts/Post'
 import axios from 'axios'
 
-// const posts = [
-//   {
-//     profileImg: null,
-//     name: "Cookie Monster",
-//     text: "Like O.M.G. it was so totally worth it. So DELICIOUS! 🐣🍗",
-//     likes: 640,
-//     comments: []
-//   },
-//   {
-//     profileImg: null,
-//     name: "Monster",
-//     text: "Hi world",
-//     likes: 10,
-//     comments: []
-//   },
-//   {
-//     profileImg: null,
-//     name: "Cookie ",
-//     text: "🐣🍗",
-//     likes: 440,
-//     comments: []
-//   }
-// ]
-
 export default class extends Component {
   constructor (props) {
     super(props)
@@ -36,7 +12,6 @@ export default class extends Component {
     }
     this.renderPosts = this.renderPosts.bind(this)
     this.createPost = this.createPost.bind(this)
-    this.updateComments = this.updateComments.bind(this)
   }
 
   componentDidMount () {
@@ -54,11 +29,9 @@ export default class extends Component {
   }
 
   getPosts () {
-    console.log('getpostcall')
     axios
       .post('/api/posts/getFeed', { token: this.state.token })
       .then(res => {
-        console.log('resdata ', res.data)
         this.setState({
           posts: res.data
         })
@@ -76,25 +49,6 @@ export default class extends Component {
         token: this.state.token,
         text: post.text
       })
-      // .then(res => {
-      //
-      // })
-      .catch(error => {
-        // if err statusCode == 401, then remove token & push /login
-        // otherwise log the token
-        console.log(error)
-      })
-  }
-
-  updateComments (comments) {
-    axios
-      .post('/api/posts/updatePost', {
-        token: this.state.token,
-        comments: comments
-      })
-      .then(res => {
-        console.log(res)
-      })
       .catch(error => {
         // if err statusCode == 401, then remove token & push /login
         // otherwise log the token
@@ -111,11 +65,10 @@ export default class extends Component {
 
   renderPosts () {
     if (this.state.posts.length <= 0) return
-    console.log(this.state.posts)
     return this.state.posts.map((post, index) => {
       return (
         <div className='post-container' key={index}>
-          <Post post={post} createComment={this.updateComments} />
+          <Post post={post} token={this.state.token} />
         </div>
       )
     })

@@ -185,11 +185,11 @@
   color:white;
   border:none;
 }
-.accept{
-  background-color:green
+.button.accept{
+  background-color: #3AAB90;
 }
-.reject{
-  background-color: red;
+.button.reject{
+  background-color: #C13D3D;
 }
 .friendship-request{
   height: 50px;
@@ -200,4 +200,61 @@
   max-width: 870px;
   box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
 
+}
+
+.friend-request-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 850px;
+  width: 100%;
+  background: white;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+}
+
+.request-row {
+  width: 100%;
+  height: 75px;
+  margin: 3px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+.request-row:not(:last-child) {
+  border-bottom: 1px solid #EEE;
+}
+
+.request-row .button {
+  padding: 6px 24px;
+  margin: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.request-row .button:hover {
+  transform: translateY(-2px);
+}
+
+.request-row img, .request-row svg {
+  height: 60px;
+  border: 1px solid #ddd;
+  margin-right: 6px;
+}
+
+.request-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.request-meta span {
+  color: #177198;
+}
+
+.request-meta span:last-child {
+  color: #888;
+  font-size: 0.9em;
+  line-height: 1.5;
 }

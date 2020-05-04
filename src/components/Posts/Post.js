@@ -3,8 +3,6 @@ import './style.css'
 import axios from 'axios'
 import { connect } from 'react-redux'
 
-// const profilePicture = null
-
 export class Post extends Component {
   constructor (props) {
     super(props)
@@ -20,16 +18,26 @@ export class Post extends Component {
     this.handleToggleLike = this.handleToggleLike.bind(this)
   }
 
+  componentDidMount () {
+    this.setState({
+      comments: this.props.post.comments,
+      likes: this.props.post.likes,
+      post: this.props.post
+    })
+  }
+
   handleToggleLike () {
+    let likes = this.state.likes
+    likes++
+
     this.setState(
       {
-        likes: (this.state.likes += 1)
+        likes: likes
       },
       () => {
-        console.log(this.props.post)
         axios
           .post('/api/posts/edit', {
-            token: this.state.token,
+            token: this.props.token,
             postId: this.props.post._id,
             likes: this.state.likes
           })
@@ -40,13 +48,6 @@ export class Post extends Component {
           })
       }
     )
-  }
-
-  componentDidMount () {
-    this.setState({
-      comments: this.props.post.comments,
-      likes: this.props.post.likes
-    })
   }
 
   handleCommentTextChange (event) {
@@ -61,12 +62,6 @@ export class Post extends Component {
       text: this.state.commentText,
       author: this.props.userId
     }
-    // const post = {
-    //   ...this.props.post
-    // }
-    // console.log(post)
-    // post.comments.push(comment)
-    // this.props.createComment(post)
     const comments = [...this.state.comments]
     comments.push(comment)
     this.setState({
