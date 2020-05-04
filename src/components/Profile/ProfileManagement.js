@@ -45,6 +45,7 @@ export default class ProfileManagement extends Component {
             Delete Account
           </button>
         </div>
+    </div>
     )
   }
 }
