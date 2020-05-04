@@ -7,25 +7,41 @@ export default class ProfileManagement extends Component {
     this.state = {}
   }
 
+  changeFace(){
+
+  }
+
+  changeEmail(){
+
+  }
+
+  changePassword(){
+
+  }
+
+  deleteAccount(){
+    //function to delete account
+  }
+
   render() {
     return (
       <div className="profile-management">
         <div className="profile-management-header">Your Account</div>
 
         <div className="profile-management-buttons">
-          <button>
+          <button onclick="changeFace()">
             Change Your Face
           </button><br/>
 
-          <button>
+          <button onclick="changeEmail()">
             Update Email
           </button><br/>
 
-          <button>
+          <button onclick="changePassword()">
             Change Password
           </button><br/>
 
-          <button className="delete-button">
+          <button className="delete-button" onclick="deleteAccount()">
             Delete Account
           </button>
         </div>
