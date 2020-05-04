@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import FriendList from '../components/Friends/FriendList'
+import Findlist from '../components/Friends/Findlist'
 
 export default class Friends extends Component {
   constructor (props) {
@@ -10,8 +11,19 @@ export default class Friends extends Component {
   render () {
     return (
       <div className='friends-page-container'>
-        <FriendList />
-        Hello there, friend.
+        <div className='friendship-request'>
+          New Request
+          <button type='submit' className='accept'>
+            Accept
+          </button>
+          <button type='submit' className='reject'>
+            Reject
+          </button>
+        </div>
+        <div className='friends-page-sub'>
+          <FriendList />
+          <Findlist />
+        </div>
       </div>
     )
   }
