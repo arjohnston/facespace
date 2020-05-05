@@ -25,7 +25,7 @@ router.post('/getUser', function (req, res) {
       // Build this out to search for a user
       User.findOne(
         {
-          _id: decoded.userId
+          _id: req.body.userId
         },
         function (error, user) {
           if (error) {
@@ -128,6 +128,7 @@ router.post('/getFeed', function (req, res) {
               if (posts) {
                 // Check if password matches database
                 postsArray.push(...posts)
+
                 resolve()
               }
             }
@@ -164,7 +165,7 @@ router.post('/getFeed', function (req, res) {
                         (error, post) => {
                           if (error) return console.log(error)
 
-                          postsArray.push(post)
+                          postsArray.push(...post)
                           resolve()
                         }
                       )

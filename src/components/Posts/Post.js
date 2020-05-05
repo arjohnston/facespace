@@ -22,8 +22,13 @@ export class Post extends Component {
     this.setState({
       comments: this.props.post.comments,
       likes: this.props.post.likes,
-      post: this.props.post
+      post: this.props.post,
+      openImageViewer: false
     })
+
+    this.loadUser()
+
+    console.log(this.props)
   }
 
   handleToggleLike () {
@@ -60,19 +65,23 @@ export class Post extends Component {
   handleCommentPost () {
     const comment = {
       text: this.state.commentText,
-      author: this.props.userId
+      authorId: this.props.user.userId,
+      author: this.props.user.firstName + ' ' + this.props.user.lastName
     }
+
     const comments = [...this.state.comments]
     comments.push(comment)
+
     this.setState({
       commentText: '',
       comments: comments
     })
+
     axios
       .post('/api/posts/edit', {
-        token: this.state.token,
+        token: this.props.token,
         postId: this.props.post._id,
-        comment: comments
+        comments: comments
       })
       .catch(error => {
         // if err statusCode == 401, then remove token & push /login
@@ -88,10 +97,9 @@ export class Post extends Component {
         {this.state.comments.map((comment, index) => {
           return (
             <div className='comment-comment' key={index}>
-              <div className='comment-name'>
-                {comment.author ? comment.author : 'User'}
-              </div>
-              <div className='comment-text'>{comment.text}</div>
+              <span className='comment'>
+                {comment.author ? comment.author : 'User'}: {comment.text}
+              </span>
             </div>
           )
         })}
@@ -121,9 +129,11 @@ export class Post extends Component {
   }
 
   loadUser () {
+    if (this.props.user.userId === this.props.post.user) return
+
     axios
       .post('/api/posts/getUser', {
-        token: this.state.token,
+        token: this.props.token,
         userId: this.props.post.user
       })
       .then(res => {
@@ -154,44 +164,73 @@ export class Post extends Component {
     })
   }
 
+  toggleOpenImageViewer () {
+    this.setState({
+      openImageViewer: !this.state.openImageViewer
+    })
+  }
+
   render () {
     let author = ''
-    if (this.state.userId === this.props.userId) {
+    if (this.props.user.userId === this.props.post.user) {
       author = 'You'
     } else {
-      author = this.state.firstName
+      author = this.state.firstName + ' ' + this.state.lastName
     }
 
     return (
       <div className='post'>
-        <div className='top-part'>
-          {this.state.profileImg ? (
+        <div
+          style={{ display: this.state.openImageViewer ? 'flex' : 'none' }}
+          className='image-viewer'
+          onClick={this.toggleOpenImageViewer.bind(this)}
+        >
+          <div className='image-viewer-wrapper'>
             <img
-              src={this.state.profileImg}
-              alt={this.state.firstName + ' ' + this.state.lastName}
+              src={this.props.post.imageData}
+              alt={this.props.post.imageName}
             />
-          ) : (
-            <svg viewBox='0 0 24 24' className='profile-temporary2'>
-              <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
-            </svg>
-          )}
+            <span>{this.props.post.imageName}</span>
+
+            <div className='close-button'>
+              <svg viewBox='0 0 24 24'>
+                <path d='M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z' />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className='top-part'>
+          <div className='post-profile-img'>
+            {this.state.profileImg ? (
+              <img
+                src={this.state.profileImg}
+                alt={this.state.firstName + ' ' + this.state.lastName}
+              />
+            ) : (
+              <svg viewBox='0 0 24 24'>
+                <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+              </svg>
+            )}
+          </div>
 
           <div className='middle-top'>
             <span className='post-maker'>
               <span>{author}</span> wrote:
             </span>
             <span className='post-text'>{this.props.post.text}</span>
+
+            {this.props.post.imageData && (
+              <div className='post-picture'>
+                <img
+                  src={this.props.post.imageData}
+                  alt={this.props.post.imageName}
+                  onClick={this.toggleOpenImageViewer.bind(this)}
+                />
+              </div>
+            )}
           </div>
         </div>
-
-        {this.props.post.imageData && (
-          <div className='post-picture'>
-            <img
-              src={this.props.post.imageData}
-              alt={this.props.post.imageName}
-            />
-          </div>
-        )}
 
         <div className='bottom-cta'>
           <div className='left-buttons'>
@@ -225,12 +264,14 @@ export class Post extends Component {
               Comment
             </button>
 
-            <button>
-              <svg viewBox='0 0 24 24'>
-                <path d='M21,12L14,5V9C7,10 4,15 3,20C5.5,16.5 9,14.9 14,14.9V19L21,12Z' />
-              </svg>
-              Share
-            </button>
+            {this.props.user.userId !== this.props.post.user && (
+              <button>
+                <svg viewBox='0 0 24 24'>
+                  <path d='M21,12L14,5V9C7,10 4,15 3,20C5.5,16.5 9,14.9 14,14.9V19L21,12Z' />
+                </svg>
+                Share
+              </button>
+            )}
           </div>
         </div>
 

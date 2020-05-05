@@ -149,10 +149,15 @@
   margin-right: 4px;
 }
 
+.post-picture {
+  display: flex;
+  justify-content: center;
+}
 .post-picture img {
   margin-left: auto;
   margin-right: auto;
-  max-width: 100%;
+  max-width: 250px;
+  cursor: pointer;
 }
 
 .picture-temporary {
@@ -228,29 +233,17 @@
 .comment-area {
   display: flex;
   flex-direction: column;
+  border-top: 1px solid #DDD;
 }
 
 .comment-comment {
-  color: white;
-  display: flex;
-  flex-direction: row;
-  border-top: 1px solid #DDD;
-  margin: 6px;
   padding: 12px 8px;
 }
 
-.comment-name {
-  width: auto;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.comment-text {
-  width: auto;
-  margin-top: 10px;
-  margin-bottom: 10px;
+.comment {
+  margin: 10px;
+  font-size: 0.9em;
+  color: white;
 }
 
 .comment-input {
@@ -280,6 +273,27 @@
   outline: none;
 }
 
+.post-profile-img {
+  width: 75px;
+  min-width: 75px;
+  height: 75px;
+  min-height: 75px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #EFEFEF;
+  margin-right: 18px;
+  position: relative;
+  fill: #FFF;
+  overflow: hidden;
+}
+.post-profile-img svg {
+  height: 75px;
+}
+.post-profile-img img {
+  height: 100%;
+}
 
 @media (prefers-color-scheme: dark) {
   .create-post-container {
@@ -341,5 +355,19 @@
     fill: #FFF;
     border: 1px solid #515151;
     background: #1f2b33;
+  }
+
+  .comment-area {
+    border-top: 1px solid #515151;
+  }
+
+  .comment-input {
+    border-top: 1px solid #515151;
+  }
+
+  .post-profile-img {
+    border: 1px solid #555;
+    background: #1f2b33;
+    fill: #FFF;
   }
 }

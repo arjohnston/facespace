@@ -49,7 +49,12 @@ export default class extends Component {
     axios
       .post('/api/posts/createPost', {
         token: this.state.token,
-        text: post.text
+        text: post.text,
+        imageData: post.imageData,
+        imageName: post.imageName
+      })
+      .then(() => {
+        this.getPosts()
       })
       .catch(error => {
         // if err statusCode == 401, then remove token & push /login

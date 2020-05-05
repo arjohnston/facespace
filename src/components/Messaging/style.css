@@ -631,7 +631,7 @@
   background: white;
   display: flex;
   flex-direction: column;
-
+  align-items: center;
 }
 
 .image-viewer-wrapper img {
