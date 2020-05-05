@@ -23,7 +23,6 @@ export default class extends Component {
 
     this.setState(
       {
-        // posts: posts,
         token: token
       },
       () => this.getPosts()

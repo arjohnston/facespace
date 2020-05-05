@@ -27,8 +27,6 @@ export class Post extends Component {
     })
 
     this.loadUser()
-
-    console.log(this.props)
   }
 
   handleToggleLike () {

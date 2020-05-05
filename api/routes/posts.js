@@ -48,7 +48,9 @@ router.post('/getUser', function (req, res) {
               lastName: user.lastName,
               profileImg: user.profileImg,
               id: user._id,
-              isOnboarded: user.isOnboarded
+              isOnboarded: user.isOnboarded,
+              friends: user.friends,
+              friendRequests: user.friendRequests
             })
           }
         }

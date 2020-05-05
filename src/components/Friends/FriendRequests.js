@@ -1,27 +1,77 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import './style.css'
-
-const array = [
-  {
-    name: 'Cookie Monster',
-    img: null
-  },
-  {
-    name: 'Garbage Man',
-    img: null
-  }
-]
 
 export default class FriendList extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      friendRequests: []
+    }
 
     this.renderRequests = this.renderRequests.bind(this)
   }
 
+  componentDidUpdate (prevProps, prevState) {
+    if (prevState.friendRequests !== this.state.friendRequests) {
+      this.setState({
+        friendRequests: this.state.friendRequests
+      })
+    }
+  }
+
+  static getDerivedStateFromProps (nextProps, prevState) {
+    if (nextProps.friendRequests !== prevState.friendRequests) {
+      return { friendRequests: nextProps.friendRequests }
+    } else return null
+  }
+
+  rejectFriendRequest (id) {
+    axios
+      .post('/api/friends/removeFriendRequest', {
+        token: this.props.token,
+        friendId: id
+      })
+      .then(() => {
+        this.props.reloadFriendRequests()
+      })
+      .catch(error => {
+        // if err statusCode == 401, then remove token & push /login
+        // otherwise log the token
+        console.log(error)
+      })
+  }
+
+  acceptFriendRequest (id) {
+    axios
+      .post('/api/friends/removeFriendRequest', {
+        token: this.props.token,
+        friendId: id
+      })
+      .then(() => {
+        axios
+          .post('/api/friends/addFriend', {
+            token: this.props.token,
+            friendId: id
+          })
+          .then(() => {
+            this.props.reloadAll()
+          })
+          .catch(error => {
+            // if err statusCode == 401, then remove token & push /login
+            // otherwise log the token
+            console.log(error)
+          })
+      })
+      .catch(error => {
+        // if err statusCode == 401, then remove token & push /login
+        // otherwise log the token
+        console.log(error)
+      })
+  }
+
   renderRequests () {
-    return array.map((friend, index) => {
+    return this.state.friendRequests.map((friend, index) => {
       return (
         <div className='request-row' key={index}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -37,15 +87,27 @@ export default class FriendList extends Component {
             )}
 
             <div className='request-meta'>
-              <span>{friend.name}</span>
+              <span>
+                {friend.firstName} {friend.lastName}
+              </span>
 
               <span>Wants to be your friend</span>
             </div>
           </div>
 
           <div style={{ display: 'flex' }}>
-            <div className='button accept'>Accept</div>
-            <div className='button reject'>Reject</div>
+            <div
+              className='button accept'
+              onClick={this.acceptFriendRequest.bind(this, friend._id)}
+            >
+              Accept
+            </div>
+            <div
+              className='button reject'
+              onClick={this.rejectFriendRequest.bind(this, friend._id)}
+            >
+              Reject
+            </div>
           </div>
         </div>
       )

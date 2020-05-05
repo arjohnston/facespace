@@ -58,7 +58,8 @@ router.post('/getFriends', function (req, res) {
                       _id: user._id,
                       firstName: user.firstName,
                       lastName: user.lastName,
-                      email: user.email
+                      email: user.email,
+                      username: user.username
                     }
 
                     friendsDecoded.push(frnd)
@@ -191,10 +192,15 @@ router.post('/getFriendRequests', function (req, res) {
                     (error, user) => {
                       if (error) return console.log(error)
 
-                      delete user.password
-                      delete user.__v
+                      const frnd = {
+                        _id: user._id,
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        email: user.email,
+                        username: user.username
+                      }
 
-                      friendRequestsDecoded.push(user)
+                      friendRequestsDecoded.push(frnd)
 
                       resolve()
                     }
@@ -226,12 +232,13 @@ router.post('/addFriendRequest', function (req, res) {
     } else {
       // Ok
       const id = mongoose.Types.ObjectId(decoded.id)
+      const frndId = mongoose.Types.ObjectId(req.body.friendId)
 
       User.updateOne(
         {
-          _id: id
+          _id: frndId
         },
-        { $push: { friendRequests: req.body.friendId } },
+        { $push: { friendRequests: id } },
         function (error, result) {
           if (error) {
             return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
@@ -336,10 +343,21 @@ router.post('/getNonFriends', function (req, res) {
                   // Check if password matches database
                   for (const friend in user.friends) {
                     for (const nonFriend in users) {
-                      if (user.friends[friend].id === users[nonFriend].id) { users.splice(nonFriend, 1) }
+                      if (user.friends[friend].id === users[nonFriend].id) {
+                        users.splice(nonFriend, 1)
+                      }
                     }
                   }
-
+                  const friends = []
+                  for (const user in users) {
+                    friends.push({
+                      _id: users[user]._id,
+                      firstName: users[user].firstName,
+                      lastName: users[user].lastName,
+                      email: users[user].email,
+                      username: users[user].username
+                    })
+                  }
                   res.status(OK).send(users)
                 }
               }
