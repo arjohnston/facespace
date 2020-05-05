@@ -13,7 +13,7 @@
 
 .profile-header {
   display: flex;
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   margin: 24px auto 0;
   justify-content: space-evenly;
@@ -24,6 +24,8 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
   max-height: 200px;
   height: 200px;
+  max-width: 750px;
+  width: 750px;
   margin: 5px 20px 0 60px;
   padding: 5px 6px 5px;
   font-size: 1.1em;
@@ -49,7 +51,8 @@
 .profile-management{
   display: flex;
   width: 200px;
-  min-height: 200px;
+  height: 265px;
+  max-height: 265px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20);
   flex-direction: column;
   align-items: center;
@@ -89,4 +92,21 @@ button:hover{
 
 .profile-management-buttons .delete-button{
   background: #FF0000;
+}
+
+.popup {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  position: relative; 
+}
+
+.popup h1 {
+  color: white;
+}
+
+.popup input[type=submit]{
+  background: #3AAB90;
+  color: white;
+  border: none;
 }
