@@ -79,7 +79,6 @@ export class Messenger extends Component {
     } else return null
   }
 
-  
   handleMinimizeMenus () {
     this.setState({
       messagesMinimized: true,

@@ -1,56 +1,47 @@
 import React, { Component } from 'react'
-import "./style.css"
+import './style.css'
 
 export default class ProfileManagement extends Component {
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {}
 
-    this.changeFace = this.changeFace.bind(this)
-    this.changeEmail = this.changeEmail.bind(this)
-    this.changePassWord = this.changePassWord.bind(this)
-    this.deleteAccount = this.deleteAccount.bind(this)
+    this.handleChangeFace = this.handleChangeFace.bind(this)
+    this.handleChangeEmail = this.handleChangeEmail.bind(this)
+    this.handleChangePassword = this.handleChangePassword.bind(this)
+    this.handleDeleteAccount = this.handleDeleteAccount.bind(this)
   }
 
-  changeFace(){
+  handleChangeFace () {}
 
+  handleChangeEmail () {}
+
+  handleChangePassword () {}
+
+  handleDeleteAccount () {
+    // function to delete account
   }
 
-  changeEmail(){
-
-  }
-
-  changePassword(){
-
-  }
-
-  deleteAccount(){
-    //function to delete account
-  }
-
-  render() {
+  render () {
     return (
-      <div className="profile-management">
-        <div className="profile-management-header">Your Account</div>
+      <div className='profile-management'>
+        <div className='profile-management-header'>Your Account</div>
 
-        <div className="profile-management-buttons">
-          <button onClick={this.changeFace}>
-            Change Your Face
-          </button><br/>
+        <div className='profile-management-buttons'>
+          <button onClick={this.handleChangeFace}>Change Your Face</button>
+          <br />
 
-          <button onClick={this.changeEmail}>
-            Update Email
-          </button><br/>
+          <button onClick={this.handleChangeEmail}>Update Email</button>
+          <br />
 
-          <button onClick={this.changePassword}>
-            Change Password
-          </button><br/>
+          <button onClick={this.handleChangePassword}>Change Password</button>
+          <br />
 
-          <button className="delete-button" onClick={this.deleteAccount}>
+          <button className='delete-button' onClick={this.handleDeleteAccount}>
             Delete Account
           </button>
         </div>
-    </div>
+      </div>
     )
   }
 }

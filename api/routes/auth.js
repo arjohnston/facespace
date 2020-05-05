@@ -5,6 +5,7 @@ const passport = require('passport')
 require('../config/passport')(passport)
 const mongoose = require('mongoose')
 const User = require('../models/User')
+const Post = require('../models/Post')
 const config = require('../../util/settings')
 const {
   OK,
@@ -110,7 +111,9 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       if (!query.email) query.email = decoded.email
       User.updateOne(query, { ...user }, function (error, result) {
-        if (error) { return res.status(BAD_REQUEST).send({ message: 'Bad Request.' }) }
+        if (error) {
+          return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+        }
 
         if (result.nModified < 1) {
           return res
@@ -131,7 +134,7 @@ router.post('/updatePassword', (req, res) => {
   if (!req.body.token || !req.body.password) return res.sendStatus(BAD_REQUEST)
 
   const token = req.body.token.replace(/^JWT\s/, '')
-  const query = { email: req.body.queryEmail }
+  const query = { email: req.body.email }
   const password = req.body.password
 
   jwt.verify(token, config.secretKey, function (error, decoded) {
@@ -326,36 +329,41 @@ router.post('/getUser', function (req, res) {
     } else {
       // Ok
       // Build this out to search for a user
-      User.findOne(
-        {
-          email: decoded.email
-        },
-        function (error, user) {
-          if (error) {
-            // Bad Request
-            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
-          }
+      const query = {}
 
-          if (!user) {
-            // Unauthorized if the email does not match any records in the database
-            res.status(UNAUTHORIZED).send({
-              message: 'Email or password does not match our records.'
-            })
-          } else {
-            // Check if password matches database
-            res.status(OK).send({
-              lastLogin: user.lastLogin,
-              username: user.username,
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              profileImg: user.profileImg,
-              id: user._id,
-              isOnboarded: user.isOnboarded
-            })
-          }
+      if (req.body.username) {
+        // Find a user by their username
+        query.username = req.body.username
+      } else {
+        // Or get the current user via email
+        query.email = decoded.email
+      }
+
+      User.findOne(query, function (error, user) {
+        if (error) {
+          // Bad Request
+          return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
         }
-      )
+
+        if (!user) {
+          // Unauthorized if the email does not match any records in the database
+          res.status(UNAUTHORIZED).send({
+            message: 'Email or password does not match our records.'
+          })
+        } else {
+          // Check if password matches database
+          res.status(OK).send({
+            lastLogin: user.lastLogin,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profileImg: user.profileImg,
+            id: user._id,
+            isOnboarded: user.isOnboarded
+          })
+        }
+      })
     }
   })
 })
@@ -408,7 +416,11 @@ router.post('/deleteUser', (req, res) => {
           return res.sendStatus(BAD_REQUEST)
         }
 
-        return res.status(OK).send(entries)
+        Post.deleteMany({ user: decoded.id }, (error, posts) => {
+          if (error) return res.sendStatus(BAD_REQUEST)
+
+          return res.status(OK).send(entries)
+        })
       })
     }
   })

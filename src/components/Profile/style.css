@@ -1,3 +1,16 @@
+.profile-wrapper {
+  display: flex;
+  margin: auto;
+  max-width: 1000px;
+}
+.profile-posts-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  width: 100%;
+  margin-left: 24px;
+}
+
 .profile-header {
   display: flex;
   max-width: 800px;

@@ -1,18 +1,28 @@
 .friends-page-container {
+  margin: 0 auto 0;
+  max-height: 90vh;
+  overflow-y: scroll;
+  width: 100%;
+  padding: 24px 0 48px;
+  height: calc(100% - 112px);
+}
+.friends-page-sub {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  height: calc(100% - 48px);
-  margin: 24px;
+  margin: 24px auto;
+  max-width: 850px;
 }
 
 .friend-list-container {
   background: white;
   width: 250px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
-  max-height: 80vh;
+  margin: 0 10px 10px 0;
+  min-height: 50vh;
 }
 
 .friend-list-header {
@@ -22,25 +32,30 @@
 }
 
 .friend-list-header span {
-  font-size: 1.2em;
+  font-size: 1.1em;
   padding: 12px 0;
-  font-weight: 500;
+  font-weight: 300;
 }
 
-.friend-list-row {
+.friend-list-row a {
   display: flex;
   align-items: center;
   padding: 6px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.friend-list-row:hover {
+  background: #ddd;
 }
 
-.friend-list-row img {
+.friend-list-row a img {
   width: 50px;
   height: 50px;
   border: 1px solid #AAA;
   margin-right: 6px;
 }
 
-.friend-list-row svg {
+.friend-list-row a svg {
   width: 50px;
   height: 50px;
   background: #DDD;
@@ -48,12 +63,277 @@
   border: 1px solid #AAA;
 }
 
-.friend-list-row svg path {
+.friend-list-row a svg path {
   fill: white;
 }
 
-.friend-list-row span {
-  font-size: 1.1em;
+.friend-list-row a {
+  text-decoration: none;
+}
+
+.friend-list-row a span {
+  font-size: 1em;
   color: #177198;
   font-weight: 500;
+}
+
+.friendlistsearch-bar {
+  width: 100%;
+  display:inline-block;
+  position: relative;
+
+}
+
+.friendlistsearch-bar input{
+  width: 100%;
+  border: none;
+  padding: 12px 24px 12px 36px;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.20);
+}
+
+.friendlistsearch-bar label {
+  display: flex;
+  position: absolute;
+  left: 14px;
+  top: 12px;
+}
+
+.friendlistsearch-bar label svg {
+  height: 20px;
+  fill: #AAA;
+}
+
+.finder-list-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+}
+.finder-list-row {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+}
+
+/* .finder-list-row img {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #AAA;
+  margin-right: 6px;
+} */
+
+/* .finder-list-row svg {
+  width: 50px;
+  height: 50px;
+  background: #DDD;
+  margin-right: 6px;
+  border: 1px solid #AAA;
+} */
+.finder-list-header {
+  color: #515151;
+  display: flex;
+  justify-content: center;
+}
+.usercard {
+  background-color: white;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: calc(33% - 5px);
+  margin-top: 10px;
+  margin-right: 10px;
+  align-items: center;
+  transition: background 0.2s;
+}
+.usercard:hover {
+  background: rgba(58, 171, 144, 0.08);
+}
+
+.usercard:nth-child(4n) {
+  margin-right: 0;
+}
+
+/* .usercard img, .usercard svg {
+  height: 80px;
+  width: 80px;
+  border: 1px solid #ddd;
+  margin-right: 6px;
+  fill: #515151;
+} */
+.usercard-profile-img {
+  width: 80px;
+  min-width: 80px;
+  height: 80px;
+  min-height: 80px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #EFEFEF;
+  position: relative;
+  fill: #FFF;
+  overflow: hidden;
+}
+.usercard-profile-img svg {
+  height: 80px;
+}
+.usercard-profile-img img {
+  height: 100%;
+}
+
+.usercard span {
+  text-align: center;
+  margin: 12px 0;
+  color: #177198;
+}
+
+.usercard button {
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.9em;
+}
+.usercard-button{
+  width:100px;
+  padding:6px;
+  margin:15px;
+  margin-left:15%;
+  border-radius: 5px;
+  color:white;
+  border:none;
+}
+.button.accept{
+  background-color: #3AAB90;
+}
+.button.reject{
+  background-color: #C13D3D;
+}
+.friendship-request{
+  height: 50px;
+  width: 85%;
+  margin:10px;
+  background: white;
+  display: flex;
+  max-width: 870px;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+}
+
+.friend-request-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 850px;
+  width: 100%;
+  background: white;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+  margin: 12px auto 0;
+}
+
+.request-row {
+  width: calc(100% - 8px);
+  height: 75px;
+  margin: 3px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+  margin: 0 4px;
+}
+.request-row:not(:last-child) {
+  border-bottom: 1px solid #EEE;
+}
+
+.request-row .button {
+  padding: 8px 40px;
+  margin: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.request-row .button:hover {
+  transform: translateY(-2px);
+}
+
+.request-row img, .request-row svg {
+  height: 60px;
+  border: 1px solid #ddd;
+  margin-right: 6px;
+}
+
+.request-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.request-meta span {
+  color: #177198;
+}
+
+.request-meta span:last-child {
+  color: #888;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  .friend-request-container {
+    background: #1b252b;
+  }
+
+  .request-row:not(:last-child) {
+    border-bottom: 1px solid #515151;
+  }
+
+  .request-row img, .request-row svg {
+    border: 1px solid #515151;
+    fill: #FFF;
+    background: #1f2b33;
+  }
+
+  .friend-list-container {
+    background: #1b252b;
+  }
+
+  .friend-list-row a img {
+    border: 1px solid #515151;
+  }
+
+  .friend-list-row a svg {
+    background: #1f2b33;
+    border: 1px solid #515151;
+  }
+
+  .friend-list-row:hover {
+    background: rgba(58, 171, 144, 0.08);
+  }
+  .friend-list-header span {
+    color: white;
+  }
+
+  .friendlistsearch-bar input {
+    background: #1b252b;
+    color: white;
+  }
+
+  .usercard {
+    background: #1b252b;
+  }
+
+  /* .usercard img, .usercard svg {
+    background: #1f2b33;
+    border: 1px solid #515151;
+    fill: white;
+  } */
+
+  .usercard-profile-img {
+    border: 1px solid #555;
+    background: #1f2b33;
+    fill: #FFF;
+  }
 }

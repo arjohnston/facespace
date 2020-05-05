@@ -588,6 +588,39 @@ describe('Users', () => {
         })
     })
 
+    // create post
+    it('Should return statusCode 200 if a post was created, to be deleted', done => {
+      chai
+        .request(app)
+        .post('/api/posts/createPost')
+        .send({ token: token, text: 'test post' })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return an array of length 1 for the posts', done => {
+      chai
+        .request(app)
+        .post('/api/posts/getPosts')
+        .send({ token: token })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+          res.body.should.be.a('array')
+          res.body.should.be.length(1)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
     it('Should return statusCode 200 if a user was deleted', done => {
       chai
         .request(app)
@@ -595,6 +628,24 @@ describe('Users', () => {
         .send({ token: token })
         .then(function (res) {
           expect(res).to.have.status(OK)
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    // get post should return 0
+    it('Should return an array of length 0 for the posts', done => {
+      chai
+        .request(app)
+        .post('/api/posts/getPosts')
+        .send({ token: token })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+          res.body.should.be.a('array')
+          res.body.should.be.length(0)
 
           done()
         })
