@@ -298,8 +298,8 @@
 .create-post-profile-img img {
   max-height: initial;
   max-width: initial;
-  min-height: initial;
-  min-width: initial;
+  min-height: auto;
+  min-width: auto;
   width: auto;
 }
 
