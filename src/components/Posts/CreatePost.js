@@ -128,7 +128,7 @@ export class CreatePost extends Component {
         </div>
         <div className='create-post-input'>
           {this.props.user.profileImg ? (
-            <div>
+            <div className='create-post-profile-img'>
               <img
                 src={this.props.user.profileImg}
                 alt={`${this.state.firstName} ${this.state.lastName}`}

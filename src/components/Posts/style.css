@@ -273,7 +273,7 @@
   outline: none;
 }
 
-.post-profile-img {
+.post-profile-img, .create-post-profile-img {
   width: 75px;
   min-width: 75px;
   height: 75px;
@@ -291,8 +291,16 @@
 .post-profile-img svg {
   height: 75px;
 }
-.post-profile-img img {
+.post-profile-img img, .create-post-profile-img img {
   height: 100%;
+}
+
+.create-post-profile-img img {
+  max-height: initial;
+  max-width: initial;
+  min-height: initial;
+  min-width: initial;
+  width: auto;
 }
 
 @media (prefers-color-scheme: dark) {

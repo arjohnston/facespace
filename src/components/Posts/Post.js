@@ -127,8 +127,6 @@ export class Post extends Component {
   }
 
   loadUser () {
-    if (this.props.user.userId === this.props.post.user) return
-
     axios
       .post('/api/posts/getUser', {
         token: this.props.token,

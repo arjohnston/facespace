@@ -152,7 +152,7 @@
   background: rgba(58, 171, 144, 0.08);
 }
 
-.usercard:nth-child(4n) {
+.usercard:nth-child(3n + 1) {
   margin-right: 0;
 }
 
