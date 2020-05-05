@@ -12,7 +12,7 @@ export class Profile extends Component {
     this.state = {
       username: null,
       posts: [],
-      popupOpen: false;
+      popupOpen: false
     }
   }
 
