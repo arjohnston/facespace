@@ -11,7 +11,8 @@ export class Profile extends Component {
     super(props)
     this.state = {
       username: null,
-      posts: []
+      posts: [],
+      popupOpen: false
     }
   }
 
@@ -46,6 +47,10 @@ export class Profile extends Component {
 
         // You can parse out the id to use for other requests (e.g. delete account and more) with res.data.id
 
+        this.setState({
+          userId: res.data.id
+        })
+
         // And then pass the id into your components to use in axios requests
       })
       .catch(error => {
@@ -73,6 +78,12 @@ export class Profile extends Component {
       })
   }
 
+  handleTogglePopupOpen(){
+    this.setState({
+      popupOpen: !this.state.popupOpen
+    })
+  }
+
   renderPosts () {
     if (this.state.posts.length <= 0) return
     return this.state.posts.map((post, index) => {
@@ -85,9 +96,26 @@ export class Profile extends Component {
   }
 
   render () {
+
+    const { email } = this.state
+
     return (
       <div>
         <ProfileHeader />
+        <div className='popup' style={{display: this.state.popupOpen ? 'flex' : 'none'}}>
+
+          <form onSubmit={this.props.handleChangeEmail}>
+            <input type='email'
+              name='email'
+              id='email'
+              onBlur={this.props.handleCheckifEmailExists}
+              value
+              required
+            />
+
+            <input type='submit' value='Update'/>
+          </form>
+        </div>
 
         <div className='profile-wrapper'>
           <ProfileManagement />

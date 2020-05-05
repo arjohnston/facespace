@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import './style.css'
+import axios from 'axios'
+import { connect } from 'react-redux'
+
+// import Profile from '../pages/Profile'
 
 export default class ProfileManagement extends Component {
   constructor (props) {
@@ -12,14 +16,61 @@ export default class ProfileManagement extends Component {
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this)
   }
 
-  handleChangeFace () {}
+  handleChangeFace (newProfileImg) {
+    axios
+      .post('/api/auth/edit', {
+        token: this.state.token,
+        profileImg: newProfileImg
+      })
+      .then(res => {
+        this.setState({
+          profileImg: newProfileImg
+        })
+      })
 
-  handleChangeEmail () {}
+  }
 
-  handleChangePassword () {}
+  handleChangeEmail (newEmail) {
+
+    axios
+      .post('/api/auth/edit', {
+        token: this.state.token,
+        email: newEmail
+      })
+      .then(res => {
+
+        this.setState({
+          email: newEmail
+        })
+
+      })
+
+  }
+
+  handleChangePassword (newPassword) {
+    axios
+      .post('/api/auth/updatePassword', {
+          token: this.state.token,
+          password: newPassword
+      })
+      .then(res => {
+        this.setState({
+          password: newPassword
+        })
+      })
+  }
 
   handleDeleteAccount () {
-    // function to delete account
+
+    if (this.state.userId !== this.props.user) return
+
+    axios
+      .post('api/auth/deleteUser', {
+        token: this.state.token
+      })
+      .then(res => {
+        console.log(res.data)
+      })
   }
 
   render () {
@@ -37,9 +88,11 @@ export default class ProfileManagement extends Component {
           <button onClick={this.handleChangePassword}>Change Password</button>
           <br />
 
-          <button className='delete-button' onClick={this.handleDeleteAccount}>
-            Delete Account
-          </button>
+          {this.state.userId === this.props.user && (
+            <button className='delete-button' onClick={this.handleDeleteAccount}>
+              Delete Account
+            </button>
+          )}
         </div>
       </div>
     )

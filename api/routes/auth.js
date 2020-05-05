@@ -360,6 +360,7 @@ router.post('/getUser', function (req, res) {
             lastName: user.lastName,
             profileImg: user.profileImg,
             id: user._id,
+            biography: user.biography,
             isOnboarded: user.isOnboarded
           })
         }

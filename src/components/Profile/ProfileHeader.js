@@ -1,33 +1,41 @@
 import React, { Component } from 'react'
 import './style.css'
+import axios from 'axios'
+import { connect } from 'react-redux'
 
-const profile = {
+/* const profile = {
   profileImg: null,
   profileBio:
     'Big Bird is an 8\'2" yellow bird who lives on Sesame Street, since 1969. Big Bird has entertained millions of pre-school children and their parents with his wide-eyed wondering at the world. Big bird is also a bird who makes friends easily.',
 
   firstName: 'Big',
   lastName: 'Bird'
-}
+} */
 
 export default class ProfileHeader extends Component {
   constructor (props) {
     super(props)
     this.state = {
       profileImg: null,
-      profileBio: ''
+      profileBio: '',
+      firstName: '',
+      lastName: ''
+    }
+
+    this.handleBiographyChange = this.handleBiographyChange.bind(this)
+  }
+
+
+  handleBiographyChange(event){
+    {this.state.userId === this.props.user &&
+      this.setState({
+        profileBio: event.target.value
+      })
     }
   }
 
-  componentDidMount () {
-    this.setState({
-      profileImg: profile.profileImg,
-      profileBio: profile.profileBio
-    })
-  }
-
   render () {
-    const name = profile.firstName + ' ' + profile.lastName
+    const name = this.state.firstName + ' ' + this.state.lastName
 
     return (
       <div className='profile-header'>
