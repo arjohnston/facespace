@@ -1,51 +1,42 @@
 import React, { Component } from 'react'
-import "./style.css"
+import './style.css'
 
 export default class ProfileManagement extends Component {
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {}
   }
 
-  changeFace(){
+  changeFace () {}
 
+  changeEmail () {}
+
+  changePassword () {}
+
+  deleteAccount () {
+    // function to delete account
   }
 
-  changeEmail(){
-
-  }
-
-  changePassword(){
-
-  }
-
-  deleteAccount(){
-    //function to delete account
-  }
-
-  render() {
+  render () {
     return (
-      <div className="profile-management">
-        <div className="profile-management-header">Your Account</div>
+      <div className='profile-management'>
+        <div className='profile-management-header'>Your Account</div>
 
-        <div className="profile-management-buttons">
-          <button onclick="changeFace()">
-            Change Your Face
-          </button><br/>
+        <div className='profile-management-buttons'>
+          <button onclick='changeFace()'>Change Your Face</button>
+          <br />
 
-          <button onclick="changeEmail()">
-            Update Email
-          </button><br/>
+          <button onclick='changeEmail()'>Update Email</button>
+          <br />
 
-          <button onclick="changePassword()">
-            Change Password
-          </button><br/>
+          <button onclick='changePassword()'>Change Password</button>
+          <br />
 
-          <button className="delete-button" onclick="deleteAccount()">
+          <button className='delete-button' onclick='deleteAccount()'>
             Delete Account
           </button>
         </div>
-    </div>
+      </div>
     )
   }
 }

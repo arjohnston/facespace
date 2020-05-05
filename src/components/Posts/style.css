@@ -1,10 +1,11 @@
 .overview-container {
   /* max-width: 800px; */
-  margin: 48px auto 0;
+  margin: 0 auto 0;
   max-height: 90vh;
   overflow-y: scroll;
   width: 100%;
-  padding-bottom: 48px;
+  padding: 24px 0 48px;
+  height: calc(100% - 112px);
 }
 
 ::-webkit-scrollbar {
@@ -28,7 +29,7 @@
 
 .create-post-input svg {
   width: 30px;
-  fill: #888;
+  fill: #3AAB90;
   margin-top: 10px;
 }
 
@@ -53,6 +54,7 @@
   height: 100px;
   border: none;
   margin-top: 10px;
+  outline: none;
 }
 
 .create-post-cta {
@@ -69,7 +71,6 @@
   padding: 8px 40px;
   border: none;
   color: white;
-  font-size: 1.1em;
   cursor: pointer;
   margin: 12px 6px 6px 0;
 }
@@ -114,6 +115,7 @@
 
 .middle-top {
   flex-direction: column;
+  display: flex;
 }
 
 .post-maker {
@@ -122,6 +124,10 @@
   height: auto;
   border: none;
   margin-top: 10px;
+  font-size: 0.9em;
+}
+.post-maker span {
+  color: #3AAB90;
 }
 
 .post-text {
@@ -129,7 +135,18 @@
   width: 100%;
   height: auto;
   border: none;
-  margin-top: 20px;
+  margin-top: 6px;
+}
+
+.cta-button {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  font-size: 0.9em;
+}
+.cta-button svg {
+  width: 18px;
+  margin-right: 4px;
 }
 
 .post-picture img {
@@ -168,6 +185,7 @@
   font-size: 0.8em;
   font-weight: 500;
   color: #777;
+  outline: 0;
 }
 
 .bottom-cta button svg {
@@ -236,22 +254,20 @@
 }
 
 .comment-input {
-  width: auto;
+  /* width: auto; */
   border-top: 1px solid #DDD;
   margin-left: 5px;
   margin-right: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .comment-button {
-  /* margin-bottom: 20px;
-  margin-left: 10px;
-  margin-right: 10px; */
   margin: 20px;
-  padding: 10px;
+  padding: 8px 40px;
   background: #3AAB90;
   border: none;
   color: white;
-  font-size: 1.1em;
   cursor: pointer;
 }
 
@@ -261,11 +277,11 @@
   height: 50px;
   border: none;
   margin: 10px;
+  outline: none;
 }
 
 
 @media (prefers-color-scheme: dark) {
-
   .create-post-container {
     background: #1b252b;
   }
@@ -274,11 +290,19 @@
     background: #1b252b;
   }
 
+  .create-post-input textarea {
+    color: white;
+  }
+
   .post {
     background: #1b252b;
   }
 
-  .post-maker, .post-text {
+  .post-maker {
+    color: #CCC;
+  }
+
+  .post-text {
     color: #FFF;
   }
 
@@ -302,5 +326,20 @@
 
   .bottom-cta {
     fill: #FFF;
+    border-top: 1px solid #515151;
+  }
+  .create-post-cta {
+    border-top: 1px solid #515151;
+  }
+  .profile-temporary2 {
+    background: #1f2b33;
+    fill: #FFF;
+    border: 1px solid #515151;
+  }
+
+  .create-post-input img, .create-post-input .profile-svg {
+    fill: #FFF;
+    border: 1px solid #515151;
+    background: #1f2b33;
   }
 }

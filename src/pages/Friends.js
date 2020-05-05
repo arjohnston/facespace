@@ -9,6 +9,10 @@ export default class Friends extends Component {
     this.state = {}
   }
 
+  componentDidMount () {
+    document.title = 'Friends | myface'
+  }
+
   render () {
     return (
       <div className='friends-page-container'>

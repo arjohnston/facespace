@@ -214,7 +214,6 @@ router.post('/edit', (req, res) => {
       // Build this out to search for a user
       Post.updateOne(query, { ...post }, function (error, result) {
         if (error) {
-          console.log(error)
           return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
         }
 

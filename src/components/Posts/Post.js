@@ -99,7 +99,7 @@ export class Post extends Component {
         <div className='comment-input'>
           <textarea
             className='comment-fill-area'
-            placeholder='Comment here'
+            placeholder='What would you like to say?'
             value={this.state.commentText}
             onChange={this.handleCommentTextChange}
           />
@@ -157,9 +157,9 @@ export class Post extends Component {
   render () {
     let author = ''
     if (this.state.userId === this.props.userId) {
-      author = 'You Wrote'
+      author = 'You'
     } else {
-      author = this.state.firstName + ' wrote'
+      author = this.state.firstName
     }
 
     return (
@@ -177,9 +177,10 @@ export class Post extends Component {
           )}
 
           <div className='middle-top'>
-            <div className='post-maker'>{author}</div>
-
-            <div className='post-text'>{this.props.post.text}</div>
+            <span className='post-maker'>
+              <span>{author}</span> wrote:
+            </span>
+            <span className='post-text'>{this.props.post.text}</span>
           </div>
         </div>
 
@@ -194,19 +195,19 @@ export class Post extends Component {
 
         <div className='bottom-cta'>
           <div className='left-buttons'>
-            <button>
+            <div className='cta-button'>
               <svg viewBox='0 0 24 24'>
                 <path d='M5,9V21H1V9H5M9,21A2,2 0 0,1 7,19V9C7,8.45 7.22,7.95 7.59,7.59L14.17,1L15.23,2.06C15.5,2.33 15.67,2.7 15.67, 3.11L15.64,3.43L14.69,8H21C22.11,8 23,8.9 23,10V12C23,12.26 22.95,12.5 22.86,12.73L19.84,19.78C19.54,20.5 18.83,21 18, 21H9M9,19H18.03L21,12V10H12.21L13.34,4.68L9,9.03V19Z' />
               </svg>
               {this.state.likes}
-            </button>
+            </div>
 
-            <button>
+            <div className='cta-button'>
               <svg viewBox='0 0 24 24'>
                 <path d='M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H6L4,18V4H20' />
               </svg>
               {this.state.comments ? this.state.comments.length : 0}
-            </button>
+            </div>
           </div>
 
           <div className='right-buttons'>

@@ -15,6 +15,8 @@ export default class extends Component {
   }
 
   componentDidMount () {
+    document.title = 'myface'
+
     const token = window.localStorage
       ? window.localStorage.getItem('jwtToken')
       : ''
