@@ -646,6 +646,7 @@
   padding: 24px;
   background: #3AAB90;
   color: white;
+  width: 100%;
 }
 
 .image-viewer-wrapper .close-button {
