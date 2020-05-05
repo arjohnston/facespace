@@ -212,7 +212,6 @@ router.post('/getFriendRequests', function (req, res) {
             Promise.all(promises).then(() => {
               res.status(OK).send(friendRequestsDecoded)
             })
-            // res.status(OK).send(friendRequestsDecoded)
           }
         }
       )
@@ -269,12 +268,13 @@ router.post('/removeFriendRequest', function (req, res) {
     } else {
       // Ok
       const id = mongoose.Types.ObjectId(decoded.id)
+      const friendId = mongoose.Types.ObjectId(req.body.friendId)
 
       User.updateOne(
         {
           _id: id
         },
-        { $pull: { friendRequests: req.body.friendId } },
+        { $pull: { friendRequests: friendId } },
         function (error, result) {
           if (error) {
             return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })

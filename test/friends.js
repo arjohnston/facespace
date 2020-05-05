@@ -486,6 +486,46 @@ describe('Friends', () => {
         })
     })
 
+    it('Should return statusCode 200 when a valid token is passed in', done => {
+      chai
+        .request(app)
+        .post('/api/auth/verify')
+        .send({ token: token })
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+          res.body.should.be.a('object')
+          res.body.should.have.property('id')
+          id = res.body.id
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
+    it('Should return statusCode 200 and a JWT token if the email/pass is correct for x@b.c', done => {
+      const user = {
+        email: 'x@b.c',
+        password: 'StrongPassword$1'
+      }
+      chai
+        .request(app)
+        .post('/api/auth/login')
+        .send(user)
+        .then(function (res) {
+          expect(res).to.have.status(OK)
+          res.body.should.be.a('object')
+          res.body.should.have.property('token')
+          token = res.body.token
+
+          done()
+        })
+        .catch(err => {
+          throw err
+        })
+    })
+
     it('Should return array of length 1 when getting friend requests', done => {
       chai
         .request(app)
@@ -503,7 +543,7 @@ describe('Friends', () => {
         })
     })
 
-    it('Should return status code 200 when a friendRequest was added', done => {
+    it('Should return status code 200 when a friendRequest was removed', done => {
       chai
         .request(app)
         .post('/api/friends/removeFriendRequest')

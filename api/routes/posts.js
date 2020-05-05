@@ -74,27 +74,73 @@ router.post('/getPosts', function (req, res) {
         req.body.queryId ? req.body.queryId : decoded.id
       )
 
-      Post.find(
-        {
-          user: id
-        },
-        function (error, posts) {
-          if (error) {
-            // Bad Request
-            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
-          }
+      if (req.body.username) {
+        User.findOne(
+          {
+            username: req.body.username
+          },
+          function (error, user) {
+            if (error) {
+              // Bad Request
+              return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+            }
 
-          if (!posts) {
-            // Unauthorized if the email does not match any records in the database
-            res.status(NOT_FOUND).send({
-              message: 'Could not find any posts'
-            })
-          } else {
-            // Check if password matches database
-            res.status(OK).send(posts.reverse())
+            if (!user) {
+              // Unauthorized if the email does not match any records in the database
+              res.status(UNAUTHORIZED).send({
+                message: 'Email or password does not match our records.'
+              })
+            } else {
+              // Check if password matches database
+              Post.find(
+                {
+                  user: user._id
+                },
+                function (error, posts) {
+                  if (error) {
+                    // Bad Request
+                    return res
+                      .status(BAD_REQUEST)
+                      .send({ message: 'Bad Request.' })
+                  }
+
+                  if (!posts) {
+                    // Unauthorized if the email does not match any records in the database
+                    res.status(NOT_FOUND).send({
+                      message: 'Could not find any posts'
+                    })
+                  } else {
+                    // Check if password matches database
+                    return res.status(OK).send(posts.reverse())
+                  }
+                }
+              )
+            }
           }
-        }
-      )
+        )
+      } else {
+        Post.find(
+          {
+            user: id
+          },
+          function (error, posts) {
+            if (error) {
+              // Bad Request
+              return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
+            }
+
+            if (!posts) {
+              // Unauthorized if the email does not match any records in the database
+              res.status(NOT_FOUND).send({
+                message: 'Could not find any posts'
+              })
+            } else {
+              // Check if password matches database
+              return res.status(OK).send(posts.reverse())
+            }
+          }
+        )
+      }
     }
   })
 })
