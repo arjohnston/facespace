@@ -44,7 +44,7 @@ export default class FindList extends Component {
             </svg>
           )}
           <span>{finder.name}</span>
-          <button type='submit'>Request Friendship</button>
+          <button type='submit'>+ Add Friend</button>
         </div>
       )
     })

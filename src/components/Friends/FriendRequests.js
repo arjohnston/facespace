@@ -9,14 +9,6 @@ const array = [
   {
     name: 'Garbage Man',
     img: null
-  },
-  {
-    name: 'Ernie',
-    img: null
-  },
-  {
-    name: 'Yellow Bird',
-    img: null
   }
 ]
 
