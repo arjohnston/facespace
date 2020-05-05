@@ -329,36 +329,41 @@ router.post('/getUser', function (req, res) {
     } else {
       // Ok
       // Build this out to search for a user
-      User.findOne(
-        {
-          email: decoded.email
-        },
-        function (error, user) {
-          if (error) {
-            // Bad Request
-            return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
-          }
+      const query = {}
 
-          if (!user) {
-            // Unauthorized if the email does not match any records in the database
-            res.status(UNAUTHORIZED).send({
-              message: 'Email or password does not match our records.'
-            })
-          } else {
-            // Check if password matches database
-            res.status(OK).send({
-              lastLogin: user.lastLogin,
-              username: user.username,
-              email: user.email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              profileImg: user.profileImg,
-              id: user._id,
-              isOnboarded: user.isOnboarded
-            })
-          }
+      if (req.body.username) {
+        // Find a user by their username
+        query.username = req.body.username
+      } else {
+        // Or get the current user via email
+        query.email = decoded.email
+      }
+
+      User.findOne(query, function (error, user) {
+        if (error) {
+          // Bad Request
+          return res.status(BAD_REQUEST).send({ message: 'Bad Request.' })
         }
-      )
+
+        if (!user) {
+          // Unauthorized if the email does not match any records in the database
+          res.status(UNAUTHORIZED).send({
+            message: 'Email or password does not match our records.'
+          })
+        } else {
+          // Check if password matches database
+          res.status(OK).send({
+            lastLogin: user.lastLogin,
+            username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            profileImg: user.profileImg,
+            id: user._id,
+            isOnboarded: user.isOnboarded
+          })
+        }
+      })
     }
   })
 })

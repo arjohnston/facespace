@@ -33,6 +33,28 @@ export class Profile extends Component {
     )
   }
 
+  getUser () {
+    axios
+      .post('/api/auth/getUser', {
+        token: this.state.token,
+        username: this.state.username
+      })
+      .then(res => {
+        // Jonah, you can use this function to get needed info like: id
+        // to see the output of what this API request gets you, open up the console in chrome
+        console.log(res.data)
+
+        // You can parse out the id to use for other requests (e.g. delete account and more) with res.data.id
+
+        // And then pass the id into your components to use in axios requests
+      })
+      .catch(error => {
+        // if err statusCode == 401, then remove token & push /login
+        // otherwise log the token
+        console.log(error)
+      })
+  }
+
   getPosts () {
     axios
       .post('/api/posts/getPosts', {
