@@ -5,6 +5,11 @@ export default class ProfileManagement extends Component {
   constructor(props){
     super(props)
     this.state = {}
+
+    this.changeFace = this.changeFace.bind(this)
+    this.changeEmail = this.changeEmail.bind(this)
+    this.changePassWord = this.changePassWord.bind(this)
+    this.deleteAccount = this.deleteAccount.bind(this)
   }
 
   changeFace(){
@@ -29,19 +34,19 @@ export default class ProfileManagement extends Component {
         <div className="profile-management-header">Your Account</div>
 
         <div className="profile-management-buttons">
-          <button onclick="changeFace()">
+          <button onClick={this.changeFace}>
             Change Your Face
           </button><br/>
 
-          <button onclick="changeEmail()">
+          <button onClick={this.changeEmail}>
             Update Email
           </button><br/>
 
-          <button onclick="changePassword()">
+          <button onClick={this.changePassword}>
             Change Password
           </button><br/>
 
-          <button className="delete-button" onclick="deleteAccount()">
+          <button className="delete-button" onClick={this.deleteAccount}>
             Delete Account
           </button>
         </div>
