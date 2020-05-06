@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
+import { connect } from 'react-redux'
 import axios from 'axios'
 
-import ProfileHeader from '../components/Profile/ProfileHeader'
+// import ProfileHeader from '../components/Profile/ProfileHeader'
 import ProfileManagement from '../components/Profile/ProfileManagement'
 import Post from '../components/Posts/Post'
 
@@ -12,8 +13,14 @@ export class Profile extends Component {
     this.state = {
       username: null,
       posts: [],
-      popupOpen: false
+      popupOpen: false,
+      isEditable: false,
+      biography: ''
     }
+
+    this.handleBiographyChange = this.handleBiographyChange.bind(this)
+    this.getUser = this.getUser.bind(this)
+    this.reloadWindow = this.reloadWindow.bind(this)
   }
 
   componentDidMount () {
@@ -30,7 +37,10 @@ export class Profile extends Component {
           ? this.props.location.pathname.split('/user/').pop()
           : null
       },
-      () => this.getPosts()
+      () => {
+        this.getPosts()
+        this.getUser()
+      }
     )
   }
 
@@ -41,17 +51,11 @@ export class Profile extends Component {
         username: this.state.username
       })
       .then(res => {
-        // Jonah, you can use this function to get needed info like: id
-        // to see the output of what this API request gets you, open up the console in chrome
-        console.log(res.data)
-
-        // You can parse out the id to use for other requests (e.g. delete account and more) with res.data.id
-
         this.setState({
-          userId: res.data.id
+          user: res.data,
+          isEditable: res.data.id === this.props.user.userId,
+          biography: res.data.biography
         })
-
-        // And then pass the id into your components to use in axios requests
       })
       .catch(error => {
         // if err statusCode == 401, then remove token & push /login
@@ -78,7 +82,7 @@ export class Profile extends Component {
       })
   }
 
-  handleTogglePopupOpen(){
+  handleTogglePopupOpen () {
     this.setState({
       popupOpen: !this.state.popupOpen
     })
@@ -95,30 +99,77 @@ export class Profile extends Component {
     })
   }
 
+  handleBiographyChange (event) {
+    const value = event.target.value
+
+    this.setState({
+      biography: event.target.value
+    })
+
+    if (this.biographyUpdateCallback) {
+      clearTimeout(this.biographyUpdateCallback)
+    }
+
+    const callback = () => {
+      if (value !== this.state.biography) {
+        axios
+          .post('/api/auth/edit', {
+            token: this.state.token,
+            biography: value
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
+
+      delete this.biographyUpdateCallback
+    }
+
+    this.biographyUpdateCallback = setTimeout(callback, 1000)
+  }
+
+  reloadWindow () {
+    if (window) window.location.reload()
+  }
+
   render () {
-
-    const { email } = this.state
-
     return (
-      <div>
-        <ProfileHeader />
-        <div className='popup' style={{display: this.state.popupOpen ? 'flex' : 'none'}}>
+      <div className='profile-wrapper'>
+        <div>
+          <div className='profile-image'>
+            {this.state.user && this.state.user.profileImg ? (
+              <img
+                src={this.state.user.profileImg}
+                alt={this.state.user.firstName + ' ' + this.state.user.lastName}
+              />
+            ) : (
+              <svg viewBox='0 0 24 24'>
+                <path d='M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z' />
+              </svg>
+            )}
+          </div>
 
-          <form onSubmit={this.props.handleChangeEmail}>
-            <input type='email'
-              name='email'
-              id='email'
-              onBlur={this.props.handleCheckifEmailExists}
-              value
-              required
+          {this.state.isEditable && (
+            <ProfileManagement
+              reloadUser={this.reloadWindow}
+              token={this.state.token}
+              user={this.state.user}
             />
-
-            <input type='submit' value='Update'/>
-          </form>
+          )}
         </div>
 
-        <div className='profile-wrapper'>
-          <ProfileManagement />
+        <div style={{ maxWidth: '800px', width: '100%' }}>
+          {this.state.isEditable ? (
+            <textarea
+              className='profile-bio'
+              placeholder='Type something here for your bio...'
+              value={this.state.biography}
+              onChange={this.handleBiographyChange}
+            />
+          ) : (
+            <div className='profile-bio'>{this.state.biography}</div>
+          )}
+
           <div className='profile-posts-wrapper'>{this.renderPosts()}</div>
         </div>
       </div>
@@ -126,4 +177,8 @@ export class Profile extends Component {
   }
 }
 
-export default withRouter(Profile)
+const mapStateToProps = state => ({
+  ...state
+})
+
+export default connect(mapStateToProps)(withRouter(Profile))
